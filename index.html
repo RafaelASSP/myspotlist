@@ -691,6 +691,15 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   .login-card{padding:1.25rem}
   .av-grid{grid-template-columns:repeat(3,1fr)}
 }
+
+/* ─── PAGINAÇÃO ─── */
+.more-wrap{padding:.5rem .25rem .25rem}
+.av-more{grid-column:1/-1;padding:.25rem}
+.av-grid{max-height:280px}
+.av-opt .sub{font-size:9.5px;color:var(--text3);margin-top:-4px}
+.av-opt.nophoto{opacity:.55}
+.av-opt .ph{width:100%;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg4);color:var(--text2);font-weight:700;font-size:1.3rem}
+.av-grid.album .av-opt .ph{border-radius:8px}
 </style>
 </head>
 <body>
@@ -1627,87 +1636,108 @@ function showError(msg){
   document.getElementById('searchResults').innerHTML=`<div style="padding:1rem;color:var(--red);font-size:13px;border:1px solid rgba(239,68,68,.2);border-radius:var(--radius);margin-top:.75rem">${msg}</div>`;
 }
 
-async function searchSpotify(q){
+function moreBtn(container,onClick){
+  const old=container.querySelector('.more-wrap');if(old)old.remove();
+  const w=document.createElement('div');w.className='more-wrap';
+  const b=document.createElement('button');b.className='btn btn-ghost';b.style.cssText='width:100%;font-size:13px';b.textContent='Ver mais resultados';
+  b.onclick=ev=>{ev.stopPropagation();b.disabled=true;b.textContent='Carregando…';onClick()};
+  w.appendChild(b);container.appendChild(w);
+}
+function spError(sr,d,offset){
+  const msg='Erro do Spotify: '+(d.error.message||d.error.status||'tente novamente');
+  if(offset>0){const w=sr.querySelector('.more-wrap');if(w)w.remove();toast(msg);return}
+  sr.innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">'+msg+'</div>';
+}
+document.getElementById('searchPanel').addEventListener('scroll',function(){
+  if(this.scrollTop+this.clientHeight>=this.scrollHeight-60){const b=this.querySelector('.more-wrap button:not([disabled])');if(b)b.click()}
+});
+function albumRow(album,token){
+  const item=document.createElement('div');item.className='search-result-item';
+  const img=(album.images[1]||album.images[0]||{}).url;
+  const inLib=DB.albums.find(a=>a.spotifyId===album.id);
+  item.innerHTML=`${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
+    <div class="result-info">
+      <div class="result-name">${album.name}</div>
+      <div class="result-sub">${album.artists.map(a=>a.name).join(', ')} · ${album.release_date?.slice(0,4)||''}</div>
+    </div>`;
+  const btn=document.createElement('button');
+  btn.className='btn '+(inLib?'btn-ghost':'btn-primary')+' result-btn';
+  btn.textContent=inLib?'Abrir':'+ Adicionar';
+  const act=()=>{
+    if(inLib){closeAdd();openDetail(inLib.id);return}
+    importAlbum(album.id,token);
+  };
+  btn.onclick=ev=>{ev.stopPropagation();act()};
+  item.onclick=act;
+  item.appendChild(btn);
+  return item;
+}
+async function searchSpotify(q,offset=0){
   const sr=document.getElementById('searchResults');
-  sr.innerHTML='<div class="spinner"></div>';
+  if(offset===0)sr.innerHTML='<div class="spinner"></div>';
   const token=await getSpotifyToken();
   if(!token)return;
   try{
-    const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=album&limit=8`,{headers:{Authorization:'Bearer '+token}});
+    const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=album&limit=10&offset=${offset}`,{headers:{Authorization:'Bearer '+token}});
     const data=await res.json();
+    if(data.error){spError(sr,data,offset);return}
     if(searchType!=='album'||document.getElementById('spotifySearch').value.trim()!==q.trim())return;
-    const albums=data.albums?.items||[];
-    if(!albums.length){sr.innerHTML='<div style="padding:1rem;color:var(--text3);font-size:13px">Nenhum resultado encontrado.</div>';return}
-    sr.innerHTML='';
-    albums.forEach(album=>{
-      const item=document.createElement('div');item.className='search-result-item';
-      const img=(album.images[1]||album.images[0]||{}).url;
-      const inLib=DB.albums.find(a=>a.spotifyId===album.id);
-      item.innerHTML=`${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
-        <div class="result-info">
-          <div class="result-name">${album.name}</div>
-          <div class="result-sub">${album.artists.map(a=>a.name).join(', ')} · ${album.release_date?.slice(0,4)||''}</div>
-        </div>`;
-      const btn=document.createElement('button');
-      btn.className='btn '+(inLib?'btn-ghost':'btn-primary')+' result-btn';
-      btn.textContent=inLib?'Abrir':'+ Adicionar';
-      const act=()=>{
-        if(inLib){closeAdd();openDetail(inLib.id);return}
-        importAlbum(album.id,token);
-      };
-      btn.onclick=ev=>{ev.stopPropagation();act()};
-      item.onclick=act;
-      item.appendChild(btn);
-      sr.appendChild(item);
-    });
+    const albums=(data.albums?.items||[]).filter(Boolean);
+    if(offset===0)sr.innerHTML='';else{const w=sr.querySelector('.more-wrap');if(w)w.remove()}
+    if(!albums.length&&offset===0){sr.innerHTML='<div style="padding:1rem;color:var(--text3);font-size:13px">Nenhum resultado encontrado.</div>';return}
+    albums.forEach(album=>sr.appendChild(albumRow(album,token)));
+    if(data.albums?.next&&albums.length)moreBtn(sr,()=>searchSpotify(q,offset+10));
   }catch(e){sr.innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">Erro na busca.</div>'}
 }
 
-async function searchSpotifyTracks(q){
+function trackRow(t){
+  const item=document.createElement('div');item.className='search-result-item';
+  const img=(t.album?.images?.[1]||t.album?.images?.[0]||{}).url;
+  const bigImg=t.album?.images?.[0]?.url||'';
+  const alreadyStandalone=!!(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===t.id);
+  item.innerHTML=`
+    ${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
+    <div class="result-info">
+      <div class="result-name">${t.name}</div>
+      <div class="result-sub">${t.artists.map(a=>a.name).join(', ')} · ${t.album?.name||''}</div>
+    </div>`;
+  const act=()=>{
+    closeSearchPanel();
+    openStModal({
+      spotifyTrackId:t.id,
+      name:t.name,
+      artist:t.artists.map(a=>a.name).join(', '),
+      albumTitle:t.album?.name||'',
+      albumSpotifyId:t.album?.id||'',
+      cover:bigImg,
+      duration:t.duration_ms||0,
+      previewUrl:t.preview_url||'',
+      year:t.album?.release_date?.slice(0,4)||'',
+    });
+  };
+  const btn=document.createElement('button');
+  btn.className='btn '+(alreadyStandalone?'btn-ghost':'btn-primary')+' result-btn';
+  btn.textContent=alreadyStandalone?'✓ Avaliada':'Avaliar';
+  btn.onclick=ev=>{ev.stopPropagation();act()};
+  item.onclick=act;
+  item.appendChild(btn);
+  return item;
+}
+async function searchSpotifyTracks(q,offset=0){
   const sr=document.getElementById('searchResults');
-  sr.innerHTML='<div class="spinner"></div>';
+  if(offset===0)sr.innerHTML='<div class="spinner"></div>';
   const token=await getSpotifyToken();
   if(!token)return;
   try{
-    const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=track&limit=10`,{headers:{Authorization:'Bearer '+token}});
+    const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=track&limit=10&offset=${offset}`,{headers:{Authorization:'Bearer '+token}});
     const data=await res.json();
+    if(data.error){spError(sr,data,offset);return}
     if(searchType!=='track'||document.getElementById('spotifySearch').value.trim()!==q.trim())return;
-    const tracks=data.tracks?.items||[];
-    if(!tracks.length){sr.innerHTML='<div style="padding:1rem;color:var(--text3);font-size:13px">Nenhuma música encontrada.</div>';return}
-    sr.innerHTML='';
-    tracks.forEach(t=>{
-      const item=document.createElement('div');item.className='search-result-item';
-      const img=(t.album?.images?.[1]||t.album?.images?.[0]||{}).url;
-      const bigImg=t.album?.images?.[0]?.url||'';
-      const alreadyStandalone=!!(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===t.id);
-      item.innerHTML=`
-        ${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
-        <div class="result-info">
-          <div class="result-name">${t.name}</div>
-          <div class="result-sub">${t.artists.map(a=>a.name).join(', ')} · ${t.album?.name||''}</div>
-        </div>`;
-      const act=()=>{
-        closeSearchPanel();
-        openStModal({
-          spotifyTrackId:t.id,
-          name:t.name,
-          artist:t.artists.map(a=>a.name).join(', '),
-          albumTitle:t.album?.name||'',
-          albumSpotifyId:t.album?.id||'',
-          cover:bigImg,
-          duration:t.duration_ms||0,
-          previewUrl:t.preview_url||'',
-          year:t.album?.release_date?.slice(0,4)||'',
-        });
-      };
-      const btn=document.createElement('button');
-      btn.className='btn '+(alreadyStandalone?'btn-ghost':'btn-primary')+' result-btn';
-      btn.textContent=alreadyStandalone?'✓ Avaliada':'Avaliar';
-      btn.onclick=ev=>{ev.stopPropagation();act()};
-      item.onclick=act;
-      item.appendChild(btn);
-      sr.appendChild(item);
-    });
+    const tracks=(data.tracks?.items||[]).filter(Boolean);
+    if(offset===0)sr.innerHTML='';else{const w=sr.querySelector('.more-wrap');if(w)w.remove()}
+    if(!tracks.length&&offset===0){sr.innerHTML='<div style="padding:1rem;color:var(--text3);font-size:13px">Nenhuma música encontrada.</div>';return}
+    tracks.forEach(t=>sr.appendChild(trackRow(t)));
+    if(data.tracks?.next&&tracks.length)moreBtn(sr,()=>searchSpotifyTracks(q,offset+10));
   }catch(e){sr.innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">Erro na busca.</div>'}
 }
 
@@ -1993,28 +2023,41 @@ function avMsg(text){document.getElementById('avGrid').innerHTML='<div class="av
 function optFromItem(it,type){
   const imgs=it.images||[];
   const url=(imgs[1]||imgs[0]||{}).url||'';
-  const label=type==='album'?`${it.name} · ${(it.artists||[]).map(a=>a.name).join(', ')}`:it.name;
-  return {type,url,label,short:it.name};
+  const artists=(it.artists||[]).map(a=>a.name).join(', ');
+  const label=type==='album'?`${it.name} · ${artists}`:it.name;
+  return {type,url,label,short:it.name,sub:type==='album'?artists:''};
 }
-function renderAvatarOptions(opts){
+function renderAvatarOptions(opts,moreFn){
   const grid=document.getElementById('avGrid');
   if(!opts.length){avMsg('Nenhum resultado.');return}
   grid.innerHTML='';
   opts.forEach(o=>{
     const b=document.createElement('button');b.type='button';
-    b.className='av-opt'+(loginAvatar&&loginAvatar.url===o.url&&loginAvatar.label===o.label?' sel':'');
-    b.title=o.label;
-    const img=document.createElement('img');img.src=o.url;img.alt='';
-    const lb=document.createElement('span');lb.textContent=o.short;
-    b.appendChild(img);b.appendChild(lb);
+    const sel=loginAvatar&&loginAvatar.url===o.url&&loginAvatar.label===o.label;
+    b.className='av-opt'+(o.url&&sel?' sel':'')+(o.url?'':' nophoto');
+    b.title=o.url?o.label:o.label+' (sem foto no Spotify)';
+    if(o.url){const img=document.createElement('img');img.src=o.url;img.alt='';b.appendChild(img)}
+    else{const ph=document.createElement('div');ph.className='ph';ph.textContent=initialOf(o.short);b.appendChild(ph)}
+    const lb=document.createElement('span');lb.textContent=o.short;b.appendChild(lb);
+    if(o.sub){const sb=document.createElement('span');sb.className='sub';sb.textContent=o.sub;b.appendChild(sb)}
     b.onclick=()=>{
+      if(!o.url){toast('Este item não tem imagem no Spotify');return}
       loginAvatar={type:o.type,url:o.url,label:o.label};
       grid.querySelectorAll('.av-opt').forEach(x=>x.classList.remove('sel'));
       b.classList.add('sel');updateLoginPreview();
     };
     grid.appendChild(b);
   });
+  if(moreFn){
+    const w=document.createElement('div');w.className='av-more';
+    const mb=document.createElement('button');mb.type='button';mb.className='btn btn-ghost';mb.style.cssText='width:100%;font-size:12.5px';mb.textContent='Ver mais resultados';
+    mb.onclick=()=>{mb.disabled=true;mb.textContent='Carregando…';moreFn()};
+    w.appendChild(mb);grid.appendChild(w);
+  }
 }
+document.getElementById('avGrid').addEventListener('scroll',function(){
+  if(this.scrollTop+this.clientHeight>=this.scrollHeight-50){const b=this.querySelector('.av-more button:not([disabled])');if(b)b.click()}
+});
 async function loadAvatarSuggestions(){
   const type=loginAvType;
   if(avSuggestCache[type]){renderAvatarOptions(avSuggestCache[type]);return}
@@ -2038,17 +2081,25 @@ function debounceAvatarSearch(q){
   if(!q.trim()){loadAvatarSuggestions();return}
   avDebounce=setTimeout(()=>searchAvatar(q.trim()),450);
 }
-async function searchAvatar(q){
+let avState={items:[]};
+async function searchAvatar(q,offset=0){
   const type=loginAvType;
-  document.getElementById('avGrid').innerHTML='<div class="spinner" style="grid-column:1/-1"></div>';
+  if(offset===0){
+    avState={items:[]};
+    document.getElementById('avGrid').innerHTML='<div class="spinner" style="grid-column:1/-1"></div>';
+  }
   const token=await getSpotifyToken(true);
   if(!token){avMsg('Não foi possível conectar ao Spotify agora.');return}
   try{
-    const r=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=${type}&limit=12`,{headers:{Authorization:'Bearer '+token}});
+    const r=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=${type}&limit=10&offset=${offset}`,{headers:{Authorization:'Bearer '+token}});
     const d=await r.json();
+    if(d.error){avMsg('Erro do Spotify: '+(d.error.message||d.error.status||'tente novamente'));return}
     if(type!==loginAvType||document.getElementById('avSearch').value.trim()!==q)return;
-    const items=(type==='artist'?d.artists:d.albums)?.items||[];
-    renderAvatarOptions(items.map(i=>optFromItem(i,type)).filter(o=>o.url));
+    const list=type==='artist'?d.artists:d.albums;
+    const opts=(list?.items||[]).filter(Boolean).map(i=>optFromItem(i,type));
+    opts.forEach(o=>{if(!avState.items.some(x=>x.label===o.label&&x.url===o.url))avState.items.push(o)});
+    const more=!!(list&&list.next)&&opts.length>0;
+    renderAvatarOptions(avState.items,more?()=>searchAvatar(q,offset+10):null);
   }catch(e){avMsg('Erro na busca.')}
 }
 function updateLoginPreview(){
