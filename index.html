@@ -738,6 +738,49 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 .share-text:focus{border-color:var(--accent)}
 .share-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
 .share-actions .btn{font-size:12.5px;padding:7px 14px}
+
+/* ─── SOCIAL ─── */
+.nav-link{position:relative}
+.nav-badge{position:absolute;top:0;right:-2px;min-width:16px;height:16px;border-radius:8px;background:var(--accent);color:#080a0c;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.seg{display:inline-flex;gap:3px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:3px}
+.seg button{padding:6px 14px;border-radius:6px;border:none;background:none;color:var(--text3);cursor:pointer;font-size:12.5px;font-family:'Sora',sans-serif;font-weight:500;transition:all .18s}
+.seg button.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.home-head{display:flex;align-items:center;gap:.9rem;margin-bottom:1.25rem}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--accent);font-weight:600}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse-ring .9s ease-in-out infinite}
+.av-sm{width:22px;height:22px;font-size:10px}
+.feed-meta{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:11px;color:var(--text3);min-width:0}
+.feed-who{color:var(--text2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feed-when{white-space:nowrap}
+.feed-badge{position:absolute;top:8px;left:8px;background:rgba(8,10,12,.75);backdrop-filter:blur(4px);border:1px solid var(--border2);border-radius:20px;padding:2px 9px;font-size:10px;color:var(--text2);font-weight:600}
+.friend-add{display:flex;gap:.6rem;flex-wrap:wrap}
+.at-wrap{position:relative;flex:1;min-width:200px}
+.at-wrap span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13.5px}
+.at-wrap input{padding-left:30px}
+.soc-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin:1.1rem 0 .5rem}
+.soc-actions{display:flex;gap:.4rem;flex-shrink:0}
+.soc-actions .btn{font-size:12px;padding:6px 12px}
+.rank-tools{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;font-size:12.5px;color:var(--text3)}
+.rank-tools span{white-space:nowrap}
+.rank-tools .ctl-select{flex:1;min-width:0;max-width:340px}
+.ctl-select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-size:12.5px;font-family:'Sora',sans-serif;outline:none}
+.rank-item.me{border-color:rgba(29,185,84,.35);background:var(--accent-dim)}
+.friend-modal{max-width:560px}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem}
+.tile{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:.8rem .95rem;min-width:0}
+.tile .tv{font-size:1.2rem;font-weight:700;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile .tl{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.tile .ts{font-size:11.5px;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-track{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.ev-track:last-child{border-bottom:none}
+.ev-track b{font-family:'Sora',sans-serif}
+.share-toggle{display:flex;align-items:center;gap:.6rem;font-size:12.5px;color:var(--text2);margin-top:.9rem;cursor:pointer}
+@media(max-width:720px){
+  .nav-badge{top:2px;right:calc(50% - 22px)}
+  .home-head{flex-wrap:wrap}
+  .home-head .section-title{flex-basis:100%;order:0}
+  .friend-add .btn{flex:1}
+}
 </style>
 </head>
 <body>
@@ -751,6 +794,7 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
     <button class="nav-link active" onclick="showSection('home',this)"><span class="nl-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span><span>Home</span></button>
     <button class="nav-link" onclick="showSection('library',this)"><span class="nl-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span>Biblioteca</span></button>
     <button class="nav-link" onclick="showSection('rankings',this)"><span class="nl-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V10M12 20V4M18 20v-7"/></svg></span><span>Rankings</span></button>
+    <button class="nav-link" id="nav-social" onclick="showSection('social',this)"><span class="nl-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span><span>Social</span><span class="nav-badge" id="socialBadge" style="display:none"></span></button>
     <button class="nav-link" onclick="showSection('favorites',this)"><span class="nl-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/></svg></span><span>Favoritos</span></button>
   </div>
   <div class="nav-search" id="navSearch">
@@ -779,8 +823,16 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
     <span class="gb-actions"><button class="btn btn-primary" onclick="openAuth('signup')" style="font-size:12.5px;padding:7px 14px">Criar conta</button><button class="link-btn" onclick="dismissGuestBanner()">Agora não</button></span>
   </div>
   <div class="stats-grid" id="statsGrid"></div>
-  <div class="section-title">Ouvidos recentemente</div>
+  <div class="home-head">
+    <div class="section-title" style="margin-bottom:0;flex:1">Ouvidos recentemente</div>
+    <span class="live" id="liveDot" style="display:none" title="Atualiza automaticamente"><i></i>ao vivo</span>
+    <div class="seg" id="homeSeg">
+      <button type="button" id="hseg-friends" onclick="setHomeTab('friends')">Amigos</button>
+      <button type="button" id="hseg-mine" onclick="setHomeTab('mine')">Meus</button>
+    </div>
+  </div>
   <div class="album-grid" id="recentGrid"></div>
+  <div class="album-grid" id="friendFeed" style="display:none"></div>
 </section>
 
 <!-- LIBRARY -->
@@ -838,6 +890,42 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
     </div>
   </div>
   <div class="rank-list" id="rankTracks"></div>
+</section>
+
+<!-- SOCIAL -->
+<section class="section" id="sec-social">
+  <h2 style="font-size:1.8rem;margin-bottom:1rem">Social</h2>
+  <div id="socialGuest" style="display:none">
+    <div class="empty-state"><div class="icon">♪</div><h3>Entre para usar o Social</h3><p>Crie uma conta para adicionar amigos e acompanhar o que eles estão ouvindo.</p><button class="btn btn-primary" onclick="openAuth('signup')" style="margin-top:1rem">Criar conta ou entrar</button></div>
+  </div>
+  <div id="socialMain" style="display:none">
+    <div id="socialUnavailable" class="share-box" style="display:none">O Social ainda não está ativado no banco de dados deste projeto. Quem administra o site precisa rodar o arquivo <b>supabase-social.sql</b> no Supabase.</div>
+    <div id="socialBody">
+      <div class="friend-add">
+        <div class="at-wrap"><span>@</span><input id="friendHandle" class="settings-input" maxlength="21" autocomplete="off" placeholder="usuário do seu amigo" onkeydown="if(event.key==='Enter')addFriend()"></div>
+        <button class="btn btn-primary" onclick="addFriend()">Adicionar amigo</button>
+      </div>
+      <div class="auth-msg" id="friendMsg"></div>
+      <div id="friendRequests"></div>
+      <div class="seg" id="socialSeg" style="margin:.4rem 0 1.25rem">
+        <button type="button" id="sseg-friends" onclick="setSocialTab('friends')">Amigos</button>
+        <button type="button" id="sseg-rank" onclick="setSocialTab('rank')">Ranking</button>
+      </div>
+      <div id="socialFriends"></div>
+      <div id="socialRank" style="display:none">
+        <div class="rank-tools"><span>Ordenar por</span>
+          <select id="rankMetric" class="ctl-select" onchange="SOC.metric=this.value;renderBoard()">
+            <option value="albums">Álbuns avaliados</option>
+            <option value="tracks">Músicas avaliadas</option>
+            <option value="avgHigh">Maior nota média</option>
+            <option value="avgLow">Menor nota média (mais exigente)</option>
+            <option value="recent">Atividade mais recente</option>
+          </select>
+        </div>
+        <div class="rank-list" id="friendRankList"></div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- FAVORITES -->
@@ -916,6 +1004,22 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
         <button class="btn btn-ghost" onclick="closeSettings();openWelcome()" style="font-size:13px">Ver guia de boas-vindas</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ─── PERFIL DO AMIGO ─── -->
+<div class="overlay" id="friendOverlay" onclick="if(event.target===this)closeFriend()">
+  <div class="st-modal friend-modal">
+    <button class="modal-close" onclick="closeFriend()">×</button>
+    <div id="friendBody"></div>
+  </div>
+</div>
+
+<!-- ─── AVALIAÇÃO DE UM AMIGO ─── -->
+<div class="overlay" id="evalOverlay" style="z-index:210" onclick="if(event.target===this)closeEval()">
+  <div class="st-modal">
+    <button class="modal-close" onclick="closeEval()">×</button>
+    <div id="evalBody"></div>
   </div>
 </div>
 
@@ -1045,6 +1149,7 @@ function showSection(id,btn){
   if(id==='library')renderLibrary();
   if(id==='rankings')renderRankings();
   if(id==='favorites')renderFavorites();
+  if(id==='social'){renderSocial();socialPoll()}
 }
 
 // ─── SCORE UTILS ─────────────────────────────────────────────
@@ -1152,6 +1257,7 @@ function phEl(album,size){
 function renderHome(){
   renderStats();
   updateGuestBanner();
+  applyHomeTab();
   const recent=[...DB.albums].sort((a,b)=>b.addedAt-a.addedAt).slice(0,8);
   const grid=document.getElementById('recentGrid');
   if(!recent.length){
@@ -1314,7 +1420,7 @@ function renderRankings(){
     const imgHtml=photo
       ?`<img src="${photo}" class="rank-img" style="border-radius:50%;object-fit:cover" alt="">`
       :`<div class="rank-img-ph" style="border-radius:50%">♪</div>`;
-    div.innerHTML=`<div class="rank-pos${i<3?' top':''}">${i+1}</div>${imgHtml}<div class="rank-info"><h4>${ar.name}</h4><p>${ar.albumCount} álbum${ar.albumCount!==1?'s':''} · ${ar.count} faixas</p></div><div class="rank-score" style="color:${scoreColor(ar.avg)}">${fmtNote(ar.avg)}</div>`;
+    div.innerHTML=`<div class="rank-pos${i<3?' top':''}">${i+1}</div>${imgHtml}<div class="rank-info"><h4>${ar.name}</h4><p>${ar.albumCount} ${ar.albumCount!==1?'álbuns':'álbum'} · ${ar.count} faixas</p></div><div class="rank-score" style="color:${scoreColor(ar.avg)}">${fmtNote(ar.avg)}</div>`;
     rar.appendChild(div);
     // async: load photo if not cached
     if(!photo&&photo!==null){
@@ -1593,6 +1699,7 @@ function renderTracks(album){
     setTimeout(()=>{saveBtn.textContent='✓ Salvar avaliação';saveBtn.style.background='';},2000);
     toast('Avaliação salva!');
     shareBox.reveal();
+    if(AUTH.user)syncNow();
   };
   cont.appendChild(saveBtn);
   const shareBox=buildShareBox(()=>shareAlbumText(album),()=>avgTracks(album)!==null&&!!album.savedAt);
@@ -2063,6 +2170,7 @@ function openStModal(trackData){
   saveBtn.textContent='✓ Salvar avaliação';
   saveBtn.onclick=()=>{
     track.note=noteInp.value;
+    track.savedAt=Date.now();
     if(!DB.standaloneTracks)DB.standaloneTracks=[];
     const idx=DB.standaloneTracks.findIndex(s=>s.spotifyTrackId===track.spotifyTrackId);
     if(idx>=0)DB.standaloneTracks[idx]=track;
@@ -2073,6 +2181,7 @@ function openStModal(trackData){
     setTimeout(()=>{saveBtn.textContent='✓ Salvar avaliação';saveBtn.style.background='';},2000);
     toast('Música avaliada!');
     stSaved=true;stShare.reveal();
+    if(AUTH.user)syncNow();
   };
   b.appendChild(saveBtn);
   let stSaved=!!existing;
@@ -2184,14 +2293,14 @@ function importData(e){
       const imported=JSON.parse(ev.target.result);
       if(!imported.albums||!Array.isArray(imported.albums))throw new Error('Formato inválido');
       const count=imported.albums.length;
-      if(!confirm(`Importar ${count} álbum${count!==1?'s':''}?
+      if(!confirm(`Importar ${count} ${count!==1?'álbuns':'álbum'}?
 
 Isso substituirá seus dados atuais.`)){e.target.value='';return}
       DB={...DB,...imported,spotifyClientId:DB.spotifyClientId||'',spotifyClientSecret:DB.spotifyClientSecret||'',spotifyToken:DB.spotifyToken||'',spotifyTokenExp:DB.spotifyTokenExp||0,sync:DB.sync,profile:AUTH.user?DB.profile:(imported.profile||DB.profile)};
       ensureSyncState();
       save();renderHome();
       if(document.getElementById('sec-library').classList.contains('active'))renderLibrary();
-      toast(`${count} álbum${count!==1?'s':''} importado${count!==1?'s':''}!`);
+      toast(`${count} ${count!==1?'álbuns':'álbum'} importado${count!==1?'s':''}!`);
     }catch(err){
       toast('Arquivo inválido.');
     }
@@ -2445,6 +2554,7 @@ async function onSignedIn(sess,opts){
   offerMigration();
   await syncNow();
   refreshViews();
+  socialStart();
   if(!DB.profile||!DB.profile.username)openLogin(true,{complete:true});
   else if(opts.isNew&&!DB.profile.avatar)openLogin(true,{complete:true});
   else showWelcomeIfFirst();
@@ -2457,6 +2567,7 @@ async function loadServerProfile(){
     p=created&&created[0];
   }
   if(p)DB.profile={name:p.display_name||p.username||(AUTH.user.email||'').split('@')[0],username:p.username||'',avatar:p.avatar||null};
+  try{const r=await sbAuthed('/rest/v1/profiles?select=share_enabled&id=eq.'+AUTH.user.id);if(r&&r[0]&&DB.profile)DB.profile.share=r[0].share_enabled!==false}catch(e){}
   save(true);
 }
 async function signOut(){
@@ -2471,6 +2582,7 @@ async function signOut(){
 function signOutLocal(msg){
   const id=AUTH.user&&AUTH.user.id;
   clearTimeout(syncTimer);
+  socialStop();
   clearSession();
   if(id){try{localStorage.removeItem('myspotlist_db_'+id)}catch(e){}}
   try{localStorage.setItem('myspotlist_mode','none')}catch(e){}
@@ -2532,6 +2644,7 @@ function refreshAccountSection(){
       ${n?`<button class="btn btn-ghost" onclick="importGuestData()" style="font-size:13px">Importar dados deste navegador (${n})</button>`:''}
       <button class="btn btn-ghost" onclick="signOut()" style="font-size:13px">Sair</button>
     </div>
+    <label class="share-toggle"><input type="checkbox" ${DB.profile&&DB.profile.share===false?'':'checked'} onchange="toggleShare(this.checked)"><span>Compartilhar minhas avaliações salvas com amigos</span></label>
     <button class="link-btn danger" onclick="deleteAccount()" style="margin-top:.9rem">Excluir minha conta</button>`;
 }
 
@@ -2601,7 +2714,10 @@ function applyRemoteRow(type,r,ch){
     if(upI>=0)ups.splice(upI,1);
     return true;
   }
-  if(!local){list.push(rData);S[type][k]=itemHash(rData);return true}
+  if(!local){
+    if(delI>=0)return false;
+    list.push(rData);S[type][k]=itemHash(rData);return true;
+  }
   if(upI<0&&delI<0){
     const rh=itemHash(rData);
     if(itemHash(local)===rh){S[type][k]=rh;return false}
@@ -2652,6 +2768,7 @@ async function syncNow(manual){
     const ch=collectLocalChanges();
     const changed=await pullRemote(ch);
     await pushLocal(ch);
+    try{await publishPending()}catch(e){console.error('publicar',e);if(e.authFailed)throw e}
     DB.sync.lastSync=Date.now();
     save(true);
     setSyncState('ok');
@@ -2708,6 +2825,495 @@ async function initApp(){
   const g=loadDB('myspotlist_db');
   if(mode==='guest'||(mode!=='none'&&g.profile)){enterGuest();return}
   openAuth('login',pendingMsg);
+}
+
+// ─── SOCIAL ───────────────────────────────────────────────────
+const SOC={friends:[],incoming:[],outgoing:[],profiles:{},feed:[],board:[],unavailable:false,polling:false,timer:null,primed:false,lastTs:0,tab:'friends',metric:'albums'};
+function socReset(){SOC.friends=[];SOC.incoming=[];SOC.outgoing=[];SOC.profiles={};SOC.feed=[];SOC.board=[];SOC.unavailable=false;SOC.primed=false;SOC.lastTs=0;SOC.polling=false}
+const plAlbum=n=>n+' '+(n===1?'álbum':'álbuns');
+const plTrack=n=>n+' '+(n===1?'música':'músicas');
+const isRatedTrack=t=>t.score!==''&&t.score!==null&&t.score!==undefined;
+const r2=n=>Math.round(n*100)/100;
+const nameOf=p=>(p&&(p.display_name||p.username))||'Amigo';
+function avEl(p,cls){
+  const el=document.createElement('span');el.className='av'+(cls?' '+cls:'');
+  setAvatarEl(el,{name:nameOf(p),avatar:p&&p.avatar});return el;
+}
+function timeAgo(ts){
+  const s=Math.max(0,(Date.now()-new Date(ts).getTime())/1000);
+  if(s<45)return 'agora';
+  if(s<3600)return 'há '+Math.max(1,Math.round(s/60))+' min';
+  if(s<86400)return 'há '+Math.round(s/3600)+' h';
+  const d=Math.round(s/86400);
+  if(d===1)return 'ontem';
+  if(d<30)return 'há '+d+' dias';
+  return new Date(ts).toLocaleDateString('pt-BR');
+}
+function isMissingTable(e){return !!e&&(e.status===404||!!(e.data&&['PGRST205','42P01','PGRST202','42703'].includes(e.data.code)))}
+const socRpc=(name,body)=>sbAuthed('/rest/v1/rpc/'+name,{method:'POST',body:body||{}});
+const inList=keys=>'in.('+keys.map(k=>'"'+String(k).replace(/"/g,'')+'"').join(',')+')';
+
+// ── publicar o que a pessoa SALVOU (só amigos aceitos enxergam) ──
+const trackStamp=t=>t.savedAt||t.addedAt||1;
+function trackInSavedAlbum(t){return !!t.spotifyTrackId&&DB.albums.some(a=>a.savedAt&&a.tracks.some(x=>x.spotifyTrackId===t.spotifyTrackId&&isRatedTrack(x)))}
+async function publishPending(){
+  if(!AUTH.user||SOC.unavailable)return;
+  ensureSyncState();
+  const S=DB.sync;if(!S.pub)S.pub={albums:{},tracks:{}};
+  const pendA=[],delA=[],pendT=[],delT=[];
+  const seenA=new Set(),seenT=new Set();
+  DB.albums.forEach(a=>{
+    const k=albumKey(a);seenA.add(k);
+    const rated=a.tracks.filter(isRatedTrack);
+    if(a.savedAt&&rated.length){if(S.pub.albums[k]!==a.savedAt)pendA.push(a)}
+    else if(S.pub.albums[k]!==undefined)delA.push(k);
+  });
+  Object.keys(S.pub.albums).forEach(k=>{if(!seenA.has(k)&&!delA.includes(k))delA.push(k)});
+  DB.standaloneTracks.forEach(t=>{
+    const k=trackKey(t);seenT.add(k);
+    if(isRatedTrack(t)&&!trackInSavedAlbum(t)){if(S.pub.tracks[k]!==trackStamp(t))pendT.push(t)}
+    else if(S.pub.tracks[k]!==undefined)delT.push(k);
+  });
+  Object.keys(S.pub.tracks).forEach(k=>{if(!seenT.has(k)&&!delT.includes(k))delT.push(k)});
+  if(!pendA.length&&!delA.length&&!pendT.length&&!delT.length)return;
+  let share=true;
+  try{
+    const r=await sbAuthed('/rest/v1/profiles?select=share_enabled&id=eq.'+AUTH.user.id);
+    share=!(r&&r[0]&&r[0].share_enabled===false);
+  }catch(e){if(isMissingTable(e)){SOC.unavailable=true;return}throw e}
+  if(DB.profile)DB.profile.share=share;
+  if(!share)return;
+  const me=AUTH.user.id;
+  const up=async(table,conflict,rows)=>{
+    for(let i=0;i<rows.length;i+=20)
+      await sbAuthed(`/rest/v1/${table}?on_conflict=${conflict}`,{method:'POST',body:rows.slice(i,i+20),headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});
+  };
+  const del=async(table,keys)=>{
+    for(let i=0;i<keys.length;i+=30)
+      await sbAuthed(`/rest/v1/${table}?user_id=eq.${me}&key=${inList(keys.slice(i,i+30))}`,{method:'DELETE'});
+  };
+  try{
+    if(pendA.length){
+      const rows=pendA.map(a=>{
+        const rated=a.tracks.filter(isRatedTrack);
+        const sum=rated.reduce((s,t)=>s+parseFloat(t.score),0);
+        return {user_id:me,key:albumKey(a),title:a.title,artist:a.artist,cover:a.cover||null,year:a.year||null,
+          avg:r2(sum/rated.length),rated_tracks:rated.length,total_tracks:a.tracks.length,score_sum:r2(sum),
+          tracks:rated.map(t=>({n:t.name,s:parseFloat(t.score)})),saved_at:new Date(a.savedAt).toISOString()};
+      });
+      await up('shared_albums','user_id,key',rows);
+      pendA.forEach(a=>{S.pub.albums[albumKey(a)]=a.savedAt});
+    }
+    if(pendT.length){
+      const rows=pendT.map(t=>({user_id:me,key:trackKey(t),name:t.name,artist:t.artist,album_title:t.albumTitle||null,cover:t.cover||null,
+        score:r2(parseFloat(t.score)),saved_at:new Date(trackStamp(t)).toISOString()}));
+      await up('shared_tracks','user_id,key',rows);
+      pendT.forEach(t=>{S.pub.tracks[trackKey(t)]=trackStamp(t)});
+    }
+    if(delA.length){await del('shared_albums',delA);delA.forEach(k=>{delete S.pub.albums[k]})}
+    if(delT.length){await del('shared_tracks',delT);delT.forEach(k=>{delete S.pub.tracks[k]})}
+  }catch(e){if(isMissingTable(e)){SOC.unavailable=true;return}throw e}
+  save(true);
+}
+async function toggleShare(on){
+  try{
+    await sbAuthed('/rest/v1/profiles?id=eq.'+AUTH.user.id,{method:'PATCH',body:{share_enabled:on},headers:{Prefer:'return=minimal'}});
+    if(!on){
+      await sbAuthed('/rest/v1/shared_albums?user_id=eq.'+AUTH.user.id,{method:'DELETE'});
+      await sbAuthed('/rest/v1/shared_tracks?user_id=eq.'+AUTH.user.id,{method:'DELETE'});
+      ensureSyncState();DB.sync.pub={albums:{},tracks:{}};
+    }
+    if(DB.profile)DB.profile.share=on;
+    save(true);
+    if(on)syncNow();
+    toast(on?'Compartilhamento ligado.':'Suas avaliações não aparecem mais para os amigos.');
+  }catch(e){toast(e.message||'Não foi possível alterar agora.')}
+  refreshAccountSection();
+}
+
+// ── carregar amigos, feed e ranking ──
+async function loadFriendships(){
+  const rows=(await socRpc('my_friendships'))||[];
+  SOC.friends=[];SOC.incoming=[];SOC.outgoing=[];
+  rows.forEach(r=>{
+    SOC.profiles[r.user_id]={username:r.username,display_name:r.display_name,avatar:r.avatar};
+    const it={fid:r.id,user_id:r.user_id,since:r.created_at};
+    if(r.status==='accepted')SOC.friends.push(it);
+    else if(r.incoming)SOC.incoming.push(it);
+    else SOC.outgoing.push(it);
+  });
+}
+async function loadFeed(){
+  const me=AUTH.user.id;
+  const [al,tr]=await Promise.all([
+    sbAuthed(`/rest/v1/shared_albums?select=user_id,key,title,artist,cover,avg,rated_tracks,total_tracks,saved_at&user_id=neq.${me}&order=saved_at.desc&limit=30`),
+    sbAuthed(`/rest/v1/shared_tracks?select=user_id,key,name,artist,album_title,cover,score,saved_at&user_id=neq.${me}&order=saved_at.desc&limit=30`)
+  ]);
+  const items=[
+    ...(al||[]).map(r=>({kind:'album',user_id:r.user_id,key:r.key,title:r.title,artist:r.artist,cover:r.cover,score:parseFloat(r.avg),rated:r.rated_tracks,total:r.total_tracks,saved_at:r.saved_at})),
+    ...(tr||[]).map(r=>({kind:'track',user_id:r.user_id,key:r.key,title:r.name,artist:r.artist,album_title:r.album_title,cover:r.cover,score:parseFloat(r.score),saved_at:r.saved_at}))
+  ];
+  items.sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
+  SOC.feed=items.slice(0,30);
+}
+async function loadBoard(){SOC.board=(await socRpc('friend_leaderboard'))||[]}
+function isSocialVisible(){const s=document.getElementById('sec-social');return !!s&&s.classList.contains('active')}
+async function socialPoll(){
+  if(!AUTH.user||SOC.polling)return;
+  SOC.polling=true;
+  try{
+    await loadFriendships();
+    if(SOC.friends.length)await loadFeed();else SOC.feed=[];
+    if(isSocialVisible()||SOC.tab==='rank')await loadBoard();
+    SOC.unavailable=false;
+    const newest=SOC.feed.length?new Date(SOC.feed[0].saved_at).getTime():0;
+    if(SOC.primed){
+      const fresh=SOC.feed.filter(x=>new Date(x.saved_at).getTime()>SOC.lastTs);
+      if(fresh.length===1)toast(nameOf(SOC.profiles[fresh[0].user_id])+' avaliou "'+fresh[0].title+'" ('+fmtNote(fresh[0].score)+')');
+      else if(fresh.length>1)toast(fresh.length+' novas avaliações dos seus amigos');
+    }
+    if(newest>SOC.lastTs)SOC.lastTs=newest;
+    SOC.primed=true;
+  }catch(e){
+    if(e.authFailed){signOutLocal('Sua sessão expirou. Entre novamente.');SOC.polling=false;return}
+    if(isMissingTable(e))SOC.unavailable=true;else console.error('social',e);
+  }finally{SOC.polling=false}
+  updateSocialBadge();renderHomeFeed();
+  if(isSocialVisible())renderSocial();
+}
+function socialStart(){
+  socReset();
+  socialPoll();
+  clearInterval(SOC.timer);
+  SOC.timer=setInterval(()=>{if(!document.hidden)socialPoll()},20000);
+}
+function socialStop(){
+  clearInterval(SOC.timer);SOC.timer=null;socReset();
+  updateSocialBadge();
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AUTH.user)socialPoll()});
+function updateSocialBadge(){
+  const b=document.getElementById('socialBadge');if(!b)return;
+  const n=SOC.incoming.length;
+  b.textContent=n>9?'9+':String(n);b.style.display=n?'flex':'none';
+}
+
+// ── Home: abas Amigos | Meus ──
+function getHomeTab(){
+  let t=null;try{t=localStorage.getItem('myspotlist_hometab')}catch(e){}
+  if(t==='friends'||t==='mine')return t;
+  return (AUTH.user&&SOC.friends.length)?'friends':'mine';
+}
+function setHomeTab(t){try{localStorage.setItem('myspotlist_hometab',t)}catch(e){}applyHomeTab()}
+function applyHomeTab(){
+  const t=getHomeTab();
+  const g=document.getElementById('recentGrid'),f=document.getElementById('friendFeed');
+  if(!g||!f)return;
+  g.style.display=t==='mine'?'':'none';
+  f.style.display=t==='friends'?'':'none';
+  document.getElementById('hseg-friends').classList.toggle('active',t==='friends');
+  document.getElementById('hseg-mine').classList.toggle('active',t==='mine');
+  document.getElementById('liveDot').style.display=(t==='friends'&&AUTH.user&&SOC.friends.length)?'inline-flex':'none';
+  if(t==='friends')renderHomeFeed();
+}
+function goSocial(){showSection('social',document.getElementById('nav-social'))}
+function feedMsg(text,btn,fn){
+  return `<div class="empty-state" style="grid-column:1/-1"><div class="icon">♪</div><h3>${esc(text)}</h3>${btn?`<button class="btn btn-primary" onclick="${fn}" style="margin-top:1rem">${esc(btn)}</button>`:''}</div>`;
+}
+function rankImg(url){
+  if(url){const i=document.createElement('img');i.src=url;i.alt='';i.className='rank-img';i.onerror=()=>{const d=document.createElement('div');d.className='rank-img-ph';d.textContent='♪';i.replaceWith(d)};return i}
+  const d=document.createElement('div');d.className='rank-img-ph';d.textContent='♪';return d;
+}
+function feedCard(it){
+  const p=SOC.profiles[it.user_id]||{};
+  const card=document.createElement('div');card.className='album-card feed-card';
+  card.onclick=()=>openEval(it);
+  card.appendChild(coverEl({cover:it.cover,title:it.title}));
+  if(it.kind==='track'){const b=document.createElement('span');b.className='feed-badge';b.textContent='música';card.appendChild(b)}
+  const info=document.createElement('div');info.className='album-info';
+  info.innerHTML=`<div class="album-title">${esc(it.title)}</div><div class="album-artist">${esc(it.artist)}</div>
+    <div class="feed-meta"><span class="feed-who">${esc(nameOf(p))}</span><span class="feed-when">· ${timeAgo(it.saved_at)}</span></div>
+    <div class="album-rating" style="color:${scoreColor(it.score)}">${fmtNote(it.score)}</div>`;
+  info.querySelector('.feed-meta').prepend(avEl(p,'av-sm'));
+  card.appendChild(info);
+  return card;
+}
+function renderHomeFeed(){
+  const box=document.getElementById('friendFeed');if(!box)return;
+  applyHomeTabVisuals();
+  box.innerHTML='';
+  if(!AUTH.user){box.innerHTML=feedMsg('Crie uma conta para ver o que seus amigos estão ouvindo.','Criar conta ou entrar',"openAuth('signup')");return}
+  if(SOC.unavailable){box.innerHTML=feedMsg('O Social ainda não foi ativado neste projeto.');return}
+  if(!SOC.primed){box.innerHTML='<div class="spinner" style="grid-column:1/-1"></div>';return}
+  if(!SOC.friends.length){box.innerHTML=feedMsg('Você ainda não tem amigos no MySpotList.','Adicionar amigos','goSocial()');return}
+  if(!SOC.feed.length){box.innerHTML=feedMsg('Seus amigos ainda não salvaram nenhuma avaliação.');return}
+  SOC.feed.forEach(it=>box.appendChild(feedCard(it)));
+}
+function applyHomeTabVisuals(){
+  const t=getHomeTab();
+  const dot=document.getElementById('liveDot');
+  if(dot)dot.style.display=(t==='friends'&&AUTH.user&&SOC.friends.length)?'inline-flex':'none';
+  const g=document.getElementById('recentGrid'),f=document.getElementById('friendFeed');
+  if(g&&f){g.style.display=t==='mine'?'':'none';f.style.display=t==='friends'?'':'none'}
+  const a=document.getElementById('hseg-friends'),b=document.getElementById('hseg-mine');
+  if(a&&b){a.classList.toggle('active',t==='friends');b.classList.toggle('active',t==='mine')}
+}
+
+// ── aba Social ──
+function setSocialTab(t){
+  SOC.tab=t;
+  if(t==='rank'&&!SOC.board.length)socialPoll();
+  renderSocial();
+}
+function setFriendMsg(text,cls){const el=document.getElementById('friendMsg');el.textContent=text||'';el.className='auth-msg'+(cls?' '+cls:'')}
+function renderSocial(){
+  const guest=!AUTH.user;
+  document.getElementById('socialGuest').style.display=guest?'block':'none';
+  document.getElementById('socialMain').style.display=guest?'none':'block';
+  if(guest)return;
+  document.getElementById('socialUnavailable').style.display=SOC.unavailable?'block':'none';
+  document.getElementById('socialBody').style.display=SOC.unavailable?'none':'block';
+  if(SOC.unavailable)return;
+  renderRequests();
+  document.getElementById('sseg-friends').classList.toggle('active',SOC.tab==='friends');
+  document.getElementById('sseg-rank').classList.toggle('active',SOC.tab==='rank');
+  document.getElementById('socialFriends').style.display=SOC.tab==='friends'?'block':'none';
+  document.getElementById('socialRank').style.display=SOC.tab==='rank'?'block':'none';
+  document.getElementById('rankMetric').value=SOC.metric;
+  if(SOC.tab==='friends')renderFriendList();else renderBoard();
+}
+function personRow(uid,subHtml,rightEl,onClick,extraCls){
+  const p=SOC.profiles[uid]||{};
+  const row=document.createElement('div');row.className='rank-item'+(extraCls?' '+extraCls:'');
+  if(onClick){row.style.cursor='pointer';row.onclick=onClick}
+  row.appendChild(avEl(p,'av-lg'));
+  const info=document.createElement('div');info.className='rank-info';
+  info.innerHTML=`<h4>${esc(nameOf(p))}${p.username?` <span style="color:var(--text3);font-weight:400">@${esc(p.username)}</span>`:''}</h4><p>${subHtml}</p>`;
+  row.appendChild(info);
+  if(rightEl)row.appendChild(rightEl);
+  return row;
+}
+function actionBtns(list){
+  const w=document.createElement('div');w.className='soc-actions';
+  list.forEach(([label,cls,fn])=>{const b=document.createElement('button');b.className='btn '+cls;b.textContent=label;b.onclick=ev=>{ev.stopPropagation();fn()};w.appendChild(b)});
+  return w;
+}
+function renderRequests(){
+  const box=document.getElementById('friendRequests');box.innerHTML='';
+  if(SOC.incoming.length){
+    const t=document.createElement('div');t.className='soc-title';t.textContent='Pedidos recebidos ('+SOC.incoming.length+')';box.appendChild(t);
+    const l=document.createElement('div');l.className='rank-list';
+    SOC.incoming.forEach(r=>l.appendChild(personRow(r.user_id,'quer ser seu amigo',actionBtns([['Aceitar','btn-primary',()=>respondRequest(r.fid,true)],['Recusar','btn-ghost',()=>respondRequest(r.fid,false)]]))));
+    box.appendChild(l);
+  }
+  if(SOC.outgoing.length){
+    const t=document.createElement('div');t.className='soc-title';t.textContent='Pedidos enviados';box.appendChild(t);
+    const l=document.createElement('div');l.className='rank-list';
+    SOC.outgoing.forEach(r=>l.appendChild(personRow(r.user_id,'aguardando resposta',actionBtns([['Cancelar','btn-ghost',()=>cancelRequest(r.fid)]]))));
+    box.appendChild(l);
+  }
+}
+function renderFriendList(){
+  const box=document.getElementById('socialFriends');box.innerHTML='';
+  if(!SOC.friends.length){box.innerHTML='<div class="empty-state"><div class="icon">♪</div><h3>Nenhum amigo ainda</h3><p>Digite o @ de um amigo acima e envie um pedido.</p></div>';return}
+  const stats={};SOC.board.forEach(b=>{stats[b.user_id]=b});
+  const l=document.createElement('div');l.className='rank-list';
+  SOC.friends.forEach(f=>{
+    const s=stats[f.user_id];
+    const sub=s?`${s.albums_rated} ${s.albums_rated!==1?'álbuns':'álbum'} · ${s.tracks_rated} música${s.tracks_rated!==1?'s':''}${s.avg_score!=null?' · média '+fmtNote(s.avg_score):''}`:'toque para ver o perfil';
+    l.appendChild(personRow(f.user_id,sub,null,()=>openFriend(f.user_id)));
+  });
+  box.appendChild(l);
+}
+function renderBoard(){
+  const box=document.getElementById('friendRankList');box.innerHTML='';
+  const me=AUTH.user.id;
+  let rows=SOC.board.map(b=>({...b,albums_rated:+b.albums_rated,tracks_rated:+b.tracks_rated,avg_score:b.avg_score==null?null:parseFloat(b.avg_score)}));
+  const m=SOC.metric;
+  if(m==='avgHigh'||m==='avgLow')rows=rows.filter(r=>r.avg_score!==null);
+  const cmp={
+    albums:(a,b)=>b.albums_rated-a.albums_rated||b.tracks_rated-a.tracks_rated,
+    tracks:(a,b)=>b.tracks_rated-a.tracks_rated||b.albums_rated-a.albums_rated,
+    avgHigh:(a,b)=>b.avg_score-a.avg_score||b.tracks_rated-a.tracks_rated,
+    avgLow:(a,b)=>a.avg_score-b.avg_score||b.tracks_rated-a.tracks_rated,
+    recent:(a,b)=>(new Date(b.last_activity||0))-(new Date(a.last_activity||0))
+  }[m];
+  rows.sort(cmp);
+  if(!rows.length){box.innerHTML='<div class="empty-state"><h3>Ainda sem avaliações para comparar</h3></div>';return}
+  rows.forEach((r,i)=>{
+    SOC.profiles[r.user_id]=SOC.profiles[r.user_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar};
+    const val={
+      albums:`${r.albums_rated} ${r.albums_rated!==1?'álbuns':'álbum'}`,
+      tracks:`${r.tracks_rated} música${r.tracks_rated!==1?'s':''}`,
+      avgHigh:fmtNote(r.avg_score),avgLow:fmtNote(r.avg_score),
+      recent:r.last_activity?timeAgo(r.last_activity):'—'
+    }[m];
+    const isMe=r.user_id===me;
+    const right=document.createElement('div');right.className='rank-score';right.style.fontSize='1rem';right.style.color=(m==='avgHigh'||m==='avgLow')?scoreColor(r.avg_score):'var(--accent)';right.textContent=val;
+    const sub=`${plAlbum(r.albums_rated)} · ${plTrack(r.tracks_rated)}`;
+    const row=personRow(r.user_id,sub,right,isMe?null:()=>openFriend(r.user_id),isMe?'me':'');
+    const pos=document.createElement('div');pos.className='rank-pos'+(i<3?' top':'');pos.textContent=i+1;
+    row.prepend(pos);
+    if(isMe){const h=row.querySelector('h4');h.insertAdjacentHTML('beforeend',' <span style="color:var(--accent);font-size:11px">(você)</span>')}
+    box.appendChild(row);
+  });
+}
+
+// ── ações de amizade ──
+async function addFriend(){
+  const inp=document.getElementById('friendHandle');
+  const h=(inp.value||'').trim().replace(/^@+/,'').toLowerCase();
+  if(!USERNAME_RE.test(h)){setFriendMsg('Digite o @ do seu amigo (3 a 20 caracteres: letras, números e _).','err');return}
+  setFriendMsg('');
+  try{
+    const r=await socRpc('send_friend_request',{handle:h});
+    const msgs={
+      sent:['Pedido enviado para @'+h+'. Quando ele aceitar, vocês aparecem aqui.','ok'],
+      accepted:['Vocês agora são amigos!','ok'],
+      already_friends:['Você e @'+h+' já são amigos.',''],
+      already_sent:['Você já enviou um pedido para @'+h+'.',''],
+      not_found:['Não encontramos ninguém com o usuário @'+h+'.','err'],
+      self:['Esse é o seu próprio usuário.','err'],
+      limit:['Você tem muitos pedidos pendentes. Aguarde algumas respostas.','err']
+    };
+    const m=msgs[r]||['Pronto.',''];
+    setFriendMsg(m[0],m[1]);
+    if(r==='sent'||r==='accepted')inp.value='';
+    SOC.polling=false;await socialPoll();
+  }catch(e){
+    if(isMissingTable(e)){SOC.unavailable=true;renderSocial();return}
+    setFriendMsg(e.message||'Não foi possível enviar o pedido.','err');
+  }
+}
+async function respondRequest(fid,accept){
+  try{await socRpc('respond_friend_request',{request_id:fid,accept});toast(accept?'Amizade aceita!':'Pedido recusado.')}
+  catch(e){toast(e.message||'Erro ao responder.')}
+  SOC.polling=false;await socialPoll();
+}
+async function cancelRequest(fid){
+  try{await socRpc('remove_friendship',{friendship_id:fid})}catch(e){toast(e.message||'Erro ao cancelar.')}
+  SOC.polling=false;await socialPoll();
+}
+async function removeFriend(fid,uid){
+  const p=SOC.profiles[uid]||{};
+  if(!confirm('Remover '+nameOf(p)+' dos seus amigos?\n\nVocês deixam de ver as avaliações um do outro.'))return;
+  try{await socRpc('remove_friendship',{friendship_id:fid});closeFriend();toast('Amizade desfeita.')}
+  catch(e){toast(e.message||'Erro ao remover.')}
+  SOC.polling=false;await socialPoll();
+}
+
+// ── perfil de um amigo ──
+function closeFriend(){document.getElementById('friendOverlay').classList.remove('open')}
+function computeFriendStats(al,tr){
+  const num=x=>parseFloat(x)||0;
+  const tracksN=al.reduce((s,a)=>s+a.rated_tracks,0)+tr.length;
+  const sum=al.reduce((s,a)=>s+num(a.score_sum),0)+tr.reduce((s,t)=>s+num(t.score),0);
+  const cnt={};
+  al.forEach(a=>{cnt[a.artist]=(cnt[a.artist]||0)+a.rated_tracks});
+  tr.forEach(t=>{cnt[t.artist]=(cnt[t.artist]||0)+1});
+  const topCount=Object.entries(cnt).sort((x,y)=>y[1]-x[1]||x[0].localeCompare(y[0]))[0];
+  const by={};al.forEach(a=>{(by[a.artist]=by[a.artist]||[]).push(num(a.avg))});
+  const rank=Object.entries(by).map(([name,v])=>({name,avg:v.reduce((s,x)=>s+x,0)/v.length,albums:v.length}))
+    .sort((x,y)=>y.avg-x.avg||y.albums-x.albums||x.name.localeCompare(y.name));
+  const recent=[
+    ...al.map(a=>({kind:'album',key:a.key,title:a.title,artist:a.artist,cover:a.cover,score:num(a.avg),saved_at:a.saved_at})),
+    ...tr.map(t=>({kind:'track',key:t.key,title:t.name,artist:t.artist,album_title:t.album_title,cover:t.cover,score:num(t.score),saved_at:t.saved_at}))
+  ].sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at)).slice(0,10);
+  return {albums:al.length,tracks:tracksN,avg:tracksN?sum/tracksN:null,topCount,top1:rank[0]||null,recent};
+}
+async function openFriend(uid){
+  const body=document.getElementById('friendBody');
+  body.innerHTML='<div class="spinner" style="margin:3rem auto"></div>';
+  document.getElementById('friendOverlay').classList.add('open');
+  try{
+    const [al,tr]=await Promise.all([
+      sbAuthed(`/rest/v1/shared_albums?select=key,title,artist,cover,year,avg,rated_tracks,total_tracks,score_sum,saved_at&user_id=eq.${uid}&order=saved_at.desc&limit=1000`),
+      sbAuthed(`/rest/v1/shared_tracks?select=key,name,artist,album_title,cover,score,saved_at&user_id=eq.${uid}&order=saved_at.desc&limit=1000`)
+    ]);
+    renderFriendProfile(uid,computeFriendStats(al||[],tr||[]));
+  }catch(e){body.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao abrir o perfil.')+'</div>'}
+}
+function renderFriendProfile(uid,st){
+  const p=SOC.profiles[uid]||{};
+  const f=SOC.friends.find(x=>x.user_id===uid);
+  const body=document.getElementById('friendBody');body.innerHTML='';
+  const head=document.createElement('div');head.className='st-header';
+  head.appendChild(avEl(p,'av-lg'));
+  const hi=document.createElement('div');hi.style.cssText='flex:1;min-width:0';
+  hi.innerHTML=`<div style="font-size:1.15rem;font-weight:600">${esc(nameOf(p))}</div><div style="color:var(--accent);font-size:.9rem">${p.username?'@'+esc(p.username):''}</div>`;
+  head.appendChild(hi);body.appendChild(head);
+  const b=document.createElement('div');b.className='st-body';
+  const tile=(v,l,s)=>`<div class="tile"><div class="tv">${esc(v)}</div><div class="tl">${esc(l)}</div>${s?`<div class="ts">${esc(s)}</div>`:''}</div>`;
+  b.innerHTML=`<div class="tiles">
+    ${tile(String(st.albums),'Álbuns avaliados')}
+    ${tile(String(st.tracks),'Músicas avaliadas')}
+    ${tile(fmtNote(st.avg),'Nota média das músicas')}
+    ${tile(st.recent.length?timeAgo(st.recent[0].saved_at):'—','Última avaliação')}
+    ${tile(st.topCount?st.topCount[0]:'—','Artista mais avaliado',st.topCount?st.topCount[1]+' música'+(st.topCount[1]!==1?'s':''):'')}
+    ${tile(st.top1?st.top1.name:'—','Nº 1 do ranking',st.top1?'média '+fmtNote(st.top1.avg)+' · '+st.top1.albums+' '+(st.top1.albums!==1?'álbuns':'álbum'):'')}
+  </div>`;
+  const t=document.createElement('div');t.className='soc-title';t.textContent='Avaliações recentes';b.appendChild(t);
+  const l=document.createElement('div');l.className='rank-list';
+  if(!st.recent.length)l.innerHTML='<div style="color:var(--text3);font-size:13px;padding:.4rem">Ainda não salvou nenhuma avaliação.</div>';
+  st.recent.forEach(it=>{
+    const row=document.createElement('div');row.className='rank-item';row.style.cursor='pointer';
+    row.onclick=()=>openEval({...it,user_id:uid});
+    row.appendChild(rankImg(it.cover));
+    const info=document.createElement('div');info.className='rank-info';
+    info.innerHTML=`<h4>${esc(it.title)}</h4><p>${esc(it.artist)} · ${timeAgo(it.saved_at)}</p>`;
+    row.appendChild(info);
+    const sc=document.createElement('div');sc.className='rank-score';sc.style.color=scoreColor(it.score);sc.textContent=fmtNote(it.score);
+    row.appendChild(sc);l.appendChild(row);
+  });
+  b.appendChild(l);
+  if(f){
+    const rm=document.createElement('button');rm.className='link-btn danger';rm.style.marginTop='1.2rem';rm.textContent='Remover amigo';
+    rm.onclick=()=>removeFriend(f.fid,uid);b.appendChild(rm);
+  }
+  body.appendChild(b);
+}
+
+// ── detalhe de uma avaliação de amigo ──
+function closeEval(){document.getElementById('evalOverlay').classList.remove('open')}
+async function openEval(it){
+  const p=SOC.profiles[it.user_id]||{};
+  const body=document.getElementById('evalBody');body.innerHTML='';
+  const head=document.createElement('div');head.className='st-header';
+  const cv=coverEl({cover:it.cover,title:it.title});cv.className=it.cover?'st-cover':'st-cover-ph';
+  head.appendChild(cv);
+  const hi=document.createElement('div');hi.style.cssText='flex:1;min-width:0';
+  hi.innerHTML=`<div style="font-size:1.1rem;font-weight:600;line-height:1.25">${esc(it.title)}</div>
+    <div style="color:var(--accent);font-size:.88rem;margin:.15rem 0 .45rem">${esc(it.artist)}</div>
+    <div class="feed-meta" style="margin:0"><span class="feed-who">${esc(nameOf(p))}</span><span class="feed-when">· ${timeAgo(it.saved_at)}</span></div>`;
+  hi.querySelector('.feed-meta').prepend(avEl(p,'av-sm'));
+  const sc=document.createElement('div');sc.style.cssText=`font-size:2rem;font-weight:700;color:${scoreColor(it.score)}`;sc.textContent=fmtNote(it.score);
+  head.appendChild(hi);head.appendChild(sc);body.appendChild(head);
+  const b=document.createElement('div');b.className='st-body';
+  const list=document.createElement('div');b.appendChild(list);
+  const actions=document.createElement('div');actions.style.marginTop='1rem';b.appendChild(actions);
+  body.appendChild(b);
+  document.getElementById('evalOverlay').classList.add('open');
+  if(it.kind==='album'){
+    list.innerHTML='<div class="spinner" style="margin:1rem auto"></div>';
+    try{
+      const r=await sbAuthed(`/rest/v1/shared_albums?select=tracks&user_id=eq.${it.user_id}&key=eq.${encodeURIComponent(it.key)}`);
+      const tr=(r&&r[0]&&r[0].tracks)||[];
+      list.innerHTML=tr.length?tr.map(t=>`<div class="ev-track"><span>${esc(t.n)}</span><b style="color:${scoreColor(t.s)}">${fmtNote(t.s)}</b></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Sem detalhes das faixas.</div>';
+    }catch(e){list.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao carregar as faixas.')+'</div>'}
+    if(String(it.key).startsWith('sp_')){
+      const spId=String(it.key).slice(3);
+      const mine=DB.albums.find(a=>a.spotifyId===spId);
+      const btn=document.createElement('button');btn.className='btn '+(mine?'btn-ghost':'btn-primary');btn.style.width='100%';
+      btn.textContent=mine?'Abrir na minha biblioteca':'Adicionar à minha biblioteca para avaliar também';
+      btn.onclick=()=>{closeEval();closeFriend();if(mine)openDetail(mine.id);else importAlbum(spId)};
+      actions.appendChild(btn);
+    }
+  }else{
+    list.innerHTML=`<div style="color:var(--text3);font-size:13px">${esc(it.album_title||'')}</div>`;
+    const btn=document.createElement('button');btn.className='btn btn-primary';btn.style.width='100%';btn.textContent='Avaliar também';
+    btn.onclick=()=>{closeEval();closeFriend();openStModal({spotifyTrackId:it.key,name:it.title,artist:it.artist,albumTitle:it.album_title||'',cover:it.cover||'',duration:0,previewUrl:'',year:''})};
+    actions.appendChild(btn);
+  }
 }
 
 // ─── PERFIL / LOGIN ──────────────────────────────────────────
