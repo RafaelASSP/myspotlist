@@ -781,6 +781,153 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   .home-head .section-title{flex-basis:100%;order:0}
   .friend-add .btn{flex:1}
 }
+
+/* ─── VISUAL v4: mais corpo ─── */
+body{background-image:radial-gradient(rgba(255,255,255,.028) 1px,transparent 1px);background-size:24px 24px;background-attachment:fixed}
+.logo-ic{width:24px;height:24px;border-radius:6px;display:block}
+.nav-logo{gap:9px}
+.nav-link.active{box-shadow:inset 0 -2px 0 var(--accent)}
+.section.active{animation:secIn .38s ease both}
+@keyframes secIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.btn-primary{background:linear-gradient(180deg,#25cf63,#1db954);box-shadow:0 6px 18px rgba(29,185,84,.2),inset 0 1px 0 rgba(255,255,255,.18)}
+.btn-primary:hover{background:linear-gradient(180deg,#2bd96b,#20c457);box-shadow:0 8px 24px rgba(29,185,84,.32),inset 0 1px 0 rgba(255,255,255,.22);transform:translateY(-1px)}
+.btn:disabled{opacity:.6;cursor:default;transform:none}
+.btn-ghost:hover{background:rgba(255,255,255,.035)}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+.section-title::before{content:'';width:4px;height:15px;border-radius:2px;background:var(--accent);flex-shrink:0}
+
+/* hero com capas */
+.hero{padding:3.2rem 0 2.6rem}
+.hero::before{content:none}
+.hero-art{position:absolute;right:1rem;top:50%;transform:translateY(-50%);width:400px;height:240px;pointer-events:none}
+.hero-cover{position:absolute;width:156px;height:156px;border-radius:14px;object-fit:cover;box-shadow:0 20px 44px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.07);background:var(--bg3)}
+.hero-cover.hc0{right:6px;top:38px;transform:rotate(6deg);z-index:4}
+.hero-cover.hc1{right:96px;top:6px;transform:rotate(-5deg);z-index:3}
+.hero-cover.hc2{right:186px;top:48px;transform:rotate(-11deg);z-index:2}
+.hero-cover.hc3{right:262px;top:18px;transform:rotate(-17deg);z-index:1}
+.vinyl{border-radius:50%;background:radial-gradient(circle,#0a0c0f 0 7%,var(--accent) 7% 24%,#0a0c0f 24% 27%,transparent 27%),repeating-radial-gradient(circle,#161b20 0 2px,#0b0e11 2px 5px);box-shadow:0 12px 44px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.05)}
+.vinyl-lg{position:absolute;right:40px;top:20px;width:200px;height:200px;animation:spin 22s linear infinite}
+.empty-state .icon{width:68px;height:68px;margin:0 auto 1rem;font-size:0;border-radius:50%;background:radial-gradient(circle,#0a0c0f 0 7%,rgba(29,185,84,.9) 7% 24%,#0a0c0f 24% 27%,transparent 27%),repeating-radial-gradient(circle,#161b20 0 2px,#0b0e11 2px 5px);box-shadow:0 8px 28px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.05);animation:spin 16s linear infinite}
+
+/* estatísticas */
+.stats-grid{background:linear-gradient(180deg,var(--bg2),#0b0e11);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.stat-card{padding:1.45rem 1.5rem 1.3rem}
+.stat-ic{position:absolute;top:14px;right:14px;color:var(--accent);opacity:.32;transition:opacity .2s,transform .2s}
+.stat-ic svg{width:18px;height:18px;display:block}
+.stat-card:hover .stat-ic{opacity:.95;transform:scale(1.12)}
+.stat-val{text-shadow:0 0 26px rgba(29,185,84,.28)}
+
+/* cards de álbum */
+.album-card{background:linear-gradient(180deg,var(--bg2),#0b0e11);border-radius:14px}
+.album-card:hover{border-color:rgba(29,185,84,.38);transform:translateY(-5px);box-shadow:0 22px 48px rgba(0,0,0,.55),0 0 0 1px rgba(29,185,84,.12)}
+.cover-wrap{position:relative;overflow:hidden;background:var(--bg3)}
+.cover-wrap::after{content:'';position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(0deg,rgba(8,10,12,.78),transparent);pointer-events:none}
+.album-card .album-cover,.album-card .album-cover-placeholder{transition:transform .5s ease}
+.album-card:hover .album-cover{transform:scale(1.06)}
+.score-pill{position:absolute;right:9px;bottom:9px;z-index:2;margin:0;padding:3px 10px;border-radius:20px;font-size:12.5px;font-weight:700;line-height:1.5;background:rgba(8,10,12,.8);backdrop-filter:blur(6px);border:1px solid var(--border2)}
+.score-pill[data-tone=high]{color:var(--green);border-color:rgba(29,185,84,.55)}
+.score-pill[data-tone=mid]{color:#f59e0b;border-color:rgba(245,158,11,.55)}
+.score-pill[data-tone=low]{color:var(--red);border-color:rgba(239,68,68,.55)}
+.album-meta{font-size:11px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fav-badge{z-index:2;color:var(--accent);width:28px;height:28px}
+.fav-badge svg{width:14px;height:14px;fill:var(--accent);stroke:var(--accent);stroke-width:1.5}
+
+/* pódio nas listas de ranking */
+.rank-item{transition:border-color .18s,transform .18s,background .18s}
+.rank-item:hover{transform:translateX(2px)}
+.rank-list>.rank-item:nth-child(1) .rank-pos{color:#f5c542}
+.rank-list>.rank-item:nth-child(2) .rank-pos{color:#cfd6de}
+.rank-list>.rank-item:nth-child(3) .rank-pos{color:#d6945a}
+.rank-list>.rank-item:nth-child(1):has(.rank-pos){background:linear-gradient(90deg,rgba(245,197,66,.09),transparent 55%),var(--bg2);border-color:rgba(245,197,66,.3)}
+.rank-list>.rank-item:nth-child(2):has(.rank-pos){background:linear-gradient(90deg,rgba(207,214,222,.06),transparent 55%),var(--bg2)}
+.rank-list>.rank-item:nth-child(3):has(.rank-pos){background:linear-gradient(90deg,rgba(214,148,90,.07),transparent 55%),var(--bg2)}
+
+/* rodapé, skeleton, indicadores */
+.site-footer{max-width:1240px;margin:2.5rem auto 0;padding:1.6rem 2.5rem 2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;color:var(--text3);font-size:12px;line-height:1.6;position:relative;z-index:1}
+.foot-brand{display:flex;align-items:center;gap:8px;color:var(--text2);font-weight:600;font-size:13px}
+.foot-brand img{width:20px;height:20px;border-radius:5px}
+.skel{background:linear-gradient(90deg,var(--bg2) 0%,var(--bg3) 50%,var(--bg2) 100%);background-size:220% 100%;animation:shimmer 1.3s linear infinite;border-radius:12px}
+@keyframes shimmer{0%{background-position:220% 0}100%{background-position:-220% 0}}
+.skel-card{height:255px}
+.skel-row{height:66px;margin-bottom:.5rem}
+.profile-btn{position:relative}
+.sync-dot{position:absolute;left:27px;bottom:3px;width:10px;height:10px;border-radius:50%;border:2px solid var(--bg);background:var(--text3);display:none}
+.sync-dot.on{display:block}
+.sync-dot.ok{background:var(--accent)}
+.sync-dot.syncing{background:#f59e0b;animation:pulse-ring .9s ease-in-out infinite}
+.sync-dot.err{background:var(--red)}
+@keyframes savepulse{0%,100%{box-shadow:0 0 0 0 rgba(29,185,84,.5)}50%{box-shadow:0 0 0 8px rgba(29,185,84,0)}}
+.btn-pulse{animation:savepulse 1.6s ease-in-out infinite}
+
+/* botão de favorito */
+.track-fav{width:34px;height:34px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--text3);transition:background .15s,color .15s}
+.track-fav svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;transition:fill .2s}
+.track-fav:hover{background:var(--bg3);color:var(--text2)}
+.track-fav.active{color:var(--accent)}
+.track-fav.active svg{fill:var(--accent)}
+.track-fav.pop svg{animation:heartpop .38s ease}
+@keyframes heartpop{0%{transform:scale(1)}35%{transform:scale(1.42)}70%{transform:scale(.9)}100%{transform:scale(1)}}
+.fav-btn{display:inline-flex;align-items:center;gap:7px;font-size:12px;padding:6px 14px}
+.fav-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round;transition:fill .2s}
+.fav-btn.on{color:var(--accent);border-color:rgba(29,185,84,.5);background:var(--accent-dim)}
+.fav-btn.on svg{fill:var(--accent)}
+.fav-btn.pop svg{animation:heartpop .38s ease}
+.track-input{text-align:center}
+
+/* comunidade */
+.com-intro{font-size:13px;color:var(--text3);line-height:1.65;margin-bottom:1.1rem;max-width:760px}
+.com-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.com-note{font-size:12px;color:var(--text3);line-height:1.6;margin-top:1rem}
+.com-val{display:flex;align-items:center;gap:.7rem;flex-shrink:0}
+.com-val .btn{font-size:12px;padding:5px 12px}
+
+/* perfil */
+.profile-modal{max-width:560px}
+.pf-head{display:flex;align-items:center;gap:1rem;padding:1.5rem 3.5rem 1.2rem 1.5rem;background:linear-gradient(180deg,rgba(29,185,84,.1),transparent);border-bottom:1px solid var(--border)}
+.av-xl{width:72px;height:72px;font-size:28px}
+.pf-id{flex:1;min-width:0}
+.pf-name{font-size:1.2rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pf-user{color:var(--accent);font-size:.9rem}
+.pf-body{padding:1.25rem 1.5rem 1.5rem}
+.pf-bio{font-size:13.5px;color:var(--text2);line-height:1.65;margin-bottom:1.1rem;white-space:pre-wrap;word-break:break-word}
+.pf-bio.empty{color:var(--text3);font-style:italic}
+.pf-bio-edit textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13.5px;font-family:'Sora',sans-serif;line-height:1.55;resize:vertical;min-height:84px;outline:none}
+.pf-bio-edit textarea:focus{border-color:var(--accent)}
+.pf-bio-edit .row{display:flex;align-items:center;gap:.6rem;margin-top:.5rem}
+.pf-bio-edit .cnt{margin-left:auto;font-size:11.5px;color:var(--text3)}
+.pf-counts{display:flex;gap:.6rem;margin-bottom:1.1rem}
+.pf-count{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:.7rem .5rem;text-align:center}
+.pf-count b{display:block;font-size:1.3rem;color:var(--accent);line-height:1.2}
+.pf-count span{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em}
+button.pf-count{cursor:pointer;font-family:inherit;transition:border-color .18s,background .18s}
+button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
+.pf-favs{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.fav-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:.85rem;min-width:0}
+.fav-lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:600;margin-bottom:.55rem}
+.fav-body{display:flex;align-items:center;gap:.7rem;min-height:54px}
+.fav-img{width:54px;height:54px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--bg4)}
+.fav-img.round{border-radius:50%}
+.fav-name{font-size:13px;font-weight:600;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.fav-sub{font-size:11px;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fav-empty{font-size:12.5px;color:var(--text3);min-height:54px;display:flex;align-items:center}
+.fav-actions{display:flex;gap:.9rem;margin-top:.45rem}
+.pf-foot{display:flex;gap:.6rem;margin-top:1.4rem;flex-wrap:wrap}
+.pf-subhead{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3.5rem 1rem 1.5rem;border-bottom:1px solid var(--border)}
+.pf-subtitle{font-weight:600}
+
+@media(max-width:900px){.hero-art{display:none}.site-footer{padding:1.4rem 1.25rem 1.8rem}}
+@media(max-width:720px){
+  .nav-link.active{box-shadow:none}
+  .hero{padding:1.75rem 0 1.5rem}
+  .stat-ic{top:10px;right:10px}
+  .pf-head{padding:1.25rem 3.5rem 1rem 1.1rem}
+  .pf-body{padding:1.1rem}
+  .pf-subhead{padding:1.1rem 3.5rem .9rem 1.1rem}
+  .com-top .rank-tools{width:100%}
+  .com-top .ctl-select{flex:1;max-width:none}
+}
+@media(max-width:480px){.pf-favs{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -788,7 +935,7 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 <!-- NAVBAR -->
 <nav>
   <div class="nav-logo" onclick="showSection('home',document.querySelector('.nav-link'))">
-    <span class="dot"></span>MySpotList
+    <img src="app-icon.png" class="logo-ic" alt="">MySpotList
   </div>
   <div class="nav-links">
     <button class="nav-link active" onclick="showSection('home',this)"><span class="nl-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span><span>Home</span></button>
@@ -807,14 +954,15 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
       </div>
     </div>
   </div>
-  <button class="profile-btn" onclick="openSettings()" aria-label="Perfil e configurações" title="Perfil e configurações">
-    <span class="av" id="navAvatar"></span><span class="pname" id="navName"></span>
+  <button class="profile-btn" onclick="openProfile()" aria-label="Meu perfil" title="Meu perfil">
+    <span class="av" id="navAvatar"></span><i class="sync-dot" id="syncDot"></i><span class="pname" id="navName"></span>
   </button>
 </nav>
 
 <!-- HOME -->
 <section class="section active" id="sec-home">
   <div class="hero">
+    <div class="hero-art" id="heroArt"></div>
     <h1><em>Diário pessoal<br>de Música</em></h1>
     <button class="btn btn-primary" onclick="openAddModal()">+ Adicionar álbum</button>
   </div>
@@ -853,6 +1001,11 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 <!-- RANKINGS -->
 <section class="section" id="sec-rankings">
   <h2 style="font-size:1.8rem;margin-bottom:1rem">Rankings</h2>
+  <div class="seg" id="rankModeSeg" style="margin:0 0 1.25rem">
+    <button type="button" id="rmode-mine" onclick="setRankMode('mine')">Meus rankings</button>
+    <button type="button" id="rmode-com" onclick="setRankMode('community')">Comunidade</button>
+  </div>
+  <div id="rankMine">
   <input type="text" id="rankSearch" class="sec-filter" placeholder="Filtrar por álbum, artista ou música…" oninput="setSectionFilter('rankings',this.value)">
   <div class="grid2" style="margin-bottom:2.5rem">
     <div>
@@ -890,6 +1043,20 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
     </div>
   </div>
   <div class="rank-list" id="rankTracks"></div>
+</div>
+  <div id="rankCommunity" style="display:none">
+    <p class="com-intro">Veja quem lidera no MySpotList entre todas as pessoas que escolheram aparecer aqui. Aparecem só o usuário, o avatar e os totais; diário e anotações continuam privados.</p>
+    <div class="com-top">
+      <div class="seg" id="comSeg">
+        <button type="button" id="cseg-people" onclick="setComTab('people')">Pessoas</button>
+        <button type="button" id="cseg-albums" onclick="setComTab('albums')">Álbuns</button>
+        <button type="button" id="cseg-artists" onclick="setComTab('artists')">Artistas</button>
+      </div>
+      <div class="rank-tools" style="margin:0"><span>Ordenar por</span><select id="comMetric" class="ctl-select" onchange="setComMetric(this.value)"></select></div>
+    </div>
+    <div class="rank-list" id="comList"></div>
+    <div class="com-note" id="comNote"></div>
+  </div>
 </section>
 
 <!-- SOCIAL -->
@@ -1007,8 +1174,33 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   </div>
 </div>
 
+<footer class="site-footer">
+  <div class="foot-brand"><img src="app-icon.png" alt="">MySpotList</div>
+  <div>Seu diário pessoal de música. Dados de músicas e capas fornecidos pelo Spotify; o MySpotList não é afiliado ao Spotify.</div>
+</footer>
+
+<!-- ─── MEU PERFIL ─── -->
+<div class="overlay" id="profileOverlay" onclick="if(event.target===this)closeProfile()">
+  <div class="st-modal profile-modal">
+    <button class="modal-close" onclick="closeProfile()">×</button>
+    <div id="profileBody"></div>
+  </div>
+</div>
+
+<!-- ─── ESCOLHER ARTISTA / ÁLBUM FAVORITO ─── -->
+<div class="overlay" id="pickOverlay" style="z-index:215" onclick="if(event.target===this)closePicker()">
+  <div class="st-modal">
+    <button class="modal-close" onclick="closePicker()">×</button>
+    <div class="settings-head" id="pickTitle">Escolher</div>
+    <div class="st-body">
+      <input id="pickInput" class="settings-input" autocomplete="off" placeholder="Buscar no Spotify…" oninput="pickDebounce(this.value)">
+      <div id="pickResults" style="margin-top:.8rem;max-height:340px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ─── PERFIL DO AMIGO ─── -->
-<div class="overlay" id="friendOverlay" onclick="if(event.target===this)closeFriend()">
+<div class="overlay" id="friendOverlay" style="z-index:205" onclick="if(event.target===this)closeFriend()">
   <div class="st-modal friend-modal">
     <button class="modal-close" onclick="closeFriend()">×</button>
     <div id="friendBody"></div>
@@ -1140,17 +1332,26 @@ function save(noSync){try{localStorage.setItem(STORE_KEY,JSON.stringify(DB))}cat
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
 
 // ─── NAV ──────────────────────────────────────────────────────
-function showSection(id,btn){
+const ROUTES=['home','library','rankings','social','favorites'];
+const ROUTE_TITLES={home:'MySpotList — Diário pessoal de Música',library:'Biblioteca · MySpotList',rankings:'Rankings · MySpotList',social:'Social · MySpotList',favorites:'Favoritos · MySpotList'};
+function routeFromHash(){const h=(location.hash||'').replace(/^#\/?/,'');return ROUTES.includes(h)?h:null}
+function showSection(id,btn,fromRoute){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
+  const nb=btn||document.querySelector('.nav-link[onclick*="showSection(\''+id+'\'"]');
+  if(nb)nb.classList.add('active');
   if(id==='home')renderHome();
   if(id==='library')renderLibrary();
-  if(id==='rankings')renderRankings();
+  if(id==='rankings'){applyRankMode();if(getRankMode()==='mine')renderRankings();else renderCommunity()}
   if(id==='favorites')renderFavorites();
   if(id==='social'){renderSocial();socialPoll()}
+  if(!fromRoute&&routeFromHash()!==id){try{history.pushState(null,'','#'+id)}catch(e){}}
+  document.title=ROUTE_TITLES[id]||'MySpotList';
+  if(!fromRoute)window.scrollTo(0,0);
 }
+window.addEventListener('popstate',()=>showSection(routeFromHash()||'home',null,true));
+function restoreRoute(){const id=routeFromHash();if(id&&id!=='home')showSection(id,null,true)}
 
 // ─── SCORE UTILS ─────────────────────────────────────────────
 function scoreColor(s){
@@ -1189,16 +1390,27 @@ function normalizeScores(d){
   (d.standaloneTracks||[]).forEach(t=>{const r=roundScore(t.score);if(r!==t.score)t.score=r});
   return d;
 }
-function sanitizeScoreInput(inp){
-  let raw=inp.value;
-  if(raw==='')return '';
-  if(/\.\d{3,}/.test(raw)){raw=raw.replace(/(\.\d{2})\d+/,'$1');inp.value=raw}
-  let n=parseFloat(raw);
-  if(isNaN(n))return '';
-  if(n>10){n=10;inp.value='10'}
-  if(n<0){n=0;inp.value='0'}
-  return Math.round(n*100)/100;
+const HEART='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/></svg>';
+const scoreTone=n=>n>=8?'high':(n>=5.8?'mid':'low');
+function scoreToField(s){
+  if(s===''||s===null||s===undefined)return '';
+  const n=parseFloat(s);if(isNaN(n))return '';
+  return String(Math.round(n*100)/100).replace('.',',');
 }
+function sanitizeScoreInput(inp){
+  const raw=String(inp.value||'');
+  let s=raw.replace(/\./g,',').replace(/[^0-9,]/g,'');
+  const k=s.indexOf(',');
+  if(k!==-1){const ip=s.slice(0,k),dp=s.slice(k+1).replace(/,/g,'').slice(0,2);s=ip+','+dp}
+  if(s.startsWith(','))s='0'+s;
+  const num=parseFloat(s.replace(',','.'));
+  if(!isNaN(num)&&num>10)s='10';
+  if(s!==raw)inp.value=s;
+  const n=parseFloat(s.replace(',','.'));
+  return isNaN(n)?'':Math.round(n*100)/100;
+}
+let _unsaved=false;
+function markUnsaved(){_unsaved=true;const b=document.querySelector('#tab-tracks .btn-primary');if(b)b.classList.add('btn-pulse')}
 const APP_URL=(location.protocol.indexOf('http')===0&&!/^(localhost|127\.|192\.168\.)/.test(location.hostname))?location.origin:'https://myspotlist-sigma.vercel.app';
 function shareAlbumText(album){
   const avg=avgTracks(album);
@@ -1258,6 +1470,7 @@ function renderHome(){
   renderStats();
   updateGuestBanner();
   applyHomeTab();
+  renderHeroArt();
   const recent=[...DB.albums].sort((a,b)=>b.addedAt-a.addedAt).slice(0,8);
   const grid=document.getElementById('recentGrid');
   if(!recent.length){
@@ -1301,29 +1514,49 @@ function renderStats(){
     {val:last?last.title:'—',lbl:'Último álbum',small:true},
   ];
   const grid=document.getElementById('statsGrid');
-  grid.innerHTML=stats.map(s=>`
+  const ic=['<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/>','<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>','<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>','<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>','<path d="M6 20V10M12 20V4M18 20v-7"/>','<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'];
+  grid.innerHTML=stats.map((s,i)=>`
     <div class="stat-card">
-      <div class="stat-val${s.small?' small':''}">${s.val}</div>
+      <span class="stat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic[i]}</svg></span>
+      <div class="stat-val${s.small?' small':''}"${typeof s.val==='number'?` data-count="${s.val}" data-k="${i}"`:''}>${typeof s.val==='number'?s.val:esc(String(s.val))}</div>
       <div class="stat-lbl">${s.lbl}</div>
     </div>`).join('');
+  const prev=window._statPrev||{};
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  grid.querySelectorAll('.stat-val[data-count]').forEach(el=>{
+    const k=el.dataset.k,to=parseInt(el.dataset.count,10),from=prev[k]==null?0:prev[k];
+    prev[k]=to;
+    if(from===to||reduce)return;
+    const t0=performance.now(),dur=650;
+    el.textContent=String(from);
+    const tick=t=>{const f=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-f,3);el.textContent=String(Math.round(from+(to-from)*e));if(f<1)requestAnimationFrame(tick)};
+    requestAnimationFrame(tick);
+  });
+  window._statPrev=prev;
+}
+function renderHeroArt(){
+  const el=document.getElementById('heroArt');if(!el)return;
+  let covers=[...DB.albums].sort((a,b)=>(b.savedAt||b.addedAt||0)-(a.savedAt||a.addedAt||0)).map(a=>a.cover).filter(Boolean);
+  if(covers.length<4&&typeof SOC!=='undefined')SOC.feed.forEach(x=>{if(x.cover&&!covers.includes(x.cover))covers.push(x.cover)});
+  covers=covers.slice(0,4);
+  const html=covers.length?covers.map((u,i)=>`<img class="hero-cover hc${i}" src="${esc(u)}" alt="">`).join(''):'<div class="vinyl vinyl-lg"></div>';
+  if(el.dataset.sig!==html){el.innerHTML=html;el.dataset.sig=html}
 }
 
 // ─── ALBUM CARD ───────────────────────────────────────────────
 function albumCard(album){
   const avg=avgTracks(album);
-  const card=document.createElement('div');
-  card.className='album-card';
+  const card=document.createElement('div');card.className='album-card';
   card.onclick=()=>openDetail(album.id);
-  card.appendChild(coverEl(album));
+  const wrap=document.createElement('div');wrap.className='cover-wrap';
+  wrap.appendChild(coverEl(album));
+  if(avg!==null){const pill=document.createElement('span');pill.className='album-rating score-pill';pill.dataset.tone=scoreTone(avg);pill.textContent=fmtNote(avg);wrap.appendChild(pill)}
+  if(album.favorite){const b=document.createElement('div');b.className='fav-badge';b.innerHTML=HEART;wrap.appendChild(b)}
+  card.appendChild(wrap);
+  const rated=album.tracks.filter(isRatedTrack).length;
   const info=document.createElement('div');info.className='album-info';
-  info.innerHTML=`
-    <div class="album-title">${album.title}</div>
-    <div class="album-artist">${album.artist}</div>
-    <div class="album-rating" style="color:${scoreColor(avg)}">${fmtNote(avg)}</div>`;
+  info.innerHTML=`<div class="album-title">${esc(album.title)}</div><div class="album-artist">${esc(album.artist)}</div><div class="album-meta">${[album.year,rated+'/'+album.tracks.length+' faixas'].filter(Boolean).join(' · ')}</div>`;
   card.appendChild(info);
-  if(album.favorite){
-    const b=document.createElement('div');b.className='fav-badge';b.textContent='♥';card.appendChild(b);
-  }
   return card;
 }
 
@@ -1357,7 +1590,7 @@ async function fetchArtistPhoto(artistName){
   // check cache first
   if(!DB.artistPhotoCache)DB.artistPhotoCache={};
   if(DB.artistPhotoCache[artistName]!==undefined)return DB.artistPhotoCache[artistName];
-  const token=await getSpotifyToken().catch(()=>null);
+  const token=await getSpotifyToken(true).catch(()=>null);
   if(!token){DB.artistPhotoCache[artistName]=null;return null;}
   try{
     const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`,{headers:{Authorization:'Bearer '+token}});
@@ -1533,7 +1766,7 @@ function openDetail(id){
   currentAlbumId=id;
   const album=DB.albums.find(a=>a.id===id);
   if(!album)return;
-  _detailRef=album;
+  _detailRef=album;_unsaved=false;
   renderDetailHeader(album);
   renderTracks(album);
   renderDiary(album);
@@ -1541,7 +1774,7 @@ function openDetail(id){
   document.querySelectorAll('.tab-content').forEach((t,i)=>{t.classList.toggle('active',i===0)});
   document.getElementById('detailOverlay').classList.add('open');
 }
-function closeDetail(){stopPreview();document.getElementById('detailOverlay').classList.remove('open')}
+function closeDetail(){stopPreview();if(_unsaved){_unsaved=false;toast('Notas alteradas, mas ainda não salvas: use "Salvar avaliação".')}document.getElementById('detailOverlay').classList.remove('open')}
 function closeDetailIfOutside(e){if(e.target===document.getElementById('detailOverlay'))closeDetail()}
 
 function fmtDuration(ms){
@@ -1579,8 +1812,8 @@ function renderDetailHeader(album){
     <div class="modal-avg" style="color:${scoreColor(avg)}">${fmtNote(avg)}</div>
     <div class="modal-avg-lbl">Média das faixas</div>
     <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;align-items:center">
-      <button class="btn btn-ghost" style="font-size:12px;padding:5px 14px" onclick="toggleAlbumFav()">
-        ${DB.albums.find(a=>a.id===currentAlbumId)?.favorite?'♥ Favorito':'♡ Favoritar'}
+      <button class="btn btn-ghost fav-btn${DB.albums.find(a=>a.id===currentAlbumId)?.favorite?' on':''}" onclick="toggleAlbumFav()">
+        ${HEART}<span>${DB.albums.find(a=>a.id===currentAlbumId)?.favorite?'Favorito':'Favoritar'}</span>
       </button>
       ${album.spotifyUrl?`<a href="${album.spotifyUrl}" target="_blank" class="spotify-link">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
@@ -1592,7 +1825,7 @@ function renderDetailHeader(album){
 function toggleAlbumFav(){
   const album=DB.albums.find(a=>a.id===currentAlbumId);if(!album)return;
   album.favorite=!album.favorite;save();
-  renderDetailHeader(album);toast(album.favorite?'Adicionado aos favoritos':'Removido dos favoritos');
+  renderDetailHeader(album);{const b=document.querySelector('#detailHeader .fav-btn');if(b&&album.favorite)b.classList.add('pop')}toast(album.favorite?'Adicionado aos favoritos':'Removido dos favoritos');
 }
 function deleteAlbum(){
   if(!confirm('Remover este álbum?'))return;
@@ -1637,16 +1870,18 @@ function renderTracks(album){
       const name=document.createElement('div');name.className='track-name';name.textContent=track.name;
       const favBtn=document.createElement('button');
       favBtn.className='track-fav'+(track.favorite?' active':'');
-      favBtn.textContent='♥';
-      favBtn.onclick=()=>{track.favorite=!track.favorite;save();favBtn.classList.toggle('active',track.favorite)};
+      favBtn.innerHTML=HEART;favBtn.title='Favoritar faixa';favBtn.setAttribute('aria-label','Favoritar faixa');
+      favBtn.onclick=()=>{track.favorite=!track.favorite;save();favBtn.classList.toggle('active',track.favorite);favBtn.classList.remove('pop');void favBtn.offsetWidth;if(track.favorite)favBtn.classList.add('pop')};
       const inp=document.createElement('input');
-      inp.type='number';inp.min='0';inp.max='10';inp.step='0.5';
+      inp.type='text';inp.setAttribute('inputmode','decimal');inp.autocomplete='off';
       inp.className='track-input';
-      inp.value=track.score!==undefined&&track.score!==''?track.score:'';
+      inp.value=scoreToField(track.score);
       inp.placeholder='—';
+      inp.onblur=()=>{inp.value=scoreToField(track.score)};
+      inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();const all=[...document.querySelectorAll('#tab-tracks .track-input')];const nx=all[all.indexOf(inp)+1];if(nx){nx.focus();nx.select()}else inp.blur()}};
       inp.oninput=()=>{
         track.score=sanitizeScoreInput(inp);
-        save();
+        save();markUnsaved();
         dot.className=`track-dot ${dotClass(track.score)}`;
         const avg=avgTracks(album);
         document.querySelector('.modal-avg').textContent=fmtNote(avg);
@@ -1691,6 +1926,7 @@ function renderTracks(album){
     const al=DB.albums.find(a=>a.id===currentAlbumId);
     if(!al)return;
     al.savedAt=Date.now();
+    _unsaved=false;saveBtn.classList.remove('btn-pulse');
     save();
     renderHome();
     if(document.getElementById('sec-library').classList.contains('active'))renderLibrary();
@@ -1761,7 +1997,20 @@ document.addEventListener('click',e=>{
   const ns=document.getElementById('navSearch');
   if(ns&&!e.composedPath().includes(ns))closeSearchPanel();
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSearchPanel()});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeSearchPanel();
+    const order=[['pickOverlay',closePicker],['evalOverlay',closeEval],['friendOverlay',closeFriend],['profileOverlay',closeProfile],['settingsOverlay',closeSettings],['stOverlay',closeStModal],['detailOverlay',closeDetail]];
+    for(const [id,fn] of order){const el=document.getElementById(id);if(el&&el.classList.contains('open')){fn();break}}
+    return;
+  }
+  if(e.key==='/'&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
+    const t=e.target,tag=(t.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea'||tag==='select'||t.isContentEditable)return;
+    if(document.getElementById('loginScreen').classList.contains('open'))return;
+    e.preventDefault();document.getElementById('spotifySearch').focus();
+  }
+});
 
 function saveSpotifyKey(){
   DB.spotifyClientId=document.getElementById('clientIdInput').value.trim();
@@ -2047,10 +2296,10 @@ async function loadArtistAlbums(offset){
     else toast(e.message||'Erro ao carregar álbuns.');
   }finally{aa.loading=false}
 }
-function moreBtn(container,onClick){
+function moreBtn(container,onClick,label){
   const old=container.querySelector('.more-wrap');if(old)old.remove();
   const w=document.createElement('div');w.className='more-wrap';
-  const b=document.createElement('button');b.className='btn btn-ghost';b.style.cssText='width:100%;font-size:13px';b.textContent='Ver mais álbuns';
+  const b=document.createElement('button');b.className='btn btn-ghost';b.style.cssText='width:100%;font-size:13px';b.textContent=label||'Ver mais álbuns';
   b.onclick=ev=>{ev.stopPropagation();b.disabled=true;b.textContent='Carregando…';onClick()};
   w.appendChild(b);container.appendChild(w);
 }
@@ -2120,10 +2369,11 @@ function openStModal(trackData){
   scoreLbl.style.cssText='font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;flex-shrink:0';
   scoreLbl.textContent='Nota';
   const scoreInp=document.createElement('input');
-  scoreInp.type='number';scoreInp.min='0';scoreInp.max='10';scoreInp.step='0.5';
+  scoreInp.type='text';scoreInp.setAttribute('inputmode','decimal');scoreInp.autocomplete='off';
   scoreInp.className='track-input';scoreInp.style.width='80px';scoreInp.style.fontSize='1.1rem';
-  scoreInp.value=track.score!==''&&track.score!=null?track.score:'';
+  scoreInp.value=scoreToField(track.score);
   scoreInp.placeholder='0–10';
+  scoreInp.onblur=()=>{scoreInp.value=scoreToField(track.score)};
   const scoreDisplay=document.createElement('div');
   scoreDisplay.style.cssText=`font-family:'Sora',sans-serif;font-size:1.75rem;font-weight:700;color:${scoreColor(track.score)}`;
   scoreDisplay.textContent=fmtNote(track.score);
@@ -2139,9 +2389,9 @@ function openStModal(trackData){
   const favRow=document.createElement('div');
   favRow.style.cssText='display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem';
   const favBtn=document.createElement('button');
-  favBtn.className='btn btn-ghost';favBtn.style.cssText='font-size:13px;padding:6px 14px';
-  favBtn.textContent=track.favorite?'♥ Favorita':'♡ Favoritar';
-  favBtn.onclick=()=>{track.favorite=!track.favorite;favBtn.textContent=track.favorite?'♥ Favorita':'♡ Favoritar'};
+  const paintFav=()=>{favBtn.className='btn btn-ghost fav-btn'+(track.favorite?' on':'');favBtn.innerHTML=HEART+'<span>'+(track.favorite?'Favorita':'Favoritar')+'</span>'};
+  paintFav();
+  favBtn.onclick=()=>{track.favorite=!track.favorite;paintFav();if(track.favorite)favBtn.classList.add('pop')};
   favRow.appendChild(favBtn);
   // preview
   if(track.previewUrl){
@@ -2455,7 +2705,7 @@ function openAuth(tab,msg){
   document.getElementById('authCard').style.display='block';
   document.getElementById('loginScreen').classList.add('open');
   document.body.style.overflow='hidden';
-  closeSettings();
+  closeSettings();closeProfile();closeFriend();closeEval();
   setAuthTab(tab||'login');
   if(msg)setAuthMsg(msg,'err');
   loadProviders();
@@ -2532,6 +2782,7 @@ function enterGuest(){
   try{localStorage.setItem('myspotlist_mode','guest')}catch(e){}
   STORE_KEY='myspotlist_db';DB=loadDB(STORE_KEY);
   closeLogin();applyProfile();renderHome();showWelcomeIfFirst();
+  restoreRoute();
 }
 function updateGuestBanner(){
   const b=document.getElementById('guestBanner');if(!b)return;
@@ -2548,6 +2799,7 @@ async function onSignedIn(sess,opts){
   STORE_KEY='myspotlist_db_'+sess.user.id;DB=loadDB(STORE_KEY);ensureSyncState();
   closeLogin();
   applyProfile();renderHome();
+  restoreRoute();
   try{await loadServerProfile()}
   catch(e){if(e.authFailed){signOutLocal('Sua sessão expirou. Entre novamente.');return}}
   applyProfile();
@@ -2566,8 +2818,18 @@ async function loadServerProfile(){
     const created=await sbAuthed('/rest/v1/profiles',{method:'POST',body:{id:AUTH.user.id,display_name:(AUTH.user.email||'').split('@')[0]},headers:{Prefer:'return=representation'}});
     p=created&&created[0];
   }
-  if(p)DB.profile={name:p.display_name||p.username||(AUTH.user.email||'').split('@')[0],username:p.username||'',avatar:p.avatar||null};
-  try{const r=await sbAuthed('/rest/v1/profiles?select=share_enabled&id=eq.'+AUTH.user.id);if(r&&r[0]&&DB.profile)DB.profile.share=r[0].share_enabled!==false}catch(e){}
+  const prev=DB.profile||{};
+  if(p)DB.profile={name:p.display_name||p.username||(AUTH.user.email||'').split('@')[0],username:p.username||'',avatar:p.avatar||null,
+    bio:prev.bio||'',favArtist:prev.favArtist||null,favAlbum:prev.favAlbum||null,share:prev.share,community:prev.community};
+  try{
+    const r=await sbAuthed('/rest/v1/profiles?select=bio,fav_artist,fav_album,show_in_community,share_enabled&id=eq.'+AUTH.user.id);
+    if(r&&r[0]&&DB.profile){
+      DB.profile.bio=r[0].bio||'';DB.profile.favArtist=r[0].fav_artist||null;DB.profile.favAlbum=r[0].fav_album||null;
+      DB.profile.community=r[0].show_in_community!==false;DB.profile.share=r[0].share_enabled!==false;
+    }
+  }catch(e){
+    try{const r=await sbAuthed('/rest/v1/profiles?select=share_enabled&id=eq.'+AUTH.user.id);if(r&&r[0]&&DB.profile)DB.profile.share=r[0].share_enabled!==false}catch(e2){}
+  }
   save(true);
 }
 async function signOut(){
@@ -2587,7 +2849,7 @@ function signOutLocal(msg){
   if(id){try{localStorage.removeItem('myspotlist_db_'+id)}catch(e){}}
   try{localStorage.setItem('myspotlist_mode','none')}catch(e){}
   STORE_KEY='myspotlist_db';DB=loadDB(STORE_KEY);
-  closeSettings();closeDetail();renderHome();
+  closeSettings();closeProfile();closeFriend();closeDetail();renderHome();updateSyncDot();
   openAuth('login',msg);
 }
 async function deleteAccount(){
@@ -2645,6 +2907,7 @@ function refreshAccountSection(){
       <button class="btn btn-ghost" onclick="signOut()" style="font-size:13px">Sair</button>
     </div>
     <label class="share-toggle"><input type="checkbox" ${DB.profile&&DB.profile.share===false?'':'checked'} onchange="toggleShare(this.checked)"><span>Compartilhar minhas avaliações salvas com amigos</span></label>
+    <label class="share-toggle"><input type="checkbox" ${DB.profile&&DB.profile.community===false?'':'checked'} onchange="toggleCommunity(this.checked)"><span>Aparecer no ranking da comunidade</span></label>
     <button class="link-btn danger" onclick="deleteAccount()" style="margin-top:.9rem">Excluir minha conta</button>`;
 }
 
@@ -2668,8 +2931,19 @@ function ensureSyncState(){
 }
 const syncState={status:'idle',msg:''};
 let syncTimer=null,syncing=false,syncAgain=false;
+function updateSyncDot(){
+  const d=document.getElementById('syncDot');if(!d)return;
+  d.className='sync-dot';
+  const btn=d.closest('.profile-btn');
+  if(!AUTH.user){if(btn)btn.title='Meu perfil';return}
+  d.classList.add('on');
+  const cls={ok:'ok',syncing:'syncing',error:'err'}[syncState.status];
+  if(cls)d.classList.add(cls);
+  if(btn)btn.title='Meu perfil · '+({ok:'sincronizado',syncing:'sincronizando…',error:'erro ao sincronizar'}[syncState.status]||'conectado');
+}
 function setSyncState(status,msg){
   syncState.status=status;syncState.msg=msg||'';
+  updateSyncDot();
   if(document.getElementById('settingsOverlay').classList.contains('open'))refreshAccountSection();
 }
 function scheduleSync(ms){
@@ -2849,7 +3123,7 @@ function timeAgo(ts){
   if(d<30)return 'há '+d+' dias';
   return new Date(ts).toLocaleDateString('pt-BR');
 }
-function isMissingTable(e){return !!e&&(e.status===404||!!(e.data&&['PGRST205','42P01','PGRST202','42703'].includes(e.data.code)))}
+function isMissingTable(e){return !!e&&(e.status===404||!!(e.data&&['PGRST205','42P01','PGRST202','42703','PGRST204'].includes(e.data.code)))}
 const socRpc=(name,body)=>sbAuthed('/rest/v1/rpc/'+name,{method:'POST',body:body||{}});
 const inList=keys=>'in.('+keys.map(k=>'"'+String(k).replace(/"/g,'')+'"').join(',')+')';
 
@@ -2978,7 +3252,7 @@ async function socialPoll(){
     if(e.authFailed){signOutLocal('Sua sessão expirou. Entre novamente.');SOC.polling=false;return}
     if(isMissingTable(e))SOC.unavailable=true;else console.error('social',e);
   }finally{SOC.polling=false}
-  updateSocialBadge();renderHomeFeed();
+  updateSocialBadge();renderHomeFeed();renderHeroArt();
   if(isSocialVisible())renderSocial();
 }
 function socialStart(){
@@ -3028,23 +3302,26 @@ function feedCard(it){
   const p=SOC.profiles[it.user_id]||{};
   const card=document.createElement('div');card.className='album-card feed-card';
   card.onclick=()=>openEval(it);
-  card.appendChild(coverEl({cover:it.cover,title:it.title}));
-  if(it.kind==='track'){const b=document.createElement('span');b.className='feed-badge';b.textContent='música';card.appendChild(b)}
+  const wrap=document.createElement('div');wrap.className='cover-wrap';
+  wrap.appendChild(coverEl({cover:it.cover,title:it.title}));
+  if(it.kind==='track'){const b=document.createElement('span');b.className='feed-badge';b.textContent='música';wrap.appendChild(b)}
+  const pill=document.createElement('span');pill.className='score-pill';pill.dataset.tone=scoreTone(it.score);pill.textContent=fmtNote(it.score);wrap.appendChild(pill);
+  card.appendChild(wrap);
   const info=document.createElement('div');info.className='album-info';
   info.innerHTML=`<div class="album-title">${esc(it.title)}</div><div class="album-artist">${esc(it.artist)}</div>
-    <div class="feed-meta"><span class="feed-who">${esc(nameOf(p))}</span><span class="feed-when">· ${timeAgo(it.saved_at)}</span></div>
-    <div class="album-rating" style="color:${scoreColor(it.score)}">${fmtNote(it.score)}</div>`;
+    <div class="feed-meta"><span class="feed-who">${esc(nameOf(p))}</span><span class="feed-when">· ${timeAgo(it.saved_at)}</span></div>`;
   info.querySelector('.feed-meta').prepend(avEl(p,'av-sm'));
   card.appendChild(info);
   return card;
 }
+
 function renderHomeFeed(){
   const box=document.getElementById('friendFeed');if(!box)return;
   applyHomeTabVisuals();
   box.innerHTML='';
   if(!AUTH.user){box.innerHTML=feedMsg('Crie uma conta para ver o que seus amigos estão ouvindo.','Criar conta ou entrar',"openAuth('signup')");return}
   if(SOC.unavailable){box.innerHTML=feedMsg('O Social ainda não foi ativado neste projeto.');return}
-  if(!SOC.primed){box.innerHTML='<div class="spinner" style="grid-column:1/-1"></div>';return}
+  if(!SOC.primed){box.innerHTML='<div class="skel skel-card"></div><div class="skel skel-card"></div><div class="skel skel-card"></div>';return}
   if(!SOC.friends.length){box.innerHTML=feedMsg('Você ainda não tem amigos no MySpotList.','Adicionar amigos','goSocial()');return}
   if(!SOC.feed.length){box.innerHTML=feedMsg('Seus amigos ainda não salvaram nenhuma avaliação.');return}
   SOC.feed.forEach(it=>box.appendChild(feedCard(it)));
@@ -3226,37 +3503,42 @@ async function openFriend(uid){
   body.innerHTML='<div class="spinner" style="margin:3rem auto"></div>';
   document.getElementById('friendOverlay').classList.add('open');
   try{
-    const [al,tr]=await Promise.all([
+    const [al,tr,ex]=await Promise.all([
       sbAuthed(`/rest/v1/shared_albums?select=key,title,artist,cover,year,avg,rated_tracks,total_tracks,score_sum,saved_at&user_id=eq.${uid}&order=saved_at.desc&limit=1000`),
-      sbAuthed(`/rest/v1/shared_tracks?select=key,name,artist,album_title,cover,score,saved_at&user_id=eq.${uid}&order=saved_at.desc&limit=1000`)
+      sbAuthed(`/rest/v1/shared_tracks?select=key,name,artist,album_title,cover,score,saved_at&user_id=eq.${uid}&order=saved_at.desc&limit=1000`),
+      sbAuthed(`/rest/v1/profiles?select=bio,fav_artist,fav_album&id=eq.${uid}`).catch(()=>[])
     ]);
-    renderFriendProfile(uid,computeFriendStats(al||[],tr||[]));
+    renderFriendProfile(uid,computeFriendStats(al||[],tr||[]),(ex&&ex[0])||{});
   }catch(e){body.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao abrir o perfil.')+'</div>'}
 }
-function renderFriendProfile(uid,st){
+function renderFriendProfile(uid,st,ex){
+  ex=ex||{};
   const p=SOC.profiles[uid]||{};
   const f=SOC.friends.find(x=>x.user_id===uid);
   const body=document.getElementById('friendBody');body.innerHTML='';
-  const head=document.createElement('div');head.className='st-header';
-  head.appendChild(avEl(p,'av-lg'));
-  const hi=document.createElement('div');hi.style.cssText='flex:1;min-width:0';
-  hi.innerHTML=`<div style="font-size:1.15rem;font-weight:600">${esc(nameOf(p))}</div><div style="color:var(--accent);font-size:.9rem">${p.username?'@'+esc(p.username):''}</div>`;
+  const head=document.createElement('div');head.className='pf-head';
+  head.appendChild(avEl(p,'av-xl'));
+  const hi=document.createElement('div');hi.className='pf-id';
+  hi.innerHTML=`<div class="pf-name">${esc(nameOf(p))}</div><div class="pf-user">${p.username?'@'+esc(p.username):''}</div>`;
   head.appendChild(hi);body.appendChild(head);
-  const b=document.createElement('div');b.className='st-body';
+  const b=document.createElement('div');b.className='pf-body';
+  if(ex.bio)b.insertAdjacentHTML('beforeend',`<div class="pf-bio">${esc(ex.bio)}</div>`);
+  if(ex.fav_artist||ex.fav_album)b.insertAdjacentHTML('beforeend',`<div class="pf-favs" style="margin-bottom:1.1rem">${favCard('artist',ex.fav_artist,false)}${favCard('album',ex.fav_album,false)}</div>`);
   const tile=(v,l,s)=>`<div class="tile"><div class="tv">${esc(v)}</div><div class="tl">${esc(l)}</div>${s?`<div class="ts">${esc(s)}</div>`:''}</div>`;
-  b.innerHTML=`<div class="tiles">
+  b.insertAdjacentHTML('beforeend',`<div class="tiles">
     ${tile(String(st.albums),'Álbuns avaliados')}
     ${tile(String(st.tracks),'Músicas avaliadas')}
     ${tile(fmtNote(st.avg),'Nota média das músicas')}
     ${tile(st.recent.length?timeAgo(st.recent[0].saved_at):'—','Última avaliação')}
-    ${tile(st.topCount?st.topCount[0]:'—','Artista mais avaliado',st.topCount?st.topCount[1]+' música'+(st.topCount[1]!==1?'s':''):'')}
-    ${tile(st.top1?st.top1.name:'—','Nº 1 do ranking',st.top1?'média '+fmtNote(st.top1.avg)+' · '+st.top1.albums+' '+(st.top1.albums!==1?'álbuns':'álbum'):'')}
-  </div>`;
-  const t=document.createElement('div');t.className='soc-title';t.textContent='Avaliações recentes';b.appendChild(t);
+    ${tile(st.topCount?st.topCount[0]:'—','Artista mais avaliado',st.topCount?plTrack(st.topCount[1]):'')}
+    ${tile(st.top1?st.top1.name:'—','Nº 1 do ranking',st.top1?'média '+fmtNote(st.top1.avg)+' · '+plAlbum(st.top1.albums):'')}
+  </div>`);
+  const t=document.createElement('div');t.className='soc-title';t.textContent='Últimas avaliações';b.appendChild(t);
   const l=document.createElement('div');l.className='rank-list';
   if(!st.recent.length)l.innerHTML='<div style="color:var(--text3);font-size:13px;padding:.4rem">Ainda não salvou nenhuma avaliação.</div>';
-  st.recent.forEach(it=>{
-    const row=document.createElement('div');row.className='rank-item';row.style.cursor='pointer';
+  st.recent.forEach((it,i)=>{
+    const row=document.createElement('div');row.className='rank-item'+(i>=3?' more-row':'');row.style.cursor='pointer';
+    if(i>=3)row.style.display='none';
     row.onclick=()=>openEval({...it,user_id:uid});
     row.appendChild(rankImg(it.cover));
     const info=document.createElement('div');info.className='rank-info';
@@ -3266,8 +3548,13 @@ function renderFriendProfile(uid,st){
     row.appendChild(sc);l.appendChild(row);
   });
   b.appendChild(l);
+  if(st.recent.length>3){
+    const more=document.createElement('button');more.className='link-btn';more.style.marginTop='.6rem';more.textContent='Ver mais avaliações';
+    more.onclick=()=>{l.querySelectorAll('.more-row').forEach(r=>{r.style.display=''});more.remove()};
+    b.appendChild(more);
+  }
   if(f){
-    const rm=document.createElement('button');rm.className='link-btn danger';rm.style.marginTop='1.2rem';rm.textContent='Remover amigo';
+    const rm=document.createElement('button');rm.className='link-btn danger';rm.style.cssText='display:block;margin-top:1.2rem';rm.textContent='Remover amigo';
     rm.onclick=()=>removeFriend(f.fid,uid);b.appendChild(rm);
   }
   body.appendChild(b);
@@ -3314,6 +3601,314 @@ async function openEval(it){
     btn.onclick=()=>{closeEval();closeFriend();openStModal({spotifyTrackId:it.key,name:it.title,artist:it.artist,albumTitle:it.album_title||'',cover:it.cover||'',duration:0,previewUrl:'',year:''})};
     actions.appendChild(btn);
   }
+}
+
+// ─── RANKINGS: modo Meus | Comunidade ─────────────────────────
+function getRankMode(){let m=null;try{m=localStorage.getItem('myspotlist_rankmode')}catch(e){}return m==='community'?'community':'mine'}
+function setRankMode(m){try{localStorage.setItem('myspotlist_rankmode',m)}catch(e){}applyRankMode();if(m==='mine')renderRankings();else renderCommunity()}
+function applyRankMode(){
+  const m=getRankMode();
+  document.getElementById('rankMine').style.display=m==='mine'?'':'none';
+  document.getElementById('rankCommunity').style.display=m==='community'?'':'none';
+  document.getElementById('rmode-mine').classList.toggle('active',m==='mine');
+  document.getElementById('rmode-com').classList.toggle('active',m==='community');
+}
+function isRankingsVisible(){const s=document.getElementById('sec-rankings');return !!s&&s.classList.contains('active')}
+
+const COM={tab:'people',metric:{people:'tracks',albums:'best',artists:'best'},cache:{}};
+try{const t=localStorage.getItem('myspotlist_comtab');if(['people','albums','artists'].includes(t))COM.tab=t}catch(e){}
+const COM_METRICS={
+  people:[['tracks','Músicas avaliadas'],['albums','Álbuns avaliados'],['avgHigh','Maior nota média'],['avgLow','Menor nota média (mais exigente)'],['recent','Atividade mais recente']],
+  albums:[['best','Melhores avaliados'],['most','Mais avaliados']],
+  artists:[['best','Melhores avaliados'],['most','Mais músicas avaliadas']]
+};
+function setComTab(t){COM.tab=t;try{localStorage.setItem('myspotlist_comtab',t)}catch(e){}renderCommunity()}
+function setComMetric(v){COM.metric[COM.tab]=v;renderCommunity()}
+const skelRows=n=>Array.from({length:n},()=>'<div class="skel skel-row"></div>').join('');
+const posEl=i=>{const d=document.createElement('div');d.className='rank-pos'+(i<3?' top':'');d.textContent=i+1;return d};
+async function renderCommunity(force){
+  ['people','albums','artists'].forEach(t=>document.getElementById('cseg-'+t).classList.toggle('active',COM.tab===t));
+  document.getElementById('comMetric').innerHTML=COM_METRICS[COM.tab].map(([v,l])=>`<option value="${v}"${COM.metric[COM.tab]===v?' selected':''}>${l}</option>`).join('');
+  const box=document.getElementById('comList');
+  document.getElementById('comNote').innerHTML='';
+  if(!AUTH.user){box.innerHTML=feedMsg('Entre para ver o ranking da comunidade.','Criar conta ou entrar',"openAuth('signup')");return}
+  const tab=COM.tab,metric=COM.metric[tab],key=tab+'|'+metric;
+  const hit=COM.cache[key];
+  if(hit&&!force&&Date.now()-hit.at<60000){drawCommunity(tab,hit.rows);return}
+  box.innerHTML=skelRows(6);
+  try{
+    let rows;
+    if(tab==='people')rows=await socRpc('community_people',{metric,max_rows:50});
+    else if(tab==='albums')rows=await socRpc('community_albums',{mode:metric,max_rows:30});
+    else rows=await socRpc('community_artists',{mode:metric,max_rows:30});
+    COM.cache[key]={rows:rows||[],at:Date.now()};
+    if(COM.tab===tab&&COM.metric[tab]===metric)drawCommunity(tab,rows||[]);
+  }catch(e){
+    if(e.authFailed){signOutLocal('Sua sessão expirou. Entre novamente.');return}
+    if(COM.tab!==tab)return;
+    box.innerHTML=isMissingTable(e)?feedMsg('A comunidade ainda não foi ativada neste projeto.'):'<div class="sp-err">'+esc(e.message||'Erro ao carregar o ranking.')+'</div>';
+  }
+}
+function drawCommunity(tab,rows){
+  const box=document.getElementById('comList');box.innerHTML='';
+  const metric=COM.metric[tab],notes=[];
+  if(tab==='people'&&(metric==='avgHigh'||metric==='avgLow'))notes.push('A nota média só conta para quem já avaliou pelo menos 5 músicas.');
+  if(AUTH.user&&DB.profile&&DB.profile.community===false)notes.push('Você está oculto no ranking da comunidade. <button class="link-btn" onclick="toggleCommunity(true)">Aparecer</button>');
+  document.getElementById('comNote').innerHTML=notes.join('<br>');
+  if(!rows.length){box.innerHTML='<div class="empty-state"><div class="icon">♪</div><h3>Ainda não há dados para este ranking</h3><p>Salve algumas avaliações para aparecer aqui.</p></div>';return}
+  const me=AUTH.user&&AUTH.user.id;
+  rows.forEach((r,i)=>box.appendChild(tab==='people'?comPersonRow(r,i,metric,me):tab==='albums'?comAlbumRow(r,i):comArtistRow(r,i)));
+}
+function comPersonRow(r,i,metric,me){
+  SOC.profiles[r.user_id]=SOC.profiles[r.user_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar};
+  const isMe=r.user_id===me,friend=!!r.is_friend;
+  const avg=r.avg_score==null?null:parseFloat(r.avg_score);
+  const val={tracks:plTrack(r.tracks_rated),albums:plAlbum(r.albums_rated),avgHigh:fmtNote(avg),avgLow:fmtNote(avg),recent:r.last_activity?timeAgo(r.last_activity):'—'}[metric];
+  const right=document.createElement('div');right.className='com-val';
+  const v=document.createElement('div');v.className='rank-score';v.style.fontSize='1rem';
+  v.style.color=(metric==='avgHigh'||metric==='avgLow')?scoreColor(avg):'var(--accent)';v.textContent=val;right.appendChild(v);
+  if(!isMe&&!friend){
+    const b=document.createElement('button');b.className='btn btn-ghost';b.textContent='Adicionar';
+    b.onclick=ev=>{ev.stopPropagation();addFriendByHandle(r.username,b)};right.appendChild(b);
+  }
+  const sub=`${plAlbum(r.albums_rated)} · ${plTrack(r.tracks_rated)}${avg!=null?' · média '+fmtNote(avg):''}`;
+  const row=personRow(r.user_id,sub,right,isMe?()=>openProfile():(friend?()=>openFriend(r.user_id):null),isMe?'me':'');
+  row.prepend(posEl(i));
+  if(isMe)row.querySelector('h4').insertAdjacentHTML('beforeend',' <span style="color:var(--accent);font-size:11px">(você)</span>');
+  return row;
+}
+function comAlbumRow(r,i){
+  const avg=parseFloat(r.avg_score);
+  const row=document.createElement('div');row.className='rank-item';row.style.cursor='pointer';row.onclick=()=>openCommAlbum(r);
+  row.appendChild(posEl(i));row.appendChild(rankImg(r.cover));
+  const info=document.createElement('div');info.className='rank-info';
+  info.innerHTML=`<h4>${esc(r.title)}</h4><p>${esc(r.artist)} · ${r.raters} avaliaç${r.raters===1?'ão':'ões'}</p>`;
+  row.appendChild(info);
+  const sc=document.createElement('div');sc.className='rank-score';sc.style.color=scoreColor(avg);sc.textContent=fmtNote(avg);
+  row.appendChild(sc);return row;
+}
+function artistImgEl(name){
+  const cached=(DB.artistPhotoCache||{})[name];
+  const mk=url=>{
+    if(url){const i=document.createElement('img');i.src=url;i.alt='';i.className='rank-img';i.style.borderRadius='50%';i.style.objectFit='cover';return i}
+    const d=document.createElement('div');d.className='rank-img-ph';d.style.borderRadius='50%';d.textContent=initialOf(name);return d;
+  };
+  const el=mk(cached||null);
+  if(cached===undefined)fetchArtistPhoto(name).then(u=>{if(u&&el.isConnected)el.replaceWith(mk(u))});
+  return el;
+}
+function comArtistRow(r,i){
+  const avg=parseFloat(r.avg_score);
+  const row=document.createElement('div');row.className='rank-item';
+  row.appendChild(posEl(i));row.appendChild(artistImgEl(r.artist));
+  const info=document.createElement('div');info.className='rank-info';
+  info.innerHTML=`<h4>${esc(r.artist)}</h4><p>${plAlbum(r.albums)} · ${plTrack(r.tracks)} · ${r.raters} ${r.raters===1?'pessoa':'pessoas'}</p>`;
+  row.appendChild(info);
+  const sc=document.createElement('div');sc.className='rank-score';sc.style.color=scoreColor(avg);sc.textContent=fmtNote(avg);
+  row.appendChild(sc);return row;
+}
+function openCommAlbum(r){
+  const avg=parseFloat(r.avg_score);
+  const body=document.getElementById('evalBody');body.innerHTML='';
+  const head=document.createElement('div');head.className='st-header';
+  head.innerHTML=`${r.cover?`<img src="${esc(r.cover)}" class="st-cover" alt="">`:'<div class="st-cover-ph">♪</div>'}
+    <div style="flex:1;min-width:0"><div style="font-size:1.1rem;font-weight:600;line-height:1.25">${esc(r.title)}</div>
+    <div style="color:var(--accent);font-size:.88rem;margin:.15rem 0 .35rem">${esc(r.artist)}</div>
+    <div style="font-size:12px;color:var(--text3)">${r.raters} avaliaç${r.raters===1?'ão':'ões'} na comunidade${r.year?' · '+esc(r.year):''}</div></div>
+    <div style="font-size:2rem;font-weight:700;color:${scoreColor(avg)}">${fmtNote(avg)}</div>`;
+  body.appendChild(head);
+  const b=document.createElement('div');b.className='st-body';
+  if(String(r.key).startsWith('sp_')){
+    const spId=String(r.key).slice(3);
+    const mine=DB.albums.find(a=>a.spotifyId===spId);
+    const btn=document.createElement('button');btn.className='btn '+(mine?'btn-ghost':'btn-primary');btn.style.width='100%';
+    btn.textContent=mine?'Abrir na minha biblioteca':'Adicionar à minha biblioteca para avaliar também';
+    btn.onclick=()=>{closeEval();if(mine)openDetail(mine.id);else importAlbum(spId)};
+    b.appendChild(btn);
+  }else b.innerHTML='<div style="color:var(--text3);font-size:13px">Este álbum foi cadastrado manualmente.</div>';
+  body.appendChild(b);
+  document.getElementById('evalOverlay').classList.add('open');
+}
+async function addFriendByHandle(h,btn){
+  if(btn){btn.disabled=true;btn.textContent='Enviando…'}
+  try{
+    const r=await socRpc('send_friend_request',{handle:h});
+    const m={sent:'Pedido enviado para @'+h+'.',accepted:'Vocês agora são amigos!',already_friends:'Vocês já são amigos.',already_sent:'Você já enviou um pedido para @'+h+'.',not_found:'Usuário não encontrado.',self:'Esse é o seu usuário.',limit:'Você tem muitos pedidos pendentes.'}[r]||'Pronto.';
+    toast(m);
+    COM.cache={};SOC.polling=false;await socialPoll();
+    if(isRankingsVisible()&&getRankMode()==='community')renderCommunity(true);
+  }catch(e){toast(e.message||'Não foi possível enviar o pedido.');if(btn){btn.disabled=false;btn.textContent='Adicionar'}}
+}
+async function toggleCommunity(on){
+  try{
+    await sbAuthed('/rest/v1/profiles?id=eq.'+AUTH.user.id,{method:'PATCH',body:{show_in_community:on},headers:{Prefer:'return=minimal'}});
+    if(DB.profile)DB.profile.community=on;
+    save(true);COM.cache={};
+    toast(on?'Você aparece no ranking da comunidade.':'Você não aparece mais no ranking da comunidade.');
+  }catch(e){toast(isMissingTable(e)?'Para ativar, o administrador precisa rodar o supabase-comunidade.sql.':(e.message||'Não foi possível alterar agora.'))}
+  refreshAccountSection();
+  if(isRankingsVisible()&&getRankMode()==='community')renderCommunity(true);
+}
+
+// ─── MEU PERFIL ───────────────────────────────────────────────
+let profileView='main';
+function openProfile(){profileView='main';renderMyProfile();document.getElementById('profileOverlay').classList.add('open')}
+function closeProfile(){document.getElementById('profileOverlay').classList.remove('open')}
+function myCounts(){
+  const saved=DB.albums.filter(a=>a.savedAt&&avgTracks(a)!==null);
+  const tr=saved.reduce((n,a)=>n+a.tracks.filter(isRatedTrack).length,0)+DB.standaloneTracks.filter(t=>isRatedTrack(t)&&!trackInSavedAlbum(t)).length;
+  return {albums:saved.length,tracks:tr};
+}
+function myRecent3(){
+  const items=[];
+  DB.albums.forEach(a=>{const avg=avgTracks(a);if(a.savedAt&&avg!==null)items.push({kind:'album',id:a.id,title:a.title,artist:a.artist,cover:a.cover,score:avg,at:a.savedAt})});
+  DB.standaloneTracks.forEach(t=>{if(isRatedTrack(t)&&!trackInSavedAlbum(t))items.push({kind:'track',title:t.name,artist:t.artist,cover:t.cover,score:parseFloat(t.score),at:t.savedAt||t.addedAt||0})});
+  items.sort((a,b)=>b.at-a.at);
+  return items.slice(0,3);
+}
+function bioHtml(p){
+  return p.bio
+    ?`<div class="pf-bio">${esc(p.bio)}</div><button type="button" class="link-btn" onclick="startEditBio()" style="margin:-.6rem 0 1rem">Editar descrição</button>`
+    :`<div class="pf-bio empty">Adicione uma descrição sobre você.</div><button type="button" class="link-btn" onclick="startEditBio()" style="margin:-.6rem 0 1rem">Adicionar descrição</button>`;
+}
+function startEditBio(){
+  const p=DB.profile||{};
+  document.getElementById('pfBio').innerHTML=`<div class="pf-bio-edit" style="margin-bottom:1.1rem"><textarea id="bioInput" maxlength="200" placeholder="Fale um pouco sobre você e o que você ouve…">${esc(p.bio||'')}</textarea><div class="row"><button type="button" class="btn btn-primary" onclick="saveBio()" style="font-size:12.5px;padding:7px 16px">Salvar</button><button type="button" class="btn btn-ghost" onclick="renderMyProfile()" style="font-size:12.5px;padding:7px 14px">Cancelar</button><span class="cnt" id="bioCnt">0/200</span></div></div>`;
+  const ta=document.getElementById('bioInput');
+  const upd=()=>{document.getElementById('bioCnt').textContent=ta.value.length+'/200'};
+  ta.oninput=upd;upd();ta.focus();
+}
+function saveBio(){saveProfileExtras({bio:document.getElementById('bioInput').value.trim()})}
+function favCard(kind,f,editable){
+  const lbl=kind==='artist'?'Artista favorito':'Álbum favorito';
+  const has=!!(f&&f.name);
+  let body;
+  if(has){
+    const cls='fav-img'+(kind==='artist'?' round':'');
+    const img=f.image?`<img class="${cls}" src="${esc(f.image)}" alt="">`:`<div class="${cls}"></div>`;
+    body=`<div class="fav-body">${img}<div style="min-width:0"><div class="fav-name">${esc(f.name)}</div>${kind==='album'&&f.artist?`<div class="fav-sub">${esc(f.artist)}</div>`:''}</div></div>`;
+  }else body=`<div class="fav-empty">${editable?'Nenhum escolhido':'Não definido'}</div>`;
+  const act=editable?`<div class="fav-actions"><button type="button" class="link-btn" onclick="openPicker('${kind}')">${has?'Trocar':'Escolher'}</button>${has?`<button type="button" class="link-btn danger" onclick="clearFav('${kind}')">Remover</button>`:''}</div>`:'';
+  return `<div class="fav-card"><div class="fav-lbl">${lbl}</div>${body}${act}</div>`;
+}
+function renderMyProfile(){
+  const body=document.getElementById('profileBody');
+  if(profileView==='friends'){renderMyFriends(body);return}
+  const p=DB.profile||{name:'Você'};
+  const acct=!!AUTH.user;
+  const cnt=myCounts();
+  body.innerHTML=`
+    <div class="pf-head"><span class="av av-xl" id="pfAv"></span>
+      <div class="pf-id"><div class="pf-name">${esc(p.name||'Você')}</div><div class="pf-user">${acct?(p.username?'@'+esc(p.username):''):'<span style="color:var(--text3)">Sem conta, só neste navegador</span>'}</div></div>
+    </div>
+    <div class="pf-body">
+      <div id="pfBio">${bioHtml(p)}</div>
+      <div class="pf-counts">
+        <button type="button" class="pf-count" onclick="openMyFriends()"><b>${acct?SOC.friends.length:'—'}</b><span>amigos</span></button>
+        <div class="pf-count"><b>${cnt.albums}</b><span>álbuns</span></div>
+        <div class="pf-count"><b>${cnt.tracks}</b><span>músicas</span></div>
+      </div>
+      <div class="pf-favs">${favCard('artist',p.favArtist,true)}${favCard('album',p.favAlbum,true)}</div>
+      <div class="soc-title">Últimas avaliações</div>
+      <div class="rank-list" id="pfRecent"></div>
+      <div class="pf-foot">
+        <button type="button" class="btn btn-ghost" onclick="closeProfile();openLogin(true)">Editar perfil</button>
+        <button type="button" class="btn btn-ghost" onclick="closeProfile();openSettings()">Configurações</button>
+        ${acct?'':'<button type="button" class="btn btn-primary" onclick="closeProfile();openAuth(\'signup\')">Criar conta</button>'}
+      </div>
+    </div>`;
+  setAvatarEl(document.getElementById('pfAv'),p);
+  const l=document.getElementById('pfRecent');
+  const rec=myRecent3();
+  if(!rec.length)l.innerHTML='<div style="color:var(--text3);font-size:13px;padding:.4rem">Salve uma avaliação para ela aparecer aqui.</div>';
+  rec.forEach(it=>{
+    const row=document.createElement('div');row.className='rank-item';
+    if(it.kind==='album'){row.style.cursor='pointer';row.onclick=()=>{closeProfile();openDetail(it.id)}}
+    row.appendChild(rankImg(it.cover));
+    const info=document.createElement('div');info.className='rank-info';
+    info.innerHTML=`<h4>${esc(it.title)}</h4><p>${esc(it.artist)} · ${timeAgo(new Date(it.at).toISOString())}</p>`;
+    row.appendChild(info);
+    const sc=document.createElement('div');sc.className='rank-score';sc.style.color=scoreColor(it.score);sc.textContent=fmtNote(it.score);
+    row.appendChild(sc);l.appendChild(row);
+  });
+}
+function openMyFriends(){
+  if(!AUTH.user){closeProfile();openAuth('signup');return}
+  profileView='friends';renderMyProfile();
+}
+function renderMyFriends(body){
+  body.innerHTML=`<div class="pf-subhead"><button type="button" class="back-btn" onclick="profileView='main';renderMyProfile()">← Meu perfil</button><div class="pf-subtitle">Amigos (${SOC.friends.length})</div></div><div class="pf-body"><div class="rank-list" id="pfFriends"></div></div>`;
+  const l=document.getElementById('pfFriends');
+  if(!SOC.friends.length){
+    l.innerHTML='<div class="empty-state"><div class="icon">♪</div><h3>Nenhum amigo ainda</h3><p>Adicione amigos pelo @ na aba Social.</p><button type="button" class="btn btn-primary" onclick="closeProfile();goSocial()" style="margin-top:1rem">Adicionar amigos</button></div>';
+    return;
+  }
+  const stats={};SOC.board.forEach(b=>{stats[b.user_id]=b});
+  SOC.friends.forEach(f=>{
+    const s=stats[f.user_id];
+    const sub=s?`${plAlbum(s.albums_rated)} · ${plTrack(s.tracks_rated)}`:'toque para ver o perfil';
+    l.appendChild(personRow(f.user_id,sub,null,()=>openFriend(f.user_id)));
+  });
+}
+async function saveProfileExtras(patch){
+  DB.profile=Object.assign(DB.profile||{},patch);
+  save(true);
+  if(AUTH.user){
+    const body={};
+    if('bio' in patch)body.bio=patch.bio||null;
+    if('favArtist' in patch)body.fav_artist=patch.favArtist||null;
+    if('favAlbum' in patch)body.fav_album=patch.favAlbum||null;
+    try{await sbAuthed('/rest/v1/profiles?id=eq.'+AUTH.user.id,{method:'PATCH',body,headers:{Prefer:'return=minimal'}})}
+    catch(e){toast(isMissingTable(e)||/column/i.test(e.message||'')?'Salvo só neste aparelho: o administrador precisa rodar o supabase-comunidade.sql.':(e.message||'Não foi possível salvar no servidor.'))}
+  }
+  renderMyProfile();
+}
+function clearFav(kind){saveProfileExtras(kind==='artist'?{favArtist:null}:{favAlbum:null})}
+
+// ── escolher artista/álbum favorito pelo Spotify ──
+let pickKind=null,pickTimer=null,pickSeq=0;
+function openPicker(kind){
+  pickKind=kind;
+  document.getElementById('pickTitle').textContent=kind==='artist'?'Escolher artista favorito':'Escolher álbum favorito';
+  const inp=document.getElementById('pickInput');
+  inp.placeholder=kind==='artist'?'Buscar artista no Spotify…':'Buscar álbum no Spotify…';
+  inp.value='';
+  document.getElementById('pickResults').innerHTML='<div class="sp-empty">Digite para buscar no Spotify.</div>';
+  document.getElementById('pickOverlay').classList.add('open');
+  inp.focus();
+}
+function closePicker(){document.getElementById('pickOverlay').classList.remove('open')}
+function pickDebounce(q){
+  clearTimeout(pickTimer);q=(q||'').trim();
+  if(!q){document.getElementById('pickResults').innerHTML='<div class="sp-empty">Digite para buscar no Spotify.</div>';return}
+  pickTimer=setTimeout(()=>pickSearch(q,0),400);
+}
+async function pickSearch(q,offset){
+  const seq=++pickSeq,box=document.getElementById('pickResults'),type=pickKind;
+  if(offset===0)box.innerHTML='<div class="spinner"></div>';
+  const token=await getSpotifyToken(true);
+  if(!token){box.innerHTML='<div class="sp-err">Não foi possível conectar ao Spotify agora.</div>';return}
+  try{
+    const d=await spJson(`/search?q=${encodeURIComponent(q)}&type=${type}&limit=10&offset=${offset}`,token);
+    if(seq!==pickSeq)return;
+    const list=(type==='artist'?d.artists:d.albums)||{};
+    const items=(list.items||[]).filter(Boolean);
+    if(offset===0)box.innerHTML='';else{const w=box.querySelector('.more-wrap');if(w)w.remove()}
+    if(!items.length&&offset===0){box.innerHTML='<div class="sp-empty">Nada encontrado.</div>';return}
+    items.forEach(it=>{
+      const img=imgOf(it);
+      const row=document.createElement('div');row.className='search-result-item';
+      row.innerHTML=`${img?`<img src="${esc(img)}" class="result-img${type==='artist'?' round':''}" alt="">`:`<div class="result-img ph${type==='artist'?' round':''}">♪</div>`}
+        <div class="result-info"><div class="result-name">${esc(it.name)}</div><div class="result-sub">${type==='artist'?'Artista':esc(namesOf(it.artists))}</div></div>`;
+      row.onclick=()=>{
+        closePicker();
+        const data=type==='artist'?{id:it.id,name:it.name,image:img}:{id:it.id,name:it.name,artist:namesOf(it.artists),image:img};
+        saveProfileExtras(type==='artist'?{favArtist:data}:{favAlbum:data});
+      };
+      box.appendChild(row);
+    });
+    if(list.next&&items.length)moreBtn(box,()=>pickSearch(q,offset+10),'Ver mais resultados');
+  }catch(e){if(seq===pickSeq)box.innerHTML='<div class="sp-err">'+esc(e.message||'Erro na busca.')+'</div>'}
 }
 
 // ─── PERFIL / LOGIN ──────────────────────────────────────────
@@ -3500,12 +4095,12 @@ async function submitLogin(){
       return;
     }
     btn.disabled=false;
-    DB.profile={name,username,avatar:loginAvatar||null};
+    DB.profile=Object.assign(DB.profile||{},{name,username,avatar:loginAvatar||null});
     save(true);applyProfile();closeLogin();refreshAccountSection();toast('Perfil salvo!');
     if(!localStorage.getItem('myspotlist_welcome'))showWelcomeIfFirst();
     return;
   }
-  DB.profile={name,avatar:loginAvatar||null};
+  DB.profile=Object.assign(DB.profile||{},{name,avatar:loginAvatar||null});
   try{localStorage.setItem('myspotlist_mode','guest')}catch(e){}
   save();applyProfile();closeLogin();
   if(loginEditing)toast('Perfil atualizado!');else showWelcomeIfFirst();
