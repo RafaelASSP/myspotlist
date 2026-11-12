@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#080a0c">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>MySpotList — Diário pessoal de Música</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,7 +97,7 @@ nav{
 }
 .nav-link:hover{color:var(--text2);background:var(--bg3)}
 .nav-link.active{color:var(--text);background:var(--bg3)}
-.nav-search{flex:1;max-width:300px;margin-left:auto;position:relative}
+.nav-search{flex:1;max-width:340px;margin-left:auto;position:relative}
 .nav-search input{
   width:100%;background:var(--bg3);
   border:1px solid var(--border);
@@ -542,7 +545,8 @@ html{-webkit-text-size-adjust:100%}
 .icon-btn svg{width:18px;height:18px}
 .nl-ic{display:none}
 .lib-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:1.75rem}
-.lib-search{display:none;width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Sora',sans-serif;outline:none;margin-bottom:1.25rem}
+.sec-filter{display:block;width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:13.5px;outline:none;margin-bottom:1.25rem;transition:border-color .18s}
+.sec-filter:focus{border-color:var(--accent)}
 .rank-info p{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .settings-head{padding:1.25rem 3.5rem 1.25rem 1.5rem;border-bottom:1px solid var(--border);font-size:1rem;font-weight:600}
 .settings-body{padding:1.25rem 1.5rem 1.5rem;display:flex;flex-direction:column;gap:1.75rem}
@@ -562,8 +566,8 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 @media(max-width:720px){
   body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
   nav{padding:env(safe-area-inset-top,0px) 1rem 0;height:calc(56px + env(safe-area-inset-top,0px));gap:.6rem;backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--bg)}
-  .nav-logo{font-size:1.2rem;margin-right:auto}
-  .nav-search{display:none}
+  .nav-logo{font-size:1.2rem}
+  .nav-search{flex:1;max-width:none;min-width:0;margin-left:0}
   .nav-links{position:fixed;left:0;right:0;bottom:0;margin:0;gap:0;justify-content:space-around;background:rgba(8,10,12,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:100}
   .nav-link{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;padding:6px 4px;background:none}
   .nav-link.active{background:none;color:var(--accent)}
@@ -584,7 +588,6 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   .album-grid{grid-template-columns:repeat(2,1fr);gap:.85rem}
   .album-info{padding:9px 10px 11px}
   .grid2{grid-template-columns:1fr;gap:2rem}
-  .lib-search{display:block}
   .lib-head h2{font-size:1.5rem !important}
   .overlay{padding:.75rem .5rem}
   .modal-header{padding:1.1rem;gap:1rem}
@@ -623,6 +626,71 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 .w-legend span{display:inline-flex;align-items:center;gap:6px}
 .w-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
 @media(max-width:720px){.welcome-top{padding:1.4rem 1.25rem 1rem}.welcome-steps{padding:.25rem 1.25rem .75rem}.welcome-foot{padding:1rem 1.25rem 1.4rem}}
+
+/* ─── BUSCA NO TOPO ─── */
+.search-panel{display:none;position:absolute;top:calc(100% + 10px);right:0;width:min(520px,calc(100vw - 2rem));max-height:min(72vh,560px);overflow-y:auto;background:var(--bg2);border:1px solid var(--border2);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.65);padding:.85rem;z-index:150}
+.search-panel.open{display:block}
+.search-panel .search-type-toggle{margin-bottom:.6rem}
+#searchResults .search-result-item{border-radius:10px;border-bottom:none;padding:.5rem .55rem;gap:.8rem}
+.search-result-item:hover{background:var(--bg3)}
+.result-img{width:46px;height:46px}
+.result-img.ph{display:flex;align-items:center;justify-content:center;color:var(--text3)}
+.result-btn{padding:6px 14px;font-size:12.5px;flex-shrink:0}
+.result-btn-sm{font-size:11.5px;font-weight:600;color:var(--text3);flex-shrink:0}
+.result-btn-sm.add{color:var(--accent)}
+#addManualWrap{margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border)}
+
+/* ─── PERFIL / AVATAR ─── */
+.av{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--bg4);color:#080a0c;font-weight:700;font-size:13px}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av-lg{width:52px;height:52px;font-size:20px}
+.profile-btn{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);border-radius:30px;padding:3px 14px 3px 3px;color:var(--text2);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;flex-shrink:0;max-width:190px;transition:all .18s}
+.profile-btn:hover{border-color:var(--border2);color:var(--text)}
+.profile-btn .pname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profile-row{display:flex;align-items:center;gap:.9rem}
+.p-name{font-size:14.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-sub{font-size:11.5px;color:var(--text3);margin-top:2px;line-height:1.4}
+
+/* ─── LOGIN ─── */
+.login-screen{display:none;position:fixed;inset:0;z-index:500;overflow-y:auto;background:radial-gradient(900px 500px at 12% 8%,rgba(29,185,84,.12),transparent 60%),radial-gradient(700px 500px at 95% 95%,rgba(29,185,84,.08),transparent 60%),var(--bg)}
+.login-screen.open{display:flex}
+.login-inner{margin:auto;display:grid;grid-template-columns:1.05fr 1fr;gap:3.5rem;max-width:1020px;width:100%;padding:2.5rem 1.5rem;align-items:center}
+.login-logo{width:76px;height:76px;border-radius:19px;display:block;margin-bottom:1.4rem;box-shadow:0 12px 40px rgba(29,185,84,.18)}
+.login-hero h1{font-size:3rem;line-height:1.05;color:var(--accent);margin-bottom:.55rem;letter-spacing:-.01em}
+.login-tag{font-size:1.15rem;color:var(--text2);margin-bottom:1.75rem}
+.login-points{list-style:none;display:flex;flex-direction:column;gap:.85rem}
+.login-points li{position:relative;padding-left:1.4rem;font-size:13.5px;color:var(--text3);line-height:1.6}
+.login-points li::before{content:'';position:absolute;left:0;top:.55rem;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.login-points b{color:var(--text);font-weight:600}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:1.75rem;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.login-card h2{font-size:1.2rem;margin-bottom:1.25rem}
+.av-tabs{display:flex;gap:3px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:3px;margin-bottom:.6rem}
+.av-tab{flex:1;padding:7px 10px;border-radius:6px;border:none;background:none;color:var(--text3);cursor:pointer;font-size:13px;font-family:'Sora',sans-serif;font-weight:500;transition:all .18s}
+.av-tab.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.av-hint{font-size:12px;color:var(--text3);margin-bottom:.6rem}
+.av-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:.8rem 0 1rem;max-height:236px;overflow-y:auto;padding:2px}
+.av-opt{background:none;border:2px solid transparent;border-radius:12px;padding:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text2);font-size:10.5px;font-family:'Sora',sans-serif;transition:all .15s;min-width:0}
+.av-opt:hover{background:var(--bg3)}
+.av-opt.sel{border-color:var(--accent);background:var(--accent-dim)}
+.av-opt img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;display:block}
+.av-grid.album .av-opt img{border-radius:8px}
+.av-opt span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.av-msg{grid-column:1/-1;font-size:12.5px;color:var(--text3);line-height:1.6;padding:.75rem .25rem}
+.login-preview{display:flex;align-items:center;gap:.9rem;padding:.85rem;background:var(--bg3);border:1px solid var(--border);border-radius:12px;margin-bottom:1.1rem}
+.login-actions{display:flex;gap:.6rem}
+.login-note{font-size:11.5px;color:var(--text3);text-align:center;margin-top:.9rem}
+
+/* ─── MOBILE (busca, perfil, login) — vem depois das regras base ─── */
+@media(max-width:720px){
+  .search-panel{position:fixed;left:.5rem;right:.5rem;top:calc(62px + env(safe-area-inset-top,0px));width:auto;max-height:calc(100vh - 170px);max-height:calc(100dvh - 170px)}
+  .profile-btn{padding:3px;border-radius:50%}
+  .profile-btn .pname{display:none}
+  .login-inner{grid-template-columns:1fr;gap:1.75rem;padding:1.5rem 1.1rem 2rem}
+  .login-hero h1{font-size:2.1rem}
+  .login-logo{width:56px;height:56px;margin-bottom:.9rem}
+  .login-card{padding:1.25rem}
+  .av-grid{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 <body>
@@ -638,12 +706,24 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
     <button class="nav-link" onclick="showSection('rankings',this)"><span class="nl-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V10M12 20V4M18 20v-7"/></svg></span><span>Rankings</span></button>
     <button class="nav-link" onclick="showSection('favorites',this)"><span class="nl-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/></svg></span><span>Favoritos</span></button>
   </div>
-  <div class="nav-search">
+  <div class="nav-search" id="navSearch">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="globalSearch" placeholder="Filtrar álbuns…" oninput="filterLibrary(this.value)">
+    <input type="text" id="spotifySearch" autocomplete="off" placeholder="Buscar álbum…" oninput="debounceSearch(this.value)" onfocus="openSearchPanel()">
+    <div class="search-panel" id="searchPanel">
+      <div class="search-type-toggle">
+        <button class="search-type-btn active" id="stype-album" onclick="setSearchType('album',this)">Álbuns</button>
+        <button class="search-type-btn" id="stype-track" onclick="setSearchType('track',this)">Músicas</button>
+      </div>
+      <div id="searchResults"></div>
+      <div id="searchHistoryWrap"></div>
+      <div id="addManualWrap">
+        <button class="btn btn-ghost" onclick="addManual()" style="width:100%;font-size:13px">Não achou? Adicionar manualmente</button>
+      </div>
+    </div>
   </div>
-  <button class="btn btn-primary" onclick="openAddModal()" aria-label="Adicionar">+<span class="add-label-long"> Adicionar</span></button>
-  <button class="btn btn-ghost icon-btn" onclick="openSettings()" aria-label="Configurações" title="Configurações"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></button>
+  <button class="profile-btn" onclick="openSettings()" aria-label="Perfil e configurações" title="Perfil e configurações">
+    <span class="av" id="navAvatar"></span><span class="pname" id="navName"></span>
+  </button>
 </nav>
 
 <!-- HOME -->
@@ -668,13 +748,14 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
       <option value="title">Título A-Z</option>
     </select>
   </div>
-  <input type="text" id="libSearch" class="lib-search" placeholder="Filtrar álbuns…" oninput="filterLibrary(this.value)">
+  <input type="text" id="libSearch" class="sec-filter" placeholder="Filtrar por álbum ou artista…" oninput="setSectionFilter('library',this.value)">
   <div class="album-grid" id="libraryGrid"></div>
 </section>
 
 <!-- RANKINGS -->
 <section class="section" id="sec-rankings">
-  <h2 style="font-size:1.8rem;margin-bottom:1.75rem">Rankings</h2>
+  <h2 style="font-size:1.8rem;margin-bottom:1rem">Rankings</h2>
+  <input type="text" id="rankSearch" class="sec-filter" placeholder="Filtrar por álbum, artista ou música…" oninput="setSectionFilter('rankings',this.value)">
   <div class="grid2" style="margin-bottom:2.5rem">
     <div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;gap:.5rem">
@@ -715,7 +796,8 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 
 <!-- FAVORITES -->
 <section class="section" id="sec-favorites">
-  <h2 style="font-size:1.8rem;margin-bottom:1.75rem">Favoritos</h2>
+  <h2 style="font-size:1.8rem;margin-bottom:1rem">Favoritos</h2>
+  <input type="text" id="favSearch" class="sec-filter" placeholder="Filtrar por álbum, artista ou música…" oninput="setSectionFilter('favorites',this.value)">
   <div class="section-title">Álbuns favoritos</div>
   <div class="album-grid" id="favAlbums" style="margin-bottom:2.5rem"></div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;gap:.5rem">
@@ -743,48 +825,20 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   </div>
 </div>
 
-<!-- ─── ADD ALBUM MODAL ─── -->
-<div class="overlay" id="addOverlay" onclick="closeAddIfOutside(event)">
-  <div id="addModal" style="position:relative;width:100%;max-width:640px;margin:auto;background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column">
-    <button class="modal-close" onclick="closeAdd()">×</button>
-
-    <div style="display:flex;align-items:center;gap:10px;padding:1.1rem 3.5rem 1.1rem 1.5rem;border-bottom:1px solid var(--border)">
-      <div class="waveform" style="margin:0"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-      <span style="font-size:1rem;font-weight:600;color:var(--text)">Adicionar</span>
-    </div>
-
-    <!-- Aba Pesquisar -->
-    <div id="addPane-search" style="padding:1.25rem 1.5rem 1.5rem">
-      <div class="search-type-toggle">
-        <button class="search-type-btn active" id="stype-album" onclick="setSearchType('album',this)">Álbuns</button>
-        <button class="search-type-btn" id="stype-track" onclick="setSearchType('track',this)">Músicas</button>
-      </div>
-      <div style="position:relative;margin-bottom:1rem">
-        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.35;pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" id="spotifySearch" placeholder="Buscar álbum no Spotify…" oninput="debounceSearch(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px 10px 38px;color:var(--text);font-size:14px;font-family:'Sora',sans-serif;outline:none;transition:border-color .18s">
-      </div>
-      <div id="searchResults"></div>
-      <!-- Histórico (só álbuns) -->
-      <div id="searchHistoryWrap"></div>
-      <div id="addManualWrap" style="display:flex;align-items:center;gap:.75rem;margin:1rem 0;flex-direction:column">
-        <div style="display:flex;align-items:center;gap:.75rem;width:100%">
-          <div style="flex:1;height:1px;background:var(--border)"></div>
-          <span style="color:var(--text3);font-size:12px">ou</span>
-          <div style="flex:1;height:1px;background:var(--border)"></div>
-        </div>
-        <button class="btn btn-ghost" onclick="addManual()" style="width:100%;font-size:13px">Adicionar manualmente</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
 <!-- ─── SETTINGS MODAL ─── -->
 <div class="overlay" id="settingsOverlay" onclick="if(event.target===this)closeSettings()">
   <div class="st-modal">
     <button class="modal-close" onclick="closeSettings()">×</button>
     <div class="settings-head">Configurações</div>
     <div class="settings-body">
+      <div class="settings-sec">
+        <div class="settings-lbl">Perfil</div>
+        <div class="profile-row">
+          <span class="av av-lg" id="settingsAvatar"></span>
+          <div style="flex:1;min-width:0"><div id="settingsName" class="p-name"></div><div id="settingsAvLabel" class="p-sub"></div></div>
+          <button class="btn btn-ghost" onclick="closeSettings();openLogin(true)" style="font-size:13px">Editar</button>
+        </div>
+      </div>
       <div class="settings-sec">
         <div class="settings-lbl">Backup dos dados</div>
         <p>Seus álbuns e notas ficam salvos neste navegador. Exporte um arquivo para guardar ou levar para outro aparelho.</p>
@@ -815,6 +869,46 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   </div>
 </div>
 
+<!-- ─── LOGIN / PERFIL ─── -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-inner">
+    <div class="login-hero">
+      <img src="app-icon.png" class="login-logo" alt="">
+      <h1>MySpotList</h1>
+      <p class="login-tag">Seu diário pessoal de música</p>
+      <ul class="login-points">
+        <li><b>Avalie faixa por faixa.</b> Notas de 0 a 10; a média do álbum é calculada sozinha.</li>
+        <li><b>Busca integrada com o Spotify.</b> Capas, faixas, ano e fotos de artistas já vêm prontos.</li>
+        <li><b>Rankings e estatísticas.</b> Seus melhores álbuns, músicas e artistas, sempre atualizados.</li>
+        <li><b>Favoritos e diário.</b> Marque o que você ama e anote o que sentiu em cada álbum.</li>
+        <li><b>Seus dados com você.</b> Ficam salvos no seu navegador, com backup em um clique.</li>
+      </ul>
+    </div>
+    <div class="login-card">
+      <h2 id="loginTitle">Criar seu perfil</h2>
+      <label class="settings-lbl">Seu nome</label>
+      <input id="loginName" class="settings-input" maxlength="24" autocomplete="off" placeholder="Como quer ser chamado?" oninput="updateLoginPreview()" onkeydown="if(event.key==='Enter')submitLogin()">
+      <label class="settings-lbl" style="margin-top:1.1rem">Escolha seu avatar</label>
+      <div class="av-tabs">
+        <button type="button" class="av-tab active" id="avtab-artist" onclick="setAvatarType('artist')">Foto de artista</button>
+        <button type="button" class="av-tab" id="avtab-album" onclick="setAvatarType('album')">Capa de álbum</button>
+      </div>
+      <p class="av-hint" id="avHint"></p>
+      <input id="avSearch" class="settings-input" autocomplete="off" placeholder="Buscar artista no Spotify…" oninput="debounceAvatarSearch(this.value)">
+      <div class="av-grid" id="avGrid"></div>
+      <div class="login-preview">
+        <span class="av av-lg" id="loginPreviewAv"></span>
+        <div style="min-width:0"><div id="loginPreviewName" class="p-name">Seu nome</div><div id="loginPreviewLabel" class="p-sub"></div></div>
+      </div>
+      <div class="login-actions">
+        <button class="btn btn-ghost" id="loginCancel" onclick="closeLogin()" style="display:none">Cancelar</button>
+        <button class="btn btn-primary" id="loginSubmit" onclick="submitLogin()" style="flex:1;padding:11px">Entrar</button>
+      </div>
+      <p class="login-note">Seu perfil fica salvo neste navegador, sem senha.</p>
+    </div>
+  </div>
+</div>
+
 <!-- ─── WELCOME MODAL ─── -->
 <div class="overlay" id="welcomeOverlay" onclick="if(event.target===this)closeWelcome()">
   <div class="st-modal welcome">
@@ -825,14 +919,14 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
       <p>Seu diário pessoal de música: registre os álbuns que você ouve, dê nota para cada faixa e acompanhe o seu gosto musical ao longo do tempo.</p>
     </div>
     <div class="welcome-steps">
-      <div class="w-step"><span class="w-num">1</span><div><b>Adicione um álbum</b><p>Toque em <b>+</b> e busque no Spotify. Capa, faixas e ano vêm prontos. Também dá para avaliar uma música avulsa.</p></div></div>
+      <div class="w-step"><span class="w-num">1</span><div><b>Adicione um álbum</b><p>Use a <b>busca no topo</b> para achar um álbum no Spotify e clique em <b>Adicionar</b>. Capa, faixas e ano vêm prontos. Na aba Músicas dá para avaliar uma faixa avulsa.</p></div></div>
       <div class="w-step"><span class="w-num">2</span><div><b>Dê notas às faixas</b><p>De 0 a 10, com decimais. A média do álbum é calculada sozinha.</p></div></div>
       <div class="w-step"><span class="w-num">3</span><div><b>Salve a avaliação</b><p>Clique em <b>Salvar avaliação</b> para atualizar suas estatísticas na Home.</p></div></div>
       <div class="w-step"><span class="w-num">4</span><div><b>Explore</b><p>Veja Rankings e Favoritos, e use a aba Diário de cada álbum para anotações e tags.</p></div></div>
     </div>
     <div class="welcome-foot">
       <div class="w-legend"><span><i style="background:var(--green)"></i>8.0+</span><span><i style="background:#f59e0b"></i>5.8 a 7.9</span><span><i style="background:var(--red)"></i>abaixo de 5.8</span></div>
-      <p>Seus dados ficam salvos neste navegador. Em ⚙ Configurações você exporta um backup para guardar ou levar para outro aparelho.</p>
+      <p>Seus dados ficam salvos neste navegador. No menu do seu perfil (canto superior direito) você exporta um backup para guardar ou levar para outro aparelho.</p>
       <button class="btn btn-primary" onclick="closeWelcome()" style="width:100%;padding:11px">Começar</button>
     </div>
   </div>
@@ -855,7 +949,6 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 let DB = JSON.parse(localStorage.getItem('myspotlist_db') || '{"albums":[],"spotifyClientId":"","spotifyClientSecret":"","spotifyToken":"","spotifyTokenExp":0}');
 let currentAlbumId = null;
 let searchDebounce = null;
-let filterQuery = '';
 
 function save(){localStorage.setItem('myspotlist_db',JSON.stringify(DB))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
@@ -987,7 +1080,7 @@ function albumCard(album){
 // ─── LIBRARY ─────────────────────────────────────────────────
 function renderLibrary(){
   let albums=[...DB.albums];
-  if(filterQuery)albums=albums.filter(a=>a.title.toLowerCase().includes(filterQuery)||a.artist.toLowerCase().includes(filterQuery));
+  albums=albums.filter(a=>matches(FILTERS.library,a.title,a.artist));
   const sort=document.getElementById('sortSelect').value;
   if(sort==='rating')albums.sort((a,b)=>(avgTracks(b)||0)-(avgTracks(a)||0));
   else if(sort==='artist')albums.sort((a,b)=>a.artist.localeCompare(b.artist));
@@ -1000,10 +1093,13 @@ function renderLibrary(){
   }
   grid.innerHTML='';albums.forEach(a=>grid.appendChild(albumCard(a)));
 }
-function filterLibrary(q){
-  filterQuery=q.toLowerCase();
-  ['globalSearch','libSearch'].forEach(id=>{const el=document.getElementById(id);if(el&&el.value!==q)el.value=q});
-  if(document.getElementById('sec-library').classList.contains('active'))renderLibrary();
+const FILTERS={library:'',rankings:'',favorites:''};
+function matches(q,...fields){if(!q)return true;return fields.some(f=>String(f||'').toLowerCase().includes(q))}
+function setSectionFilter(sec,q){
+  FILTERS[sec]=(q||'').toLowerCase().trim();
+  if(sec==='library')renderLibrary();
+  else if(sec==='rankings')renderRankings();
+  else renderFavorites();
 }
 
 // ─── RANKINGS ────────────────────────────────────────────────
@@ -1033,7 +1129,7 @@ function renderRankings(){
   }
   const albumArtistFilter=(albumArtistSel||{}).value||'';
   const albums=[...DB.albums]
-    .filter(a=>avgTracks(a)!==null&&(!albumArtistFilter||a.artist===albumArtistFilter))
+    .filter(a=>avgTracks(a)!==null&&(!albumArtistFilter||a.artist===albumArtistFilter)&&matches(FILTERS.rankings,a.title,a.artist))
     .sort((a,b)=>avgTracks(b)-avgTracks(a)).slice(0,10);
   const ra=document.getElementById('rankAlbums');ra.innerHTML='';
   if(!albums.length){ra.innerHTML='<div style="color:var(--text3);font-size:13px;padding:.5rem">Nenhum álbum encontrado.</div>';}
@@ -1061,7 +1157,7 @@ function renderRankings(){
   const artistSortVal=(document.getElementById('artistSortSelect')||{}).value||'avg';
   const artistList=Object.entries(artistData)
     .map(([name,d])=>({name,count:d.count,albumCount:d.albumCount,avg:d.rated?d.total/d.rated:null}))
-    .filter(a=>a.avg!==null)
+    .filter(a=>a.avg!==null&&matches(FILTERS.rankings,a.name))
     .sort((a,b)=>{
       if(artistSortVal==='tracks')return b.count-a.count;
       if(artistSortVal==='albums')return b.albumCount-a.albumCount;
@@ -1100,7 +1196,7 @@ function renderRankings(){
     if(t.score!==''&&t.score!=null){
       // avoid duplicates if already in an album
       const inAlbum=DB.albums.some(a=>a.tracks.some(tr=>tr.spotifyTrackId&&tr.spotifyTrackId===t.spotifyTrackId&&tr.score!==''&&tr.score!=null));
-      if(!inAlbum)allTracks.push({name:t.name,score:parseFloat(t.score),albumTitle:t.albumTitle||'Avulsa',albumId:null,artist:t.artist,cover:t.cover||'',standalone:true,stTrackId:t.spotifyTrackId});
+      if(!inAlbum)allTracks.push({name:t.name,score:parseFloat(t.score),albumTitle:t.albumTitle||'Avulsa',albumId:null,artist:t.artist,cover:t.cover||'',standalone:true,stTrackId:t.spotifyTrackId,stRef:t});
     }
   });
 
@@ -1115,7 +1211,7 @@ function renderRankings(){
   // apply filters
   const sortVal=(document.getElementById('trackSortSelect')||{}).value||'score_desc';
   const artistFilter=(document.getElementById('trackArtistFilter')||{}).value||'';
-  let filtered=allTracks.filter(t=>!artistFilter||t.artist===artistFilter);
+  let filtered=allTracks.filter(t=>(!artistFilter||t.artist===artistFilter)&&matches(FILTERS.rankings,t.name,t.artist,t.albumTitle));
   if(sortVal==='score_desc')filtered.sort((a,b)=>b.score-a.score);
   else if(sortVal==='score_asc')filtered.sort((a,b)=>a.score-b.score);
   else if(sortVal==='artist')filtered.sort((a,b)=>a.artist.localeCompare(b.artist)||b.score-a.score);
@@ -1124,7 +1220,7 @@ function renderRankings(){
   const rt=document.getElementById('rankTracks');rt.innerHTML='';
   if(!top20.length){rt.innerHTML='<div style="color:var(--text3);font-size:13px;padding:.5rem">Nenhuma faixa encontrada.</div>';return;}
   top20.forEach((t,i)=>{
-    const div=document.createElement('div');div.className='rank-item';div.style.cursor='pointer';div.onclick=()=>openDetail(t.albumId);
+    const div=document.createElement('div');div.className='rank-item';div.style.cursor='pointer';div.onclick=()=>{if(t.albumId)openDetail(t.albumId);else if(t.stRef)openStModal(t.stRef)};
     const coverDiv=t.cover?`<img src="${t.cover}" class="rank-img" alt="">`:'<div class="rank-img-ph">♪</div>';
     div.innerHTML=`
       <div class="rank-pos${i<3?' top':''}">${i+1}</div>
@@ -1139,37 +1235,40 @@ function renderRankings(){
 }
 
 // ─── FAVORITES ────────────────────────────────────────────────
-function renderFavorites(){
-  const favAlbums=DB.albums.filter(a=>a.favorite);
-  const fa=document.getElementById('favAlbums');fa.innerHTML='';
-  if(!favAlbums.length){fa.innerHTML='<div style="color:var(--text3);font-size:13px">Nenhum álbum favorito ainda.</div>';}
-  else favAlbums.forEach(a=>fa.appendChild(albumCard(a)));
-  // build artist dropdown
-  const allFavTracks=[];
-  DB.albums.forEach(a=>a.tracks.forEach(t=>{if(t.favorite)allFavTracks.push({...t,albumTitle:a.title,artist:a.artist,albumId:a.id,cover:a.cover})}));
+function collectFavTracks(){
+  const all=[];
+  DB.albums.forEach(a=>a.tracks.forEach(t=>{if(t.favorite)all.push({...t,albumTitle:a.title,artist:a.artist,albumId:a.id,cover:a.cover})}));
   (DB.standaloneTracks||[]).forEach(t=>{
     if(t.favorite){
       const inAlbum=DB.albums.some(a=>a.tracks.some(tr=>tr.spotifyTrackId&&tr.spotifyTrackId===t.spotifyTrackId));
-      if(!inAlbum)allFavTracks.push({...t,albumId:null});
+      if(!inAlbum)all.push({...t,albumId:null,stRef:t});
     }
   });
+  return all;
+}
+function renderFavorites(){
+  const q=FILTERS.favorites;
+  const favAlbums=DB.albums.filter(a=>a.favorite&&matches(q,a.title,a.artist));
+  const fa=document.getElementById('favAlbums');fa.innerHTML='';
+  if(!favAlbums.length){fa.innerHTML='<div style="color:var(--text3);font-size:13px">'+(q?'Nenhum álbum encontrado.':'Nenhum álbum favorito ainda.')+'</div>';}
+  else favAlbums.forEach(a=>fa.appendChild(albumCard(a)));
   const sel=document.getElementById('favTrackArtistFilter');
   if(sel){
     const cur=sel.value;
-    const uArtists=[...new Set(allFavTracks.map(t=>t.artist))].sort((a,b)=>a.localeCompare(b));
+    const uArtists=[...new Set(collectFavTracks().map(t=>t.artist))].sort((a,b)=>a.localeCompare(b));
     sel.innerHTML='<option value="">Todos os artistas</option>'+uArtists.map(a=>`<option value="${a}"${a===cur?' selected':''}>${a}</option>`).join('');
   }
   renderFavTracks();
 }
 function renderFavTracks(){
-  const allFavTracks=[];
-  DB.albums.forEach(a=>a.tracks.forEach(t=>{if(t.favorite)allFavTracks.push({...t,albumTitle:a.title,artist:a.artist,albumId:a.id,cover:a.cover})}));
+  const q=FILTERS.favorites;
   const artistFilter=(document.getElementById('favTrackArtistFilter')||{}).value||'';
-  const filtered=allFavTracks.filter(t=>!artistFilter||t.artist===artistFilter);
+  const filtered=collectFavTracks().filter(t=>(!artistFilter||t.artist===artistFilter)&&matches(q,t.name,t.artist,t.albumTitle));
   const ft=document.getElementById('favTracks');ft.innerHTML='';
   if(!filtered.length){ft.innerHTML='<div style="color:var(--text3);font-size:13px">Nenhuma faixa favorita encontrada.</div>';return}
   filtered.forEach(t=>{
-    const div=document.createElement('div');div.className='rank-item';div.style.cursor='pointer';div.onclick=()=>openDetail(t.albumId);
+    const div=document.createElement('div');div.className='rank-item';div.style.cursor='pointer';
+    div.onclick=()=>{if(t.albumId)openDetail(t.albumId);else if(t.stRef)openStModal(t.stRef)};
     const coverEl=t.cover
       ?`<img src="${t.cover}" class="rank-img" alt="">`
       :`<div class="rank-img-ph">♪</div>`;
@@ -1401,18 +1500,38 @@ function renderSearchHistory(){
           <div class="history-name">${h.title}</div>
           <div class="history-sub">${h.artist}${h.year?' · '+h.year:''}</div>
         </div>
-        ${h.inLibrary?'<span style="font-size:11px;color:var(--accent);font-weight:600">✓ Na biblioteca</span>':'<span style="font-size:11px;color:var(--text3)">+ Adicionar</span>'}
+        ${DB.albums.some(a=>a.spotifyId===h.spotifyId)?'<span class="result-btn-sm">Abrir</span>':'<span class="result-btn-sm add">+ Adicionar</span>'}
       </div>`).join('');
 }
-function openAddModal(){
-  document.getElementById('spotifySearch').value='';
-  document.getElementById('searchResults').innerHTML='';
-  renderSearchHistory();
-  setSearchType('album',document.getElementById('stype-album'));
-  document.getElementById('addOverlay').classList.add('open');
+function openSearchPanel(){
+  document.getElementById('searchPanel').classList.add('open');
+  updatePanelSections();
 }
-function closeAdd(){document.getElementById('addOverlay').classList.remove('open')}
-function closeAddIfOutside(e){if(e.target===document.getElementById('addOverlay'))closeAdd()}
+function closeSearchPanel(){document.getElementById('searchPanel').classList.remove('open')}
+function closeAdd(){
+  closeSearchPanel();
+  const i=document.getElementById('spotifySearch');
+  if(i){i.value='';i.blur()}
+  document.getElementById('searchResults').innerHTML='';
+}
+function openAddModal(){
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('spotifySearch').focus();
+  openSearchPanel();
+}
+function updatePanelSections(){
+  const q=(document.getElementById('spotifySearch').value||'').trim();
+  const hw=document.getElementById('searchHistoryWrap');
+  const mw=document.getElementById('addManualWrap');
+  const showHist=searchType==='album'&&!q;
+  if(hw){hw.style.display=showHist?'block':'none';if(showHist)renderSearchHistory()}
+  if(mw)mw.style.display=searchType==='album'?'block':'none';
+}
+document.addEventListener('click',e=>{
+  const ns=document.getElementById('navSearch');
+  if(ns&&!e.composedPath().includes(ns))closeSearchPanel();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSearchPanel()});
 
 function saveSpotifyKey(){
   DB.spotifyClientId=document.getElementById('clientIdInput').value.trim();
@@ -1453,18 +1572,18 @@ function setSearchType(type,btn){
   document.querySelectorAll('.search-type-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const inp=document.getElementById('spotifySearch');
-  inp.placeholder=type==='album'?'Buscar álbum no Spotify…':'Buscar música no Spotify…';
+  inp.placeholder=type==='album'?'Buscar álbum…':'Buscar música…';
   inp.value='';
   document.getElementById('searchResults').innerHTML='';
-  const hw=document.getElementById('searchHistoryWrap');
-  if(hw)hw.style.display=type==='album'?'block':'none';
-  const mw=document.getElementById('addManualWrap');
-  if(mw)mw.style.display=type==='album'?'flex':'none';
+  updatePanelSections();
+  inp.focus();
 }
 function debounceSearch(q){
   clearTimeout(searchDebounce);
-  if(!q.trim()){document.getElementById('searchResults').innerHTML='';return}
-  searchDebounce=setTimeout(()=>searchType==='track'?searchSpotifyTracks(q):searchSpotify(q),500);
+  openSearchPanel();
+  if(!q.trim()){document.getElementById('searchResults').innerHTML='';updatePanelSections();return}
+  updatePanelSections();
+  searchDebounce=setTimeout(()=>searchType==='track'?searchSpotifyTracks(q):searchSpotify(q),450);
 }
 
 let serverTokenState=null;
@@ -1479,7 +1598,8 @@ async function fetchServerToken(){
     return d;
   }catch(e){serverTokenState=false;return null}
 }
-async function getSpotifyToken(){
+async function getSpotifyToken(silent){
+  const fail=m=>{if(!silent)showError(m);return null};
   if(DB.spotifyToken&&Date.now()<DB.spotifyTokenExp-5000)return DB.spotifyToken;
   const srv=await fetchServerToken();
   if(srv){
@@ -1487,7 +1607,7 @@ async function getSpotifyToken(){
     return DB.spotifyToken;
   }
   if(!DB.spotifyClientId||!DB.spotifyClientSecret){
-    showError('Não foi possível conectar ao Spotify. Tente novamente ou use suas próprias credenciais em ⚙ Configurações.');
+    fail('Não foi possível conectar ao Spotify. Tente novamente ou use suas próprias credenciais nas configurações (clique no seu avatar, no topo).');
     return null;
   }
   try{
@@ -1497,10 +1617,10 @@ async function getSpotifyToken(){
       body:'grant_type=client_credentials'
     });
     const data=await res.json();
-    if(!data.access_token){showError('Credenciais inválidas. Verifique Client ID e Secret.');return null}
+    if(!data.access_token){fail('Credenciais inválidas. Verifique Client ID e Secret.');return null}
     DB.spotifyToken=data.access_token;DB.spotifyTokenExp=Date.now()+data.expires_in*1000;save();
     return DB.spotifyToken;
-  }catch(e){showError('Erro ao conectar com Spotify.');return null}
+  }catch(e){fail('Erro ao conectar com Spotify.');return null}
 }
 
 function showError(msg){
@@ -1515,27 +1635,29 @@ async function searchSpotify(q){
   try{
     const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=album&limit=8`,{headers:{Authorization:'Bearer '+token}});
     const data=await res.json();
+    if(searchType!=='album'||document.getElementById('spotifySearch').value.trim()!==q.trim())return;
     const albums=data.albums?.items||[];
     if(!albums.length){sr.innerHTML='<div style="padding:1rem;color:var(--text3);font-size:13px">Nenhum resultado encontrado.</div>';return}
     sr.innerHTML='';
     albums.forEach(album=>{
       const item=document.createElement('div');item.className='search-result-item';
-      const img=album.images[0]?.url;
-      item.innerHTML=`${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img" style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-family:'Sora',sans-serif;color:var(--text3)">♪</div>`}
+      const img=(album.images[1]||album.images[0]||{}).url;
+      const inLib=DB.albums.find(a=>a.spotifyId===album.id);
+      item.innerHTML=`${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
         <div class="result-info">
           <div class="result-name">${album.name}</div>
           <div class="result-sub">${album.artists.map(a=>a.name).join(', ')} · ${album.release_date?.slice(0,4)||''}</div>
         </div>`;
-      item.onclick=()=>{
-        // save to history (not in library yet)
-        if(!DB.searchHistory)DB.searchHistory=[];
-        if(!DB.searchHistory.find(h=>h.spotifyId===album.id)){
-          DB.searchHistory.unshift({spotifyId:album.id,title:album.name,artist:album.artists.map(a=>a.name).join(', '),cover:album.images[0]?.url||'',year:album.release_date?.slice(0,4)||'',inLibrary:!!DB.albums.find(a=>a.spotifyId===album.id)});
-          if(DB.searchHistory.length>12)DB.searchHistory=DB.searchHistory.slice(0,12);
-          save();
-        }
+      const btn=document.createElement('button');
+      btn.className='btn '+(inLib?'btn-ghost':'btn-primary')+' result-btn';
+      btn.textContent=inLib?'Abrir':'+ Adicionar';
+      const act=()=>{
+        if(inLib){closeAdd();openDetail(inLib.id);return}
         importAlbum(album.id,token);
       };
+      btn.onclick=ev=>{ev.stopPropagation();act()};
+      item.onclick=act;
+      item.appendChild(btn);
       sr.appendChild(item);
     });
   }catch(e){sr.innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">Erro na busca.</div>'}
@@ -1549,32 +1671,41 @@ async function searchSpotifyTracks(q){
   try{
     const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=track&limit=10`,{headers:{Authorization:'Bearer '+token}});
     const data=await res.json();
+    if(searchType!=='track'||document.getElementById('spotifySearch').value.trim()!==q.trim())return;
     const tracks=data.tracks?.items||[];
     if(!tracks.length){sr.innerHTML='<div style="padding:1rem;color:var(--text3);font-size:13px">Nenhuma música encontrada.</div>';return}
     sr.innerHTML='';
     tracks.forEach(t=>{
       const item=document.createElement('div');item.className='search-result-item';
-      const img=t.album?.images?.[0]?.url;
+      const img=(t.album?.images?.[1]||t.album?.images?.[0]||{}).url;
+      const bigImg=t.album?.images?.[0]?.url||'';
       const alreadyStandalone=!!(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===t.id);
-      const inAlbum=DB.albums.some(a=>a.tracks.some(tr=>tr.spotifyTrackId===t.id));
       item.innerHTML=`
-        ${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img" style="display:flex;align-items:center;justify-content:center;font-size:1.25rem;color:var(--text3)">♪</div>`}
+        ${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
         <div class="result-info">
           <div class="result-name">${t.name}</div>
           <div class="result-sub">${t.artists.map(a=>a.name).join(', ')} · ${t.album?.name||''}</div>
-        </div>
-        ${alreadyStandalone?'<span style="font-size:11px;color:var(--accent);font-weight:600">✓ Avaliada</span>':inAlbum?'<span style="font-size:11px;color:var(--text3)">No álbum</span>':''}`;
-      item.onclick=()=>openStModal({
-        spotifyTrackId:t.id,
-        name:t.name,
-        artist:t.artists.map(a=>a.name).join(', '),
-        albumTitle:t.album?.name||'',
-        albumSpotifyId:t.album?.id||'',
-        cover:img||'',
-        duration:t.duration_ms||0,
-        previewUrl:t.preview_url||'',
-        year:t.album?.release_date?.slice(0,4)||'',
-      });
+        </div>`;
+      const act=()=>{
+        closeSearchPanel();
+        openStModal({
+          spotifyTrackId:t.id,
+          name:t.name,
+          artist:t.artists.map(a=>a.name).join(', '),
+          albumTitle:t.album?.name||'',
+          albumSpotifyId:t.album?.id||'',
+          cover:bigImg,
+          duration:t.duration_ms||0,
+          previewUrl:t.preview_url||'',
+          year:t.album?.release_date?.slice(0,4)||'',
+        });
+      };
+      const btn=document.createElement('button');
+      btn.className='btn '+(alreadyStandalone?'btn-ghost':'btn-primary')+' result-btn';
+      btn.textContent=alreadyStandalone?'✓ Avaliada':'Avaliar';
+      btn.onclick=ev=>{ev.stopPropagation();act()};
+      item.onclick=act;
+      item.appendChild(btn);
       sr.appendChild(item);
     });
   }catch(e){sr.innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">Erro na busca.</div>'}
@@ -1796,6 +1927,144 @@ Isso substituirá seus dados atuais.`)){e.target.value='';return}
   reader.readAsText(file);
 }
 
+// ─── PERFIL / LOGIN ──────────────────────────────────────────
+const AV_COLORS=['#1db954','#8b5cf6','#f59e0b','#ec4899','#06b6d4','#ef4444','#84cc16'];
+const AV_SUGGEST={
+  artist:['Kendrick Lamar','Tame Impala','Radiohead','Daft Punk','Olivia Rodrigo','Ariana Grande','The Weeknd','Matuê'],
+  album:['GNX Kendrick Lamar','Currents Tame Impala','OK Computer Radiohead','Random Access Memories Daft Punk','SOUR Olivia Rodrigo','eternal sunshine Ariana Grande','Dawn FM The Weeknd','333 Matuê']
+};
+const avSuggestCache={artist:null,album:null};
+let loginAvatar=null,loginAvType='artist',loginEditing=false,avDebounce=null;
+
+function initialOf(name){return ((name||'?').trim().charAt(0)||'?').toUpperCase()}
+function avatarColor(name){let h=0;for(const ch of (name||'')){h=(h*31+ch.charCodeAt(0))>>>0}return AV_COLORS[h%AV_COLORS.length]}
+function setAvatarEl(el,profile){
+  if(!el)return;
+  el.innerHTML='';
+  const a=profile&&profile.avatar;
+  const fallback=()=>{el.textContent=initialOf(profile&&profile.name);el.style.background=avatarColor(profile&&profile.name)};
+  if(a&&a.url){
+    const img=document.createElement('img');img.alt='';
+    img.onerror=()=>{img.remove();fallback()};
+    img.src=a.url;el.style.background='';el.appendChild(img);
+  }else fallback();
+}
+function avatarLabel(a){
+  if(!a||!a.url)return 'Sem avatar escolhido: usaremos a sua inicial';
+  return (a.type==='album'?'Capa de álbum: ':'Foto de artista: ')+(a.label||'');
+}
+function applyProfile(){
+  const p=DB.profile;if(!p)return;
+  setAvatarEl(document.getElementById('navAvatar'),p);
+  document.getElementById('navName').textContent=p.name;
+  setAvatarEl(document.getElementById('settingsAvatar'),p);
+  document.getElementById('settingsName').textContent=p.name;
+  document.getElementById('settingsAvLabel').textContent=avatarLabel(p.avatar);
+}
+function openLogin(editing){
+  loginEditing=!!editing;
+  const p=DB.profile||{};
+  document.getElementById('loginName').value=editing?(p.name||''):'';
+  loginAvatar=editing&&p.avatar?{...p.avatar}:null;
+  document.getElementById('loginTitle').textContent=editing?'Editar perfil':'Criar seu perfil';
+  document.getElementById('loginSubmit').textContent=editing?'Salvar':'Entrar';
+  document.getElementById('loginCancel').style.display=editing?'inline-flex':'none';
+  document.getElementById('loginScreen').classList.add('open');
+  document.body.style.overflow='hidden';
+  setAvatarType(loginAvatar&&loginAvatar.type?loginAvatar.type:'artist');
+  updateLoginPreview();
+}
+function closeLogin(){
+  document.getElementById('loginScreen').classList.remove('open');
+  document.body.style.overflow='';
+}
+function setAvatarType(type){
+  loginAvType=type;
+  document.getElementById('avtab-artist').classList.toggle('active',type==='artist');
+  document.getElementById('avtab-album').classList.toggle('active',type==='album');
+  document.getElementById('avHint').textContent=type==='artist'?'Use a foto de um artista do Spotify como avatar.':'Use a capa de um álbum do Spotify como avatar.';
+  const inp=document.getElementById('avSearch');
+  inp.placeholder=type==='artist'?'Buscar artista no Spotify…':'Buscar álbum no Spotify…';
+  inp.value='';
+  document.getElementById('avGrid').classList.toggle('album',type==='album');
+  loadAvatarSuggestions();
+}
+function avMsg(text){document.getElementById('avGrid').innerHTML='<div class="av-msg">'+text+'</div>'}
+function optFromItem(it,type){
+  const imgs=it.images||[];
+  const url=(imgs[1]||imgs[0]||{}).url||'';
+  const label=type==='album'?`${it.name} · ${(it.artists||[]).map(a=>a.name).join(', ')}`:it.name;
+  return {type,url,label,short:it.name};
+}
+function renderAvatarOptions(opts){
+  const grid=document.getElementById('avGrid');
+  if(!opts.length){avMsg('Nenhum resultado.');return}
+  grid.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button');b.type='button';
+    b.className='av-opt'+(loginAvatar&&loginAvatar.url===o.url&&loginAvatar.label===o.label?' sel':'');
+    b.title=o.label;
+    const img=document.createElement('img');img.src=o.url;img.alt='';
+    const lb=document.createElement('span');lb.textContent=o.short;
+    b.appendChild(img);b.appendChild(lb);
+    b.onclick=()=>{
+      loginAvatar={type:o.type,url:o.url,label:o.label};
+      grid.querySelectorAll('.av-opt').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');updateLoginPreview();
+    };
+    grid.appendChild(b);
+  });
+}
+async function loadAvatarSuggestions(){
+  const type=loginAvType;
+  if(avSuggestCache[type]){renderAvatarOptions(avSuggestCache[type]);return}
+  document.getElementById('avGrid').innerHTML='<div class="spinner" style="grid-column:1/-1"></div>';
+  const token=await getSpotifyToken(true);
+  if(type!==loginAvType)return;
+  if(!token){avMsg('Não foi possível conectar ao Spotify agora. Você pode entrar com a inicial do seu nome e trocar o avatar depois, em Editar perfil.');return}
+  const results=await Promise.all(AV_SUGGEST[type].map(n=>
+    fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(n)}&type=${type}&limit=1`,{headers:{Authorization:'Bearer '+token}}).then(r=>r.json()).catch(()=>null)));
+  const opts=results.map(r=>{
+    const it=r&&(type==='artist'?r.artists:r.albums)?.items?.[0];
+    return it?optFromItem(it,type):null;
+  }).filter(o=>o&&o.url);
+  if(opts.length)avSuggestCache[type]=opts;
+  if(type===loginAvType&&!document.getElementById('avSearch').value.trim()){
+    if(opts.length)renderAvatarOptions(opts);else avMsg('Não foi possível carregar as sugestões. Tente buscar pelo nome.');
+  }
+}
+function debounceAvatarSearch(q){
+  clearTimeout(avDebounce);
+  if(!q.trim()){loadAvatarSuggestions();return}
+  avDebounce=setTimeout(()=>searchAvatar(q.trim()),450);
+}
+async function searchAvatar(q){
+  const type=loginAvType;
+  document.getElementById('avGrid').innerHTML='<div class="spinner" style="grid-column:1/-1"></div>';
+  const token=await getSpotifyToken(true);
+  if(!token){avMsg('Não foi possível conectar ao Spotify agora.');return}
+  try{
+    const r=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=${type}&limit=12`,{headers:{Authorization:'Bearer '+token}});
+    const d=await r.json();
+    if(type!==loginAvType||document.getElementById('avSearch').value.trim()!==q)return;
+    const items=(type==='artist'?d.artists:d.albums)?.items||[];
+    renderAvatarOptions(items.map(i=>optFromItem(i,type)).filter(o=>o.url));
+  }catch(e){avMsg('Erro na busca.')}
+}
+function updateLoginPreview(){
+  const name=document.getElementById('loginName').value.trim();
+  setAvatarEl(document.getElementById('loginPreviewAv'),{name:name||'?',avatar:loginAvatar});
+  document.getElementById('loginPreviewName').textContent=name||'Seu nome';
+  document.getElementById('loginPreviewLabel').textContent=avatarLabel(loginAvatar);
+}
+function submitLogin(){
+  const name=document.getElementById('loginName').value.trim();
+  if(!name){toast('Digite seu nome');document.getElementById('loginName').focus();return}
+  DB.profile={name,avatar:loginAvatar||null};
+  save();applyProfile();closeLogin();
+  if(loginEditing)toast('Perfil atualizado!');else showWelcomeIfFirst();
+}
+
 // ─── BOAS-VINDAS ─────────────────────────────────────────────
 function openWelcome(){document.getElementById('welcomeOverlay').classList.add('open')}
 function closeWelcome(){
@@ -1809,7 +2078,7 @@ function showWelcomeIfFirst(){
 }
 
 renderHome();
-showWelcomeIfFirst();
+if(DB.profile){applyProfile();showWelcomeIfFirst();}else openLogin(false);
 </script>
 </body>
 </html>
