@@ -928,6 +928,45 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
   .com-top .ctl-select{flex:1;max-width:none}
 }
 @media(max-width:480px){.pf-favs{grid-template-columns:1fr}}
+
+/* ─── AVALIAÇÃO EM UMA TELA ─── */
+.review-sec{margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--border)}
+.review-sec .diary-field label{margin-bottom:.45rem}
+.review-sec textarea{min-height:110px;line-height:1.6}
+.tag-add{display:flex;gap:.5rem;margin-top:.7rem}
+.tag-add input{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;outline:none}
+.tag-add input:focus{border-color:var(--accent)}
+.tag-add .btn{padding:7px 14px;font-size:12.5px}
+.share-hint{font-size:11.5px;color:var(--text3);margin-top:.6rem;line-height:1.5}
+.share-hint:empty{display:none}
+
+/* ver avaliação de alguém */
+.ev-author{display:flex;align-items:center;gap:.8rem;padding:.8rem .9rem;background:var(--bg3);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem}
+.ev-author .ev-info{flex:1;min-width:0}
+.ev-who{font-size:13px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-who b{color:var(--text)}
+.ev-who span{color:var(--text3)}
+.ev-when{font-size:11.5px;color:var(--text3);margin-top:1px}
+.rel-box{flex-shrink:0}
+.rel-box .btn{font-size:12.5px;padding:7px 14px}
+.rel-pill{display:inline-block;font-size:11.5px;font-weight:600;color:var(--text3);border:1px solid var(--border);border-radius:20px;padding:4px 11px}
+.rel-pill.ok{color:var(--accent);border-color:rgba(29,185,84,.4);background:var(--accent-dim)}
+.ev-review{font-size:13.5px;line-height:1.7;color:var(--text2);white-space:pre-wrap;word-break:break-word;background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:.85rem 1rem}
+.ev-meta{font-size:12.5px;color:var(--text3);margin-top:.9rem}
+.ev-meta b{color:var(--text2);font-weight:600}
+.ev-empty{color:var(--text3);font-size:13px}
+.ev-chips{margin-top:.2rem}
+.ev-chips .tag{cursor:default}
+
+/* convite para quem abriu um link sem conta */
+.share-preview{margin-bottom:1.1rem;padding:.9rem;background:var(--accent-dim);border:1px solid rgba(29,185,84,.28);border-radius:14px}
+.sp-card{display:flex;gap:.8rem;align-items:center}
+.sp-card img,.sp-card .ph{width:60px;height:60px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3)}
+.sp-line{font-size:12.5px;color:var(--text2)}
+.sp-line b{color:var(--text)}
+.sp-title{font-size:15px;font-weight:700;line-height:1.25;margin-top:2px}
+.sp-sub{font-size:12px;color:var(--text3)}
+.sp-cta{font-size:12.5px;color:var(--text2);line-height:1.55;margin-top:.7rem}
 </style>
 </head>
 <body>
@@ -1045,7 +1084,7 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
   <div class="rank-list" id="rankTracks"></div>
 </div>
   <div id="rankCommunity" style="display:none">
-    <p class="com-intro">Veja quem lidera no MySpotList entre todas as pessoas que escolheram aparecer aqui. Aparecem só o usuário, o avatar e os totais; diário e anotações continuam privados.</p>
+    <p class="com-intro">Veja quem lidera no MySpotList entre todas as pessoas que escolheram aparecer aqui. Aparecem só o usuário, o avatar e os totais; reviews e anotações não aparecem aqui.</p>
     <div class="com-top">
       <div class="seg" id="comSeg">
         <button type="button" id="cseg-people" onclick="setComTab('people')">Pessoas</button>
@@ -1116,12 +1155,7 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
     <button class="modal-close" onclick="closeDetail()">×</button>
     <div class="modal-header" id="detailHeader"></div>
     <div class="modal-body">
-      <div class="modal-tabs">
-        <button class="modal-tab active" onclick="switchTab('tracks',this)">Faixas</button>
-        <button class="modal-tab" onclick="switchTab('diary',this)">Diário</button>
-      </div>
       <div class="tab-content active" id="tab-tracks"></div>
-      <div class="tab-content" id="tab-diary"></div>
     </div>
   </div>
 </div>
@@ -1226,11 +1260,12 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
         <li><b>Avalie faixa por faixa.</b> Notas de 0 a 10; a média do álbum é calculada sozinha.</li>
         <li><b>Busca integrada com o Spotify.</b> Capas, faixas, ano e fotos de artistas já vêm prontos.</li>
         <li><b>Rankings e estatísticas.</b> Seus melhores álbuns, músicas e artistas, sempre atualizados.</li>
-        <li><b>Favoritos e diário.</b> Marque o que você ama e anote o que sentiu em cada álbum.</li>
+        <li><b>Favoritos e reviews.</b> Marque o que você ama e escreva o que sentiu em cada álbum.</li>
         <li><b>Seus dados em qualquer aparelho.</b> Crie uma conta e suas avaliações ficam salvas na nuvem.</li>
       </ul>
     </div>
     <div class="login-card" id="authCard" style="display:none">
+      <div id="sharePreview" class="share-preview" style="display:none"></div>
       <h2 id="authTitle">Entrar</h2>
       <div class="av-tabs" id="authTabs">
         <button type="button" class="av-tab active" id="authtab-login" onclick="setAuthTab('login')">Entrar</button>
@@ -1296,7 +1331,7 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
       <div class="w-step"><span class="w-num">1</span><div><b>Adicione um álbum</b><p>Use a <b>busca no topo</b>: pesquise seu artista, álbum ou música preferida e clique em <b>Adicionar</b> (ou em <b>Ver álbuns</b> para abrir todos os álbuns de um artista).</p></div></div>
       <div class="w-step"><span class="w-num">2</span><div><b>Dê notas às faixas</b><p>De 0 a 10, com decimais. A média do álbum é calculada sozinha.</p></div></div>
       <div class="w-step"><span class="w-num">3</span><div><b>Salve a avaliação</b><p>Clique em <b>Salvar avaliação</b> para atualizar suas estatísticas na Home.</p></div></div>
-      <div class="w-step"><span class="w-num">4</span><div><b>Explore</b><p>Veja Rankings e Favoritos, e use a aba Diário de cada álbum para anotações e tags.</p></div></div>
+      <div class="w-step"><span class="w-num">4</span><div><b>Explore</b><p>Veja Rankings e Favoritos. Dentro de cada álbum, escreva sua review e escolha moods e tags.</p></div></div>
     </div>
     <div class="welcome-foot">
       <div class="w-legend"><span><i style="background:var(--green)"></i>8.0+</span><span><i style="background:#f59e0b"></i>5.8 a 7.9</span><span><i style="background:var(--red)"></i>abaixo de 5.8</span></div>
@@ -1350,8 +1385,13 @@ function showSection(id,btn,fromRoute){
   document.title=ROUTE_TITLES[id]||'MySpotList';
   if(!fromRoute)window.scrollTo(0,0);
 }
-window.addEventListener('popstate',()=>showSection(routeFromHash()||'home',null,true));
-function restoreRoute(){const id=routeFromHash();if(id&&id!=='home')showSection(id,null,true)}
+window.addEventListener('popstate',()=>{const t=shareTokenFromHash();if(t){handleShareLink(t);return}showSection(routeFromHash()||'home',null,true)});
+window.addEventListener('hashchange',()=>{const t=shareTokenFromHash();if(t)handleShareLink(t)});
+function restoreRoute(){
+  const t=shareTokenFromHash();
+  if(t){handleShareLink(t);return}
+  const id=routeFromHash();if(id&&id!=='home')showSection(id,null,true);
+}
 
 // ─── SCORE UTILS ─────────────────────────────────────────────
 function scoreColor(s){
@@ -1412,21 +1452,51 @@ function sanitizeScoreInput(inp){
 let _unsaved=false;
 function markUnsaved(){_unsaved=true;const b=document.querySelector('#tab-tracks .btn-primary');if(b)b.classList.add('btn-pulse')}
 const APP_URL=(location.protocol.indexOf('http')===0&&!/^(localhost|127\.|192\.168\.)/.test(location.hostname))?location.origin:'https://myspotlist-sigma.vercel.app';
+const SHARE_BOXES=new Set();
+function tokenFor(kind,key){const t=DB.sync&&DB.sync.tok;const b=t&&t[kind==='album'?'albums':'tracks'];return (b&&b[key])||null}
+const evalLink=t=>APP_URL+'/#/r/'+t;
+async function ensureToken(kind,key){
+  if(!AUTH.user||typeof SOC==='undefined')return null;
+  ensureSyncState();
+  const S=DB.sync;if(!S.tok)S.tok={albums:{},tracks:{}};
+  const bucket=kind==='album'?'albums':'tracks';
+  if(S.tok[bucket][key])return S.tok[bucket][key];
+  if(SOC.noNewCols||SOC.unavailable)return null;
+  if(!(S.pub&&S.pub[bucket]&&S.pub[bucket][key]!==undefined))return null;
+  try{
+    const r=await sbAuthed(`/rest/v1/${kind==='album'?'shared_albums':'shared_tracks'}?select=share_token&user_id=eq.${AUTH.user.id}&key=eq.${encodeURIComponent(key)}`);
+    const t=r&&r[0]&&r[0].share_token;
+    if(t){S.tok[bucket][key]=t;save(true);return t}
+  }catch(e){if(isMissingTable(e))SOC.noNewCols=true}
+  return null;
+}
+function notifyShareBoxes(){SHARE_BOXES.forEach(b=>{if(b.isConnected)b.update();else SHARE_BOXES.delete(b)})}
+function shareHint(kind,key){
+  if(!AUTH.user)return 'Crie uma conta para compartilhar um link direto para esta avaliação.';
+  if(SOC.noNewCols||SOC.unavailable)return '';
+  if(DB.profile&&DB.profile.share===false)return 'O compartilhamento está desligado nas configurações, então o link direto não está disponível.';
+  return tokenFor(kind,key)?'O link abre esta avaliação para quem o receber (é preciso entrar ou criar uma conta gratuita).':'Gerando o link da avaliação…';
+}
 function shareAlbumText(album){
   const avg=avgTracks(album);
   const total=album.tracks.length;
   const rated=album.tracks.filter(t=>t.score!==''&&t.score!==null&&t.score!==undefined).length;
   const partial=rated<total?` (${rated} de ${total} faixas avaliadas)`:'';
-  return `🎧 Dei nota ${fmtNote(avg)} ao álbum "${album.title}", de ${album.artist}${partial}, no MySpotList.\n\nAvalie seus álbuns e músicas preferidos: ${APP_URL}`;
+  const t=tokenFor('album',albumKey(album));
+  const tail=t?`Veja minha avaliação: ${evalLink(t)}`:`Avalie seus álbuns e músicas preferidos: ${APP_URL}`;
+  return `🎧 Dei nota ${fmtNote(avg)} ao álbum "${album.title}", de ${album.artist}${partial}, no MySpotList.\n\n${tail}`;
 }
 function shareTrackText(track){
-  return `🎧 Dei nota ${fmtNote(track.score)} à música "${track.name}", de ${track.artist}, no MySpotList.\n\nAvalie seus álbuns e músicas preferidos: ${APP_URL}`;
+  const t=tokenFor('track',trackKey(track));
+  const tail=t?`Veja minha avaliação: ${evalLink(t)}`:`Avalie seus álbuns e músicas preferidos: ${APP_URL}`;
+  return `🎧 Dei nota ${fmtNote(track.score)} à música "${track.name}", de ${track.artist}, no MySpotList.\n\n${tail}`;
 }
-function buildShareBox(getText,canShow){
+function buildShareBox(getText,canShow,getHint){
   const box=document.createElement('div');box.className='share-box';
   const title=document.createElement('div');title.className='share-title';title.textContent='Compartilhar avaliação';
   const ta=document.createElement('textarea');ta.className='share-text';ta.rows=4;ta.value=getText();
   let edited=false;ta.oninput=()=>{edited=true};
+  const hint=document.createElement('div');hint.className='share-hint';hint.textContent=getHint?getHint():'';
   const actions=document.createElement('div');actions.className='share-actions';
   const copy=document.createElement('button');copy.className='btn btn-primary';copy.textContent='Copiar texto';
   copy.onclick=async()=>{
@@ -1443,9 +1513,11 @@ function buildShareBox(getText,canShow){
     sh.onclick=()=>{navigator.share({text:ta.value}).catch(()=>{})};
     actions.appendChild(sh);
   }
-  box.appendChild(title);box.appendChild(ta);box.appendChild(actions);
-  box.update=()=>{if(!edited)ta.value=getText();box.style.display=canShow()?'block':'none'};
-  box.reveal=()=>{if(!edited)ta.value=getText();box.style.display=canShow()?'block':'none';if(canShow())box.scrollIntoView({behavior:'smooth',block:'nearest'})};
+  box.appendChild(title);box.appendChild(ta);box.appendChild(hint);box.appendChild(actions);
+  const refresh=()=>{if(!edited)ta.value=getText();if(getHint)hint.textContent=getHint();box.style.display=canShow()?'block':'none'};
+  box.update=refresh;
+  box.reveal=()=>{refresh();if(canShow())box.scrollIntoView({behavior:'smooth',block:'nearest'})};
+  SHARE_BOXES.add(box);
   return box;
 }
 let stShare=null;
@@ -1769,9 +1841,6 @@ function openDetail(id){
   _detailRef=album;_unsaved=false;
   renderDetailHeader(album);
   renderTracks(album);
-  renderDiary(album);
-  document.querySelectorAll('.modal-tab').forEach((t,i)=>{t.classList.toggle('active',i===0)});
-  document.querySelectorAll('.tab-content').forEach((t,i)=>{t.classList.toggle('active',i===0)});
   document.getElementById('detailOverlay').classList.add('open');
 }
 function closeDetail(){stopPreview();if(_unsaved){_unsaved=false;toast('Notas alteradas, mas ainda não salvas: use "Salvar avaliação".')}document.getElementById('detailOverlay').classList.remove('open')}
@@ -1917,6 +1986,7 @@ function renderTracks(album){
   cont.appendChild(footer);
   // expor updateFooter para o oninput das faixas
   cont._updateFooter=updateFooter;
+  renderDiarySection(album,cont);
   // Botão Salvar avaliação
   const saveBtn=document.createElement('button');
   saveBtn.className='btn btn-primary';
@@ -1925,6 +1995,7 @@ function renderTracks(album){
   saveBtn.onclick=()=>{
     const al=DB.albums.find(a=>a.id===currentAlbumId);
     if(!al)return;
+    {const dd=ensureDiary(al),de=document.getElementById('dDate');dd.date=(de&&de.value)||dd.date||todayStr()}
     al.savedAt=Date.now();
     _unsaved=false;saveBtn.classList.remove('btn-pulse');
     save();
@@ -1938,45 +2009,67 @@ function renderTracks(album){
     if(AUTH.user)syncNow();
   };
   cont.appendChild(saveBtn);
-  const shareBox=buildShareBox(()=>shareAlbumText(album),()=>avgTracks(album)!==null&&!!album.savedAt);
+  const shareBox=buildShareBox(()=>shareAlbumText(album),()=>avgTracks(album)!==null&&!!album.savedAt,()=>shareHint('album',albumKey(album)));
   shareBox.update();
   cont.appendChild(shareBox);
+  ensureToken('album',albumKey(album)).then(()=>shareBox.update());
   cont._updateShare=()=>shareBox.update();
 }
 
-function renderDiary(album){
-  const d=album.diary||{};
-  const cont=document.getElementById('tab-diary');
-  const tags=['Perfeito pra madrugada','Melhor do ano','Muito repetitivo','Produção incrível','Letra profunda','Descoberta nova','Nostalgia','Revisitado'];
-  cont.innerHTML=`
-    <div class="diary-field">
-      <label>Data que ouvi</label>
-      <input type="date" id="dDate" value="${d.date||''}">
-    </div>
-    <div class="diary-field">
-      <label>Opinião pessoal</label>
-      <textarea id="dNote" placeholder="O que você achou?">${d.note||''}</textarea>
-    </div>
-    <div class="diary-field">
-      <label>Mood / Tags</label>
-      <div class="tags-wrap" id="dTags">
-        ${tags.map(t=>`<span class="tag${(d.tags||[]).includes(t)?' active':''}" onclick="this.classList.toggle('active')">${t}</span>`).join('')}
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="saveDiary()" style="margin-top:.5rem">Salvar diário</button>`;
-}
-function saveDiary(){
-  const album=DB.albums.find(a=>a.id===currentAlbumId);if(!album)return;
-  const tags=[...document.querySelectorAll('#dTags .tag.active')].map(t=>t.textContent);
-  album.diary={date:document.getElementById('dDate').value,note:document.getElementById('dNote').value,tags};
-  save();toast('Diário salvo!');
-}
-
-function switchTab(name,btn){
-  document.querySelectorAll('.modal-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
+// ─── REVIEW, DATA, MOOD E TAGS (na mesma tela das notas) ──────
+const MOODS=['Feliz','Triste','Calmo','Energético','Nostálgico','Romântico','Sombrio','Introspectivo'];
+const PRESET_TAGS=['Perfeito pra madrugada','Melhor do ano','Muito repetitivo','Produção incrível','Letra profunda','Descoberta nova','Nostalgia','Revisitado'];
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function ensureDiary(album){if(!album.diary)album.diary={};return album.diary}
+function renderDiarySection(album,cont){
+  const d0=album.diary||{};
+  const wrap=document.createElement('div');wrap.className='review-sec';
+  wrap.innerHTML=`
+    <div class="diary-field"><label>Minha review</label><textarea id="dNote" maxlength="2000" placeholder="O que você achou deste álbum? Escreva sua review…"></textarea></div>
+    <div class="diary-field"><label>Data em que ouvi</label><input type="date" id="dDate"></div>
+    <div class="diary-field"><label>Mood</label><div class="tags-wrap" id="dMoods"></div></div>
+    <div class="diary-field"><label>Tags</label><div class="tags-wrap" id="dTags"></div>
+      <div class="tag-add"><input type="text" id="dTagNew" maxlength="24" placeholder="Criar nova tag…" autocomplete="off"><button type="button" class="btn btn-ghost" id="dTagBtn">Adicionar</button></div>
+    </div>`;
+  cont.appendChild(wrap);
+  const note=wrap.querySelector('#dNote'),date=wrap.querySelector('#dDate');
+  note.value=d0.note||'';
+  date.value=d0.date||todayStr();
+  note.oninput=()=>{ensureDiary(album).note=note.value;save();markUnsaved()};
+  date.onchange=()=>{ensureDiary(album).date=date.value||todayStr();save();markUnsaved()};
+  const drawChips=()=>{
+    const cur=album.diary||{};
+    const mk=(box,items,key)=>{
+      box.innerHTML='';
+      items.forEach(t=>{
+        const el=document.createElement('span');
+        el.className='tag'+((cur[key]||[]).includes(t)?' active':'');
+        el.textContent=t;
+        el.onclick=()=>{
+          const dd=ensureDiary(album),list=dd[key]||[];
+          dd[key]=list.includes(t)?list.filter(x=>x!==t):[...list,t];
+          save();markUnsaved();drawChips();
+        };
+        box.appendChild(el);
+      });
+    };
+    mk(wrap.querySelector('#dMoods'),MOODS,'moods');
+    const custom=(cur.tags||[]).filter(t=>!PRESET_TAGS.includes(t));
+    mk(wrap.querySelector('#dTags'),[...PRESET_TAGS,...custom],'tags');
+  };
+  drawChips();
+  const addTag=()=>{
+    const inp=wrap.querySelector('#dTagNew');
+    const t=inp.value.trim().replace(/\s+/g,' ');
+    if(!t)return;
+    const dd=ensureDiary(album),list=dd.tags||[];
+    if(list.some(x=>x.toLowerCase()===t.toLowerCase())){inp.value='';return}
+    if(list.length>=15){toast('Limite de 15 tags por álbum.');return}
+    dd.tags=[...list,t];inp.value='';
+    save();markUnsaved();drawChips();
+  };
+  wrap.querySelector('#dTagBtn').onclick=addTag;
+  wrap.querySelector('#dTagNew').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();addTag()}};
 }
 
 // ─── PAINEL DE BUSCA ──────────────────────────────────────────
@@ -2405,7 +2498,7 @@ function openStModal(trackData){
   // note
   const noteLbl=document.createElement('div');
   noteLbl.style.cssText='font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:.4rem';
-  noteLbl.textContent='Anotação';
+  noteLbl.textContent='Minha review';
   const noteInp=document.createElement('textarea');
   noteInp.style.cssText="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13.5px;font-family:'Sora',sans-serif;outline:none;resize:vertical;min-height:70px;transition:border-color .18s";
   noteInp.placeholder='O que você achou desta música?';
@@ -2435,9 +2528,10 @@ function openStModal(trackData){
   };
   b.appendChild(saveBtn);
   let stSaved=!!existing;
-  stShare=buildShareBox(()=>shareTrackText(track),()=>stSaved&&track.score!==''&&track.score!==null&&track.score!==undefined);
+  stShare=buildShareBox(()=>shareTrackText(track),()=>stSaved&&track.score!==''&&track.score!==null&&track.score!==undefined,()=>shareHint('track',trackKey(track)));
   stShare.update();
   b.appendChild(stShare);
+  ensureToken('track',trackKey(track)).then(()=>stShare&&stShare.update());
   if(existing){
     const delBtn=document.createElement('button');
     delBtn.className='btn btn-ghost';delBtn.style.cssText='width:100%;font-size:12.5px;padding:7px;margin-top:.5rem;color:var(--red);border-color:rgba(239,68,68,.3)';
@@ -2707,6 +2801,8 @@ function openAuth(tab,msg){
   document.body.style.overflow='hidden';
   closeSettings();closeProfile();closeFriend();closeEval();
   setAuthTab(tab||'login');
+  if(shareTokenFromHash()||tab==='reset')document.getElementById('authGuest').style.display='none';
+  showSharePreview();
   if(msg)setAuthMsg(msg,'err');
   loadProviders();
 }
@@ -2727,6 +2823,7 @@ async function loadProviders(){
   }catch(e){box.innerHTML=''}
 }
 function oauthLogin(provider){
+  try{localStorage.setItem('myspotlist_next',location.hash||'')}catch(e){}
   location.href=SB_URL+'/auth/v1/authorize?provider='+provider+'&redirect_to='+encodeURIComponent(location.origin+location.pathname);
 }
 async function submitAuth(){
@@ -2906,7 +3003,8 @@ function refreshAccountSection(){
       ${n?`<button class="btn btn-ghost" onclick="importGuestData()" style="font-size:13px">Importar dados deste navegador (${n})</button>`:''}
       <button class="btn btn-ghost" onclick="signOut()" style="font-size:13px">Sair</button>
     </div>
-    <label class="share-toggle"><input type="checkbox" ${DB.profile&&DB.profile.share===false?'':'checked'} onchange="toggleShare(this.checked)"><span>Compartilhar minhas avaliações salvas com amigos</span></label>
+    <label class="share-toggle"><input type="checkbox" ${DB.profile&&DB.profile.share===false?'':'checked'} onchange="toggleShare(this.checked)"><span>Compartilhar minhas avaliações salvas (notas, review e tags) com amigos e por link</span></label>
+    <button type="button" class="link-btn" onclick="resetShareLinks()" style="display:block;margin-top:.5rem">Gerar novos links (invalida os já enviados)</button>
     <label class="share-toggle"><input type="checkbox" ${DB.profile&&DB.profile.community===false?'':'checked'} onchange="toggleCommunity(this.checked)"><span>Aparecer no ranking da comunidade</span></label>
     <button class="link-btn danger" onclick="deleteAccount()" style="margin-top:.9rem">Excluir minha conta</button>`;
 }
@@ -3080,6 +3178,7 @@ setInterval(()=>{if(AUTH.user&&!document.hidden)syncNow()},60000);
 async function initApp(){
   if(window.matchMedia('(max-width:720px)').matches)document.getElementById('spotifySearch').placeholder='Pesquise artista, álbum ou música';
   const hashRes=parseAuthHash();
+  try{const nx=localStorage.getItem('myspotlist_next');localStorage.removeItem('myspotlist_next');if(nx&&(hashRes.session||hashRes.error))history.replaceState(null,'',location.pathname+location.search+nx)}catch(e){}
   renderHome();
   let pendingMsg=hashRes.error||'';
   let sess=null;
@@ -3095,6 +3194,7 @@ async function initApp(){
     if(stored&&stored.user){AUTH.session=stored;AUTH.user=stored.user;sess=stored}
   }
   if(sess){await onSignedIn(sess);return}
+  if(shareTokenFromHash()){openAuth('signup',pendingMsg);return}
   let mode=null;try{mode=localStorage.getItem('myspotlist_mode')}catch(e){}
   const g=loadDB('myspotlist_db');
   if(mode==='guest'||(mode!=='none'&&g.profile)){enterGuest();return}
@@ -3158,9 +3258,21 @@ async function publishPending(){
   if(DB.profile)DB.profile.share=share;
   if(!share)return;
   const me=AUTH.user.id;
-  const up=async(table,conflict,rows)=>{
-    for(let i=0;i<rows.length;i+=20)
-      await sbAuthed(`/rest/v1/${table}?on_conflict=${conflict}`,{method:'POST',body:rows.slice(i,i+20),headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});
+  if(!S.tok)S.tok={albums:{},tracks:{}};
+  const up=async(table,conflict,rows,newCols)=>{
+    const bucket=table==='shared_albums'?'albums':'tracks';
+    for(let i=0;i<rows.length;i+=20){
+      const batch=rows.slice(i,i+20);
+      let res=null;
+      if(!SOC.noNewCols){
+        try{res=await sbAuthed(`/rest/v1/${table}?on_conflict=${conflict}&select=key,share_token`,{method:'POST',body:batch,headers:{Prefer:'resolution=merge-duplicates,return=representation'}})}
+        catch(e){if(e.authFailed||e.network||!isMissingTable(e))throw e;SOC.noNewCols=true}
+      }
+      if(SOC.noNewCols){
+        const legacy=batch.map(r=>{const o={...r};newCols.forEach(k=>{delete o[k]});return o});
+        await sbAuthed(`/rest/v1/${table}?on_conflict=${conflict}`,{method:'POST',body:legacy,headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});
+      }else if(Array.isArray(res))res.forEach(r=>{if(r&&r.share_token)S.tok[bucket][r.key]=r.share_token});
+    }
   };
   const del=async(table,keys)=>{
     for(let i=0;i<keys.length;i+=30)
@@ -3173,21 +3285,27 @@ async function publishPending(){
         const sum=rated.reduce((s,t)=>s+parseFloat(t.score),0);
         return {user_id:me,key:albumKey(a),title:a.title,artist:a.artist,cover:a.cover||null,year:a.year||null,
           avg:r2(sum/rated.length),rated_tracks:rated.length,total_tracks:a.tracks.length,score_sum:r2(sum),
-          tracks:rated.map(t=>({n:t.name,s:parseFloat(t.score)})),saved_at:new Date(a.savedAt).toISOString()};
+          tracks:rated.map(t=>({n:t.name,s:parseFloat(t.score)})),saved_at:new Date(a.savedAt).toISOString(),
+          review:(a.diary&&a.diary.note&&a.diary.note.trim())?a.diary.note.trim().slice(0,2000):null,
+          listened_at:(a.diary&&a.diary.date)||null,
+          moods:(a.diary&&a.diary.moods&&a.diary.moods.length)?a.diary.moods:null,
+          tags:(a.diary&&a.diary.tags&&a.diary.tags.length)?a.diary.tags:null};
       });
-      await up('shared_albums','user_id,key',rows);
+      await up('shared_albums','user_id,key',rows,['review','listened_at','moods','tags']);
       pendA.forEach(a=>{S.pub.albums[albumKey(a)]=a.savedAt});
     }
     if(pendT.length){
       const rows=pendT.map(t=>({user_id:me,key:trackKey(t),name:t.name,artist:t.artist,album_title:t.albumTitle||null,cover:t.cover||null,
-        score:r2(parseFloat(t.score)),saved_at:new Date(trackStamp(t)).toISOString()}));
-      await up('shared_tracks','user_id,key',rows);
+        score:r2(parseFloat(t.score)),saved_at:new Date(trackStamp(t)).toISOString(),
+        review:(t.note&&t.note.trim())?t.note.trim().slice(0,2000):null}));
+      await up('shared_tracks','user_id,key',rows,['review']);
       pendT.forEach(t=>{S.pub.tracks[trackKey(t)]=trackStamp(t)});
     }
     if(delA.length){await del('shared_albums',delA);delA.forEach(k=>{delete S.pub.albums[k]})}
     if(delT.length){await del('shared_tracks',delT);delT.forEach(k=>{delete S.pub.tracks[k]})}
   }catch(e){if(isMissingTable(e)){SOC.unavailable=true;return}throw e}
   save(true);
+  notifyShareBoxes();
 }
 async function toggleShare(on){
   try{
@@ -3195,7 +3313,7 @@ async function toggleShare(on){
     if(!on){
       await sbAuthed('/rest/v1/shared_albums?user_id=eq.'+AUTH.user.id,{method:'DELETE'});
       await sbAuthed('/rest/v1/shared_tracks?user_id=eq.'+AUTH.user.id,{method:'DELETE'});
-      ensureSyncState();DB.sync.pub={albums:{},tracks:{}};
+      ensureSyncState();DB.sync.pub={albums:{},tracks:{}};DB.sync.tok={albums:{},tracks:{}};
     }
     if(DB.profile)DB.profile.share=on;
     save(true);
@@ -3561,34 +3679,70 @@ function renderFriendProfile(uid,st,ex){
 }
 
 // ── detalhe de uma avaliação de amigo ──
-function closeEval(){document.getElementById('evalOverlay').classList.remove('open')}
-async function openEval(it){
-  const p=SOC.profiles[it.user_id]||{};
-  const body=document.getElementById('evalBody');body.innerHTML='';
-  const head=document.createElement('div');head.className='st-header';
-  const cv=coverEl({cover:it.cover,title:it.title});cv.className=it.cover?'st-cover':'st-cover-ph';
-  head.appendChild(cv);
-  const hi=document.createElement('div');hi.style.cssText='flex:1;min-width:0';
-  hi.innerHTML=`<div style="font-size:1.1rem;font-weight:600;line-height:1.25">${esc(it.title)}</div>
-    <div style="color:var(--accent);font-size:.88rem;margin:.15rem 0 .45rem">${esc(it.artist)}</div>
-    <div class="feed-meta" style="margin:0"><span class="feed-who">${esc(nameOf(p))}</span><span class="feed-when">· ${timeAgo(it.saved_at)}</span></div>`;
-  hi.querySelector('.feed-meta').prepend(avEl(p,'av-sm'));
-  const sc=document.createElement('div');sc.style.cssText=`font-size:2rem;font-weight:700;color:${scoreColor(it.score)}`;sc.textContent=fmtNote(it.score);
-  head.appendChild(hi);head.appendChild(sc);body.appendChild(head);
-  const b=document.createElement('div');b.className='st-body';
-  const list=document.createElement('div');b.appendChild(list);
-  const actions=document.createElement('div');actions.style.marginTop='1rem';b.appendChild(actions);
-  body.appendChild(b);
-  document.getElementById('evalOverlay').classList.add('open');
-  if(it.kind==='album'){
-    list.innerHTML='<div class="spinner" style="margin:1rem auto"></div>';
-    try{
-      const r=await sbAuthed(`/rest/v1/shared_albums?select=tracks&user_id=eq.${it.user_id}&key=eq.${encodeURIComponent(it.key)}`);
-      const tr=(r&&r[0]&&r[0].tracks)||[];
-      list.innerHTML=tr.length?tr.map(t=>`<div class="ev-track"><span>${esc(t.n)}</span><b style="color:${scoreColor(t.s)}">${fmtNote(t.s)}</b></div>`).join(''):'<div style="color:var(--text3);font-size:13px">Sem detalhes das faixas.</div>';
-    }catch(e){list.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao carregar as faixas.')+'</div>'}
-    if(String(it.key).startsWith('sp_')){
-      const spId=String(it.key).slice(3);
+let SHARE_OPEN=false;
+function shareTokenFromHash(){const m=(location.hash||'').match(/^#\/?r\/([0-9a-fA-F-]{36})$/);return m?m[1].toLowerCase():null}
+function clearShareHash(){
+  if(!shareTokenFromHash())return;
+  const act=document.querySelector('.section.active');
+  const id=act?act.id.replace('sec-',''):'home';
+  try{history.replaceState(null,'',location.pathname+location.search+'#'+id)}catch(e){}
+}
+function closeEval(){
+  document.getElementById('evalOverlay').classList.remove('open');
+  if(SHARE_OPEN){SHARE_OPEN=false;clearShareHash()}
+}
+const fmtDateBR=s=>{if(!s)return '';const d=new Date(String(s).slice(0,10)+'T12:00:00');return isNaN(d)?'':d.toLocaleDateString('pt-BR')};
+const chipsHtml=arr=>(arr&&arr.length)?'<div class="tags-wrap ev-chips">'+arr.map(t=>`<span class="tag active">${esc(t)}</span>`).join('')+'</div>':'';
+function relationEl(ev){
+  const box=document.createElement('div');box.className='rel-box';
+  const a=ev.author||{};
+  const set=rel=>{
+    ev.relation=rel;box.innerHTML='';
+    if(rel==='self'){box.innerHTML='<span class="rel-pill">Sua avaliação</span>';return}
+    if(rel==='friend'){box.innerHTML='<span class="rel-pill ok">Amigos</span>';return}
+    if(rel==='pending_out'){box.innerHTML='<span class="rel-pill">Pedido enviado</span>';return}
+    const b=document.createElement('button');b.className='btn btn-primary';
+    if(rel==='pending_in'){
+      b.textContent='Aceitar pedido';
+      b.onclick=async()=>{
+        b.disabled=true;
+        try{await socRpc('respond_friend_request',{request_id:ev.friendship_id,accept:true});set('friend');toast('Amizade aceita!');socialPoll()}
+        catch(e){toast(e.message||'Erro ao aceitar.');b.disabled=false}
+      };
+    }else{
+      if(!a.username)return;
+      b.textContent='Adicionar amigo';
+      b.onclick=async()=>{
+        b.disabled=true;b.textContent='Enviando…';
+        try{
+          const r=await socRpc('send_friend_request',{handle:a.username});
+          set(r==='accepted'||r==='already_friends'?'friend':'pending_out');
+          toast(r==='accepted'?'Vocês agora são amigos!':'Pedido enviado para @'+a.username+'.');
+          COM.cache={};socialPoll();
+        }catch(e){toast(e.message||'Não foi possível enviar.');b.disabled=false;b.textContent='Adicionar amigo'}
+      };
+    }
+    box.appendChild(b);
+  };
+  set(ev.relation||'none');
+  return box;
+}
+function renderEvalDetails(ev,list,actions){
+  list.innerHTML='';
+  if(ev.kind==='album'){
+    const tr=ev.tracks||[];
+    list.insertAdjacentHTML('beforeend',tr.length?tr.map(t=>`<div class="ev-track"><span>${esc(t.n)}</span><b style="color:${scoreColor(t.s)}">${fmtNote(t.s)}</b></div>`).join(''):'<div class="ev-empty">Sem detalhes das faixas.</div>');
+  }else if(ev.album_title){
+    list.insertAdjacentHTML('beforeend',`<div class="ev-empty">${esc(ev.album_title)}</div>`);
+  }
+  if(ev.review)list.insertAdjacentHTML('beforeend',`<div class="soc-title">Review</div><div class="ev-review">${esc(ev.review)}</div>`);
+  if(ev.listened_at)list.insertAdjacentHTML('beforeend',`<div class="ev-meta">Ouvido em <b>${fmtDateBR(ev.listened_at)}</b></div>`);
+  if(ev.moods&&ev.moods.length)list.insertAdjacentHTML('beforeend',`<div class="soc-title">Mood</div>${chipsHtml(ev.moods)}`);
+  if(ev.tags&&ev.tags.length)list.insertAdjacentHTML('beforeend',`<div class="soc-title">Tags</div>${chipsHtml(ev.tags)}`);
+  actions.innerHTML='';
+  if(ev.kind==='album'){
+    if(String(ev.key).startsWith('sp_')){
+      const spId=String(ev.key).slice(3);
       const mine=DB.albums.find(a=>a.spotifyId===spId);
       const btn=document.createElement('button');btn.className='btn '+(mine?'btn-ghost':'btn-primary');btn.style.width='100%';
       btn.textContent=mine?'Abrir na minha biblioteca':'Adicionar à minha biblioteca para avaliar também';
@@ -3596,11 +3750,103 @@ async function openEval(it){
       actions.appendChild(btn);
     }
   }else{
-    list.innerHTML=`<div style="color:var(--text3);font-size:13px">${esc(it.album_title||'')}</div>`;
     const btn=document.createElement('button');btn.className='btn btn-primary';btn.style.width='100%';btn.textContent='Avaliar também';
-    btn.onclick=()=>{closeEval();closeFriend();openStModal({spotifyTrackId:it.key,name:it.title,artist:it.artist,albumTitle:it.album_title||'',cover:it.cover||'',duration:0,previewUrl:'',year:''})};
+    btn.onclick=()=>{closeEval();closeFriend();openStModal({spotifyTrackId:ev.key,name:ev.title,artist:ev.artist,albumTitle:ev.album_title||'',cover:ev.cover||'',duration:0,previewUrl:'',year:''})};
     actions.appendChild(btn);
   }
+}
+async function showEvaluation(ev,needsFetch){
+  const body=document.getElementById('evalBody');body.innerHTML='';
+  const head=document.createElement('div');head.className='st-header';
+  const cv=coverEl({cover:ev.cover,title:ev.title});cv.className=ev.cover?'st-cover':'st-cover-ph';
+  head.appendChild(cv);
+  const hi=document.createElement('div');hi.style.cssText='flex:1;min-width:0';
+  hi.innerHTML=`<div style="font-size:1.1rem;font-weight:600;line-height:1.25">${esc(ev.title)}</div>
+    <div style="color:var(--accent);font-size:.88rem;margin:.15rem 0 .2rem">${esc(ev.artist)}</div>
+    ${ev.kind==='track'?'<div class="ev-when">Música</div>':''}`;
+  const sc=document.createElement('div');sc.style.cssText=`font-size:2rem;font-weight:700;color:${scoreColor(ev.score)}`;sc.textContent=fmtNote(ev.score);
+  head.appendChild(hi);head.appendChild(sc);body.appendChild(head);
+  const b=document.createElement('div');b.className='st-body';
+  const a=ev.author||{};
+  const row=document.createElement('div');row.className='ev-author';
+  row.appendChild(avEl(a));
+  const info=document.createElement('div');info.className='ev-info';
+  info.innerHTML=`<div class="ev-who">Avaliação de <b>${esc(nameOf(a))}</b>${a.username?` <span>@${esc(a.username)}</span>`:''}</div><div class="ev-when">${timeAgo(ev.saved_at)}</div>`;
+  row.appendChild(info);row.appendChild(relationEl(ev));
+  b.appendChild(row);
+  const list=document.createElement('div');b.appendChild(list);
+  const actions=document.createElement('div');actions.style.marginTop='1.1rem';b.appendChild(actions);
+  body.appendChild(b);
+  document.getElementById('evalOverlay').classList.add('open');
+  if(needsFetch){
+    list.innerHTML='<div class="spinner" style="margin:1rem auto"></div>';
+    try{
+      if(ev.kind==='album'){
+        let r;
+        try{r=await sbAuthed(`/rest/v1/shared_albums?select=tracks,review,listened_at,moods,tags,year&user_id=eq.${a.id}&key=eq.${encodeURIComponent(ev.key)}`)}
+        catch(e){r=await sbAuthed(`/rest/v1/shared_albums?select=tracks,year&user_id=eq.${a.id}&key=eq.${encodeURIComponent(ev.key)}`)}
+        Object.assign(ev,(r&&r[0])||{});
+      }else{
+        let r;
+        try{r=await sbAuthed(`/rest/v1/shared_tracks?select=review&user_id=eq.${a.id}&key=eq.${encodeURIComponent(ev.key)}`)}catch(e){r=[]}
+        Object.assign(ev,(r&&r[0])||{});
+      }
+    }catch(e){list.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao carregar a avaliação.')+'</div>';return}
+  }
+  renderEvalDetails(ev,list,actions);
+}
+async function openEval(it){
+  const me=AUTH.user&&AUTH.user.id;
+  const p=SOC.profiles[it.user_id]||{};
+  const rel=it.user_id===me?'self':(SOC.friends.some(f=>f.user_id===it.user_id)?'friend':'none');
+  await showEvaluation({kind:it.kind,key:it.key,title:it.title,artist:it.artist,cover:it.cover,score:it.score,saved_at:it.saved_at,album_title:it.album_title,
+    author:{id:it.user_id,username:p.username,display_name:p.display_name,avatar:p.avatar},relation:rel},true);
+}
+async function openSharedEvaluation(token){
+  if(!AUTH.user)return;
+  SHARE_OPEN=true;
+  try{
+    const rows=await socRpc('get_shared_evaluation',{token});
+    const r=rows&&rows[0];
+    if(!r){toast('Esta avaliação não está mais disponível.');SHARE_OPEN=false;clearShareHash();return}
+    SOC.profiles[r.author_id]=SOC.profiles[r.author_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar};
+    await showEvaluation({kind:r.kind,key:r.key,title:r.title,artist:r.artist,cover:r.cover,score:parseFloat(r.score),saved_at:r.saved_at,album_title:r.album_title,year:r.year,
+      tracks:r.tracks,review:r.review,listened_at:r.listened_at,moods:r.moods,tags:r.tags,friendship_id:r.friendship_id,
+      author:{id:r.author_id,username:r.username,display_name:r.display_name,avatar:r.avatar},relation:r.relation},false);
+  }catch(e){
+    SHARE_OPEN=false;clearShareHash();
+    if(e.authFailed)return;
+    toast(isMissingTable(e)?'Os links de avaliação ainda não foram ativados neste projeto.':(e.message||'Não foi possível abrir a avaliação.'));
+  }
+}
+let _lastShare='';
+function handleShareLink(token){
+  const k=token+':'+Math.floor(Date.now()/800);
+  if(_lastShare===k)return;_lastShare=k;
+  if(AUTH.user)openSharedEvaluation(token);else openAuth('signup');
+}
+async function showSharePreview(){
+  const box=document.getElementById('sharePreview');if(!box)return;
+  const token=shareTokenFromHash();
+  if(!token){box.style.display='none';box.innerHTML='';return}
+  box.style.display='block';
+  box.innerHTML='<div class="sp-cta" style="margin:0">Alguém compartilhou uma avaliação com você. Entre ou crie uma conta gratuita para ver.</div>';
+  try{
+    const r=await sbReq('/rest/v1/rpc/shared_preview',{method:'POST',body:{token}});
+    const x=r&&r[0];
+    if(!x){box.innerHTML='<div class="sp-cta" style="margin:0">Este link não está mais disponível.</div>';return}
+    const who={display_name:x.display_name,username:x.username};
+    box.innerHTML=`<div class="sp-card">${x.cover?`<img src="${esc(x.cover)}" alt="">`:'<div class="ph">♪</div>'}<div style="min-width:0"><div class="sp-line"><b>${esc(nameOf(who))}</b> compartilhou a avaliação de</div><div class="sp-title">${esc(x.title)}</div><div class="sp-sub">${esc(x.artist)}</div></div></div><p class="sp-cta">Crie uma conta gratuita ou entre para ver a avaliação completa e adicionar ${esc(nameOf(who))} como amigo.</p>`;
+  }catch(e){}
+}
+async function resetShareLinks(){
+  if(!confirm('Os links de avaliação que você já enviou vão parar de funcionar. Continuar?'))return;
+  try{
+    await socRpc('reset_share_links');
+    ensureSyncState();DB.sync.tok={albums:{},tracks:{}};save(true);
+    notifyShareBoxes();
+    toast('Pronto: os links antigos foram invalidados.');
+  }catch(e){toast(isMissingTable(e)?'Para usar, rode o supabase-avaliacao.sql no Supabase.':(e.message||'Não foi possível agora.'))}
 }
 
 // ─── RANKINGS: modo Meus | Comunidade ─────────────────────────
