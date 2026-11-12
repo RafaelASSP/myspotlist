@@ -97,7 +97,7 @@ nav{
 }
 .nav-link:hover{color:var(--text2);background:var(--bg3)}
 .nav-link.active{color:var(--text);background:var(--bg3)}
-.nav-search{flex:1;max-width:340px;margin-left:auto;position:relative}
+.nav-search{flex:1;max-width:460px;margin-left:auto;position:relative}
 .nav-search input{
   width:100%;background:var(--bg3);
   border:1px solid var(--border);
@@ -700,6 +700,36 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 .av-opt.nophoto{opacity:.55}
 .av-opt .ph{width:100%;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg4);color:var(--text2);font-weight:700;font-size:1.3rem}
 .av-grid.album .av-opt .ph{border-radius:8px}
+
+/* ─── BUSCA UNIFICADA ─── */
+.nav-search input{text-overflow:ellipsis}
+.sec-head{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;padding:.6rem .55rem .3rem}
+.sec-more{display:block;width:100%;background:none;border:none;color:var(--accent);font-size:12.5px;font-family:'Sora',sans-serif;padding:.45rem .55rem;cursor:pointer;text-align:left;font-weight:600}
+.sec-more:disabled{color:var(--text3);cursor:default}
+.result-img.round{border-radius:50%}
+.sp-err{padding:1rem .6rem;color:var(--red);font-size:13px;line-height:1.55}
+.sp-empty{padding:1.1rem .6rem;color:var(--text3);font-size:13px}
+.artist-head{padding:.1rem .1rem .7rem;border-bottom:1px solid var(--border);margin-bottom:.4rem}
+.artist-head-info{display:flex;align-items:center;gap:.8rem;margin-top:.6rem}
+.back-btn{background:none;border:none;color:var(--text2);font-size:12.5px;font-family:'Sora',sans-serif;cursor:pointer;padding:2px 4px;font-weight:600}
+.back-btn:hover{color:var(--text)}
+
+/* ─── CONTA ─── */
+.auth-msg{font-size:12.5px;margin:.7rem 0;min-height:1.2em;line-height:1.5}
+.auth-msg.err{color:var(--red)}
+.auth-msg.ok{color:var(--accent)}
+.link-btn{background:none;border:none;color:var(--text2);font-size:12.5px;font-family:'Sora',sans-serif;cursor:pointer;padding:.35rem 0;text-decoration:underline}
+.link-btn:hover{color:var(--text)}
+.link-btn.danger{color:var(--red)}
+#authForgot{display:block;margin:.6rem auto 0}
+.field-hint{font-size:11.5px;margin-top:.3rem;min-height:1.1em;color:var(--text3)}
+.field-hint.ok{color:var(--accent)}
+.field-hint.err{color:var(--red)}
+.divider-or{display:flex;align-items:center;gap:.75rem;margin:1.1rem 0 .9rem;color:var(--text3);font-size:12px}
+.divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--border)}
+.oauth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:.55rem;font-size:13.5px;padding:10px}
+.guest-banner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:var(--accent-dim);border:1px solid rgba(29,185,84,.25);border-radius:12px;padding:.85rem 1.1rem;margin-bottom:1.5rem;font-size:13px;color:var(--text2)}
+.gb-actions{display:flex;align-items:center;gap:.8rem}
 </style>
 </head>
 <body>
@@ -717,14 +747,9 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   </div>
   <div class="nav-search" id="navSearch">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="spotifySearch" autocomplete="off" placeholder="Buscar álbum…" oninput="debounceSearch(this.value)" onfocus="openSearchPanel()">
+    <input type="text" id="spotifySearch" autocomplete="off" placeholder="Pesquise seu artista, álbum ou música preferida e faça sua review" oninput="onSearchInput(this.value)" onfocus="if(this.value.trim())openSearchPanel()">
     <div class="search-panel" id="searchPanel">
-      <div class="search-type-toggle">
-        <button class="search-type-btn active" id="stype-album" onclick="setSearchType('album',this)">Álbuns</button>
-        <button class="search-type-btn" id="stype-track" onclick="setSearchType('track',this)">Músicas</button>
-      </div>
       <div id="searchResults"></div>
-      <div id="searchHistoryWrap"></div>
       <div id="addManualWrap">
         <button class="btn btn-ghost" onclick="addManual()" style="width:100%;font-size:13px">Não achou? Adicionar manualmente</button>
       </div>
@@ -740,6 +765,10 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   <div class="hero">
     <h1><em>Diário pessoal<br>de Música</em></h1>
     <button class="btn btn-primary" onclick="openAddModal()">+ Adicionar álbum</button>
+  </div>
+  <div class="guest-banner" id="guestBanner" style="display:none">
+    <span>Seus dados estão só neste navegador. Crie uma conta para acessá-los em qualquer aparelho.</span>
+    <span class="gb-actions"><button class="btn btn-primary" onclick="openAuth('signup')" style="font-size:12.5px;padding:7px 14px">Criar conta</button><button class="link-btn" onclick="dismissGuestBanner()">Agora não</button></span>
   </div>
   <div class="stats-grid" id="statsGrid"></div>
   <div class="section-title">Ouvidos recentemente</div>
@@ -841,6 +870,10 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
     <div class="settings-head">Configurações</div>
     <div class="settings-body">
       <div class="settings-sec">
+        <div class="settings-lbl">Conta</div>
+        <div id="accountBody"></div>
+      </div>
+      <div class="settings-sec">
         <div class="settings-lbl">Perfil</div>
         <div class="profile-row">
           <span class="av av-lg" id="settingsAvatar"></span>
@@ -890,13 +923,41 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
         <li><b>Busca integrada com o Spotify.</b> Capas, faixas, ano e fotos de artistas já vêm prontos.</li>
         <li><b>Rankings e estatísticas.</b> Seus melhores álbuns, músicas e artistas, sempre atualizados.</li>
         <li><b>Favoritos e diário.</b> Marque o que você ama e anote o que sentiu em cada álbum.</li>
-        <li><b>Seus dados com você.</b> Ficam salvos no seu navegador, com backup em um clique.</li>
+        <li><b>Seus dados em qualquer aparelho.</b> Crie uma conta e suas avaliações ficam salvas na nuvem.</li>
       </ul>
     </div>
-    <div class="login-card">
+    <div class="login-card" id="authCard" style="display:none">
+      <h2 id="authTitle">Entrar</h2>
+      <div class="av-tabs" id="authTabs">
+        <button type="button" class="av-tab active" id="authtab-login" onclick="setAuthTab('login')">Entrar</button>
+        <button type="button" class="av-tab" id="authtab-signup" onclick="setAuthTab('signup')">Criar conta</button>
+      </div>
+      <div id="authUserWrap" style="display:none">
+        <label class="settings-lbl" style="margin-top:.9rem">Nome de usuário</label>
+        <input id="authUsername" class="settings-input" maxlength="20" autocomplete="username" placeholder="ex.: maria_musica" oninput="this.value=this.value.toLowerCase();watchUsername('authUsername','authUserHint','')">
+        <div class="field-hint" id="authUserHint"></div>
+      </div>
+      <div id="authEmailWrap">
+        <label class="settings-lbl" style="margin-top:.9rem">E-mail</label>
+        <input id="authEmail" type="email" class="settings-input" autocomplete="email" placeholder="voce@email.com">
+      </div>
+      <label class="settings-lbl" id="authPassLbl" style="margin-top:.9rem">Senha</label>
+      <input id="authPassword" type="password" class="settings-input" autocomplete="current-password" placeholder="Pelo menos 8 caracteres" onkeydown="if(event.key==='Enter')submitAuth()">
+      <div class="auth-msg" id="authMsg"></div>
+      <button class="btn btn-primary" id="authSubmit" onclick="submitAuth()" style="width:100%;padding:11px">Entrar</button>
+      <button type="button" class="link-btn" id="authForgot" onclick="forgotPassword()">Esqueci minha senha</button>
+      <div id="authOAuth"></div>
+      <button type="button" class="link-btn" id="authGuest" onclick="continueAsGuest()" style="display:block;margin:.9rem auto 0">Continuar sem conta (dados só neste navegador)</button>
+    </div>
+    <div class="login-card" id="profileCard">
       <h2 id="loginTitle">Criar seu perfil</h2>
       <label class="settings-lbl">Seu nome</label>
       <input id="loginName" class="settings-input" maxlength="24" autocomplete="off" placeholder="Como quer ser chamado?" oninput="updateLoginPreview()" onkeydown="if(event.key==='Enter')submitLogin()">
+      <div id="loginUserWrap" style="display:none">
+        <label class="settings-lbl" style="margin-top:1.1rem">Nome de usuário</label>
+        <input id="loginUsername" class="settings-input" maxlength="20" autocomplete="off" placeholder="ex.: maria_musica" oninput="this.value=this.value.toLowerCase();watchUsername('loginUsername','loginUserHint',(DB.profile&&DB.profile.username)||'')">
+        <div class="field-hint" id="loginUserHint"></div>
+      </div>
       <label class="settings-lbl" style="margin-top:1.1rem">Escolha seu avatar</label>
       <div class="av-tabs">
         <button type="button" class="av-tab active" id="avtab-artist" onclick="setAvatarType('artist')">Foto de artista</button>
@@ -910,10 +971,10 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
         <div style="min-width:0"><div id="loginPreviewName" class="p-name">Seu nome</div><div id="loginPreviewLabel" class="p-sub"></div></div>
       </div>
       <div class="login-actions">
-        <button class="btn btn-ghost" id="loginCancel" onclick="closeLogin()" style="display:none">Cancelar</button>
+        <button class="btn btn-ghost" id="loginCancel" onclick="cancelProfile()" style="display:none">Cancelar</button>
         <button class="btn btn-primary" id="loginSubmit" onclick="submitLogin()" style="flex:1;padding:11px">Entrar</button>
       </div>
-      <p class="login-note">Seu perfil fica salvo neste navegador, sem senha.</p>
+      <p class="login-note" id="loginNote">Seu perfil fica salvo neste navegador, sem senha.</p>
     </div>
   </div>
 </div>
@@ -928,14 +989,14 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
       <p>Seu diário pessoal de música: registre os álbuns que você ouve, dê nota para cada faixa e acompanhe o seu gosto musical ao longo do tempo.</p>
     </div>
     <div class="welcome-steps">
-      <div class="w-step"><span class="w-num">1</span><div><b>Adicione um álbum</b><p>Use a <b>busca no topo</b> para achar um álbum no Spotify e clique em <b>Adicionar</b>. Capa, faixas e ano vêm prontos. Na aba Músicas dá para avaliar uma faixa avulsa.</p></div></div>
+      <div class="w-step"><span class="w-num">1</span><div><b>Adicione um álbum</b><p>Use a <b>busca no topo</b>: pesquise seu artista, álbum ou música preferida e clique em <b>Adicionar</b> (ou em <b>Ver álbuns</b> para abrir todos os álbuns de um artista).</p></div></div>
       <div class="w-step"><span class="w-num">2</span><div><b>Dê notas às faixas</b><p>De 0 a 10, com decimais. A média do álbum é calculada sozinha.</p></div></div>
       <div class="w-step"><span class="w-num">3</span><div><b>Salve a avaliação</b><p>Clique em <b>Salvar avaliação</b> para atualizar suas estatísticas na Home.</p></div></div>
       <div class="w-step"><span class="w-num">4</span><div><b>Explore</b><p>Veja Rankings e Favoritos, e use a aba Diário de cada álbum para anotações e tags.</p></div></div>
     </div>
     <div class="welcome-foot">
       <div class="w-legend"><span><i style="background:var(--green)"></i>8.0+</span><span><i style="background:#f59e0b"></i>5.8 a 7.9</span><span><i style="background:var(--red)"></i>abaixo de 5.8</span></div>
-      <p>Seus dados ficam salvos neste navegador. No menu do seu perfil (canto superior direito) você exporta um backup para guardar ou levar para outro aparelho.</p>
+      <p>Com uma conta, seus dados ficam salvos na nuvem e acompanham você em qualquer aparelho. No menu do seu perfil (canto superior direito) você também pode exportar um backup.</p>
       <button class="btn btn-primary" onclick="closeWelcome()" style="width:100%;padding:11px">Começar</button>
     </div>
   </div>
@@ -955,11 +1016,15 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 
 <script>
 // ─── STATE ───────────────────────────────────────────────────
-let DB = JSON.parse(localStorage.getItem('myspotlist_db') || '{"albums":[],"spotifyClientId":"","spotifyClientSecret":"","spotifyToken":"","spotifyTokenExp":0}');
+const AUTH={session:null,user:null};
+let STORE_KEY='myspotlist_db';
+function emptyDB(){return {albums:[],standaloneTracks:[],spotifyClientId:'',spotifyClientSecret:'',spotifyToken:'',spotifyTokenExp:0}}
+function loadDB(key){try{return Object.assign(emptyDB(),JSON.parse(localStorage.getItem(key)||'{}'))}catch(e){return emptyDB()}}
+let DB=loadDB(STORE_KEY);
 let currentAlbumId = null;
 let searchDebounce = null;
 
-function save(){localStorage.setItem('myspotlist_db',JSON.stringify(DB))}
+function save(noSync){try{localStorage.setItem(STORE_KEY,JSON.stringify(DB))}catch(e){console.error(e)}if(!noSync&&AUTH.user)scheduleSync()}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
 
 // ─── NAV ──────────────────────────────────────────────────────
@@ -1017,6 +1082,7 @@ function phEl(album,size){
 // ─── HOME ─────────────────────────────────────────────────────
 function renderHome(){
   renderStats();
+  updateGuestBanner();
   const recent=[...DB.albums].sort((a,b)=>b.addedAt-a.addedAt).slice(0,8);
   const grid=document.getElementById('recentGrid');
   if(!recent.length){
@@ -1287,10 +1353,12 @@ function renderFavTracks(){
 }
 
 // ─── DETAIL MODAL ─────────────────────────────────────────────
+let _detailRef=null;
 function openDetail(id){
   currentAlbumId=id;
   const album=DB.albums.find(a=>a.id===id);
   if(!album)return;
+  _detailRef=album;
   renderDetailHeader(album);
   renderTracks(album);
   renderDiary(album);
@@ -1495,46 +1563,19 @@ function switchTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
 }
 
-// ─── ADD MODAL ────────────────────────────────────────────────
-function renderSearchHistory(){
-  const wrap=document.getElementById('searchHistoryWrap');
-  if(!wrap)return;
-  const history=(DB.searchHistory||[]).slice(0,6);
-  if(!history.length){wrap.innerHTML='';return}
-  wrap.innerHTML=`<div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:.5rem">Pesquisas recentes</div>`+
-    history.map((h,i)=>`
-      <div class="history-item" onclick="importAlbumFromHistory('${h.spotifyId}')">
-        ${h.cover?`<img src="${h.cover}" class="history-img" alt="">`:`<div class="history-img" style="display:flex;align-items:center;justify-content:center;color:var(--text3)">♪</div>`}
-        <div class="history-info">
-          <div class="history-name">${h.title}</div>
-          <div class="history-sub">${h.artist}${h.year?' · '+h.year:''}</div>
-        </div>
-        ${DB.albums.some(a=>a.spotifyId===h.spotifyId)?'<span class="result-btn-sm">Abrir</span>':'<span class="result-btn-sm add">+ Adicionar</span>'}
-      </div>`).join('');
-}
-function openSearchPanel(){
-  document.getElementById('searchPanel').classList.add('open');
-  updatePanelSections();
-}
+// ─── PAINEL DE BUSCA ──────────────────────────────────────────
+function openSearchPanel(){document.getElementById('searchPanel').classList.add('open')}
 function closeSearchPanel(){document.getElementById('searchPanel').classList.remove('open')}
 function closeAdd(){
   closeSearchPanel();
   const i=document.getElementById('spotifySearch');
   if(i){i.value='';i.blur()}
   document.getElementById('searchResults').innerHTML='';
+  sState.q='';sState.view='search';
 }
 function openAddModal(){
   window.scrollTo({top:0,behavior:'smooth'});
   document.getElementById('spotifySearch').focus();
-  openSearchPanel();
-}
-function updatePanelSections(){
-  const q=(document.getElementById('spotifySearch').value||'').trim();
-  const hw=document.getElementById('searchHistoryWrap');
-  const mw=document.getElementById('addManualWrap');
-  const showHist=searchType==='album'&&!q;
-  if(hw){hw.style.display=showHist?'block':'none';if(showHist)renderSearchHistory()}
-  if(mw)mw.style.display=searchType==='album'?'block':'none';
 }
 document.addEventListener('click',e=>{
   const ns=document.getElementById('navSearch');
@@ -1554,6 +1595,7 @@ function openSettings(){
   document.getElementById('clientIdInput').value=DB.spotifyClientId||'';
   document.getElementById('clientSecretInput').value=DB.spotifyClientSecret||'';
   document.getElementById('settingsOverlay').classList.add('open');
+  refreshAccountSection();
   refreshSpotifyStatus();
 }
 function closeSettings(){document.getElementById('settingsOverlay').classList.remove('open')}
@@ -1575,25 +1617,266 @@ async function refreshSpotifyStatus(){
   }
 }
 
-let searchType='album';
-function setSearchType(type,btn){
-  searchType=type;
-  document.querySelectorAll('.search-type-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const inp=document.getElementById('spotifySearch');
-  inp.placeholder=type==='album'?'Buscar álbum…':'Buscar música…';
-  inp.value='';
-  document.getElementById('searchResults').innerHTML='';
-  updatePanelSections();
-  inp.focus();
+// ─── BUSCA UNIFICADA (artistas, álbuns e músicas) ─────────────
+const SP_PAGE=10;
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const imgOf=(o,i=1)=>{const a=(o&&o.images)||[];return ((a[i]||a[0])||{}).url||''};
+const namesOf=arr=>(arr||[]).map(a=>a&&a.name).filter(Boolean).join(', ');
+
+async function spGet(path,token){
+  let res;
+  try{res=await fetch('https://api.spotify.com/v1'+path,{headers:{Authorization:'Bearer '+token}})}
+  catch(e){throw new Error('Sem conexão com o Spotify. Verifique sua internet e tente de novo.')}
+  const text=await res.text();
+  let data=null;try{data=text?JSON.parse(text):null}catch(e){}
+  if(res.status===401){const er=new Error('Sessão do Spotify expirada.');er.retry=true;throw er}
+  if(res.status===429)throw new Error('Muitas buscas seguidas. Aguarde alguns segundos e tente de novo.');
+  if(!res.ok||(data&&data.error)){
+    const msg=data&&data.error&&(data.error.message||data.error.status);
+    throw new Error('Spotify: '+(msg||('erro '+res.status)));
+  }
+  if(data===null)throw new Error('Resposta inválida do Spotify (erro '+res.status+').');
+  return data;
 }
-function debounceSearch(q){
+async function spJson(path,token){
+  try{return await spGet(path,token)}
+  catch(e){
+    if(!e.retry)throw e;
+    DB.spotifyToken='';DB.spotifyTokenExp=0;save();
+    const t=await getSpotifyToken(true);
+    if(!t)throw new Error('Não foi possível reconectar ao Spotify.');
+    return await spGet(path,t);
+  }
+}
+async function fetchAlbumTracks(id,token){
+  let limit=50,offset=0;const items=[];
+  for(let guard=0;guard<40;guard++){
+    let data;
+    try{data=await spJson(`/albums/${id}/tracks?limit=${limit}&offset=${offset}`,token)}
+    catch(e){if(limit>10&&offset===0){limit=10;continue}throw e}
+    const page=(data.items||[]).filter(Boolean);
+    items.push(...page);
+    if(!data.next||!page.length)break;
+    offset+=(data.items||[]).length;
+  }
+  return items;
+}
+
+let searchSeq=0;
+let sState={q:'',view:'search',sec:{artist:{items:[],raw:0,next:false},album:{items:[],raw:0,next:false},track:{items:[],raw:0,next:false}},artist:null,aa:{items:[],raw:0,next:false,mode:'endpoint',loading:false,keys:new Set()}};
+
+function onSearchInput(v){
   clearTimeout(searchDebounce);
+  const q=(v||'').trim();
+  const box=document.getElementById('searchResults');
+  if(!q){closeSearchPanel();box.innerHTML='';sState.q='';sState.view='search';return}
   openSearchPanel();
-  if(!q.trim()){document.getElementById('searchResults').innerHTML='';updatePanelSections();return}
-  updatePanelSections();
-  searchDebounce=setTimeout(()=>searchType==='track'?searchSpotifyTracks(q):searchSpotify(q),450);
+  if(!box.children.length)box.innerHTML='<div class="spinner"></div>';
+  searchDebounce=setTimeout(()=>runSearch(q),400);
 }
+async function runSearch(q){
+  const seq=++searchSeq;
+  const box=document.getElementById('searchResults');
+  try{
+    const token=await getSpotifyToken();
+    if(!token)return;
+    const d=await spJson(`/search?q=${encodeURIComponent(q)}&type=artist,album,track&limit=5`,token);
+    if(seq!==searchSeq)return;
+    sState.q=q;sState.view='search';sState.artist=null;
+    ['artist','album','track'].forEach(t=>{
+      const l=d[t+'s']||{};const raw=l.items||[];
+      sState.sec[t]={items:raw.filter(Boolean),raw:raw.length,next:!!l.next};
+    });
+    renderSearchView();
+  }catch(e){
+    if(seq!==searchSeq)return;
+    console.error(e);
+    box.innerHTML='<div class="sp-err">'+esc(e.message||'Erro na busca.')+'</div>';
+  }
+}
+function renderSearchView(){
+  const box=document.getElementById('searchResults');
+  const panel=document.getElementById('searchPanel');const pt=panel.scrollTop;
+  box.innerHTML='';
+  const labels={artist:'Artistas',album:'Álbuns',track:'Músicas'};
+  let any=false;
+  ['artist','album','track'].forEach(t=>{
+    const s=sState.sec[t];if(!s.items.length)return;any=true;
+    const h=document.createElement('div');h.className='sec-head';h.textContent=labels[t];box.appendChild(h);
+    s.items.forEach(it=>box.appendChild(t==='artist'?artistRow(it):t==='album'?albumRow(it):trackRow(it)));
+    if(s.next){
+      const b=document.createElement('button');b.className='sec-more';b.textContent='Ver mais '+labels[t].toLowerCase();
+      b.onclick=ev=>{ev.stopPropagation();b.disabled=true;b.textContent='Carregando…';loadMoreSection(t)};
+      box.appendChild(b);
+    }
+  });
+  if(!any)box.innerHTML='<div class="sp-empty">Nenhum resultado para “'+esc(sState.q)+'”.</div>';
+  panel.scrollTop=pt;
+}
+async function loadMoreSection(t){
+  const q=sState.q,s=sState.sec[t];
+  try{
+    const token=await getSpotifyToken();if(!token)return;
+    const d=await spJson(`/search?q=${encodeURIComponent(q)}&type=${t}&limit=${SP_PAGE}&offset=${s.raw}`,token);
+    if(q!==sState.q||sState.view!=='search')return;
+    const l=d[t+'s']||{};const raw=l.items||[];
+    const seen=new Set(s.items.map(x=>x.id));
+    raw.filter(Boolean).forEach(x=>{if(!seen.has(x.id)){seen.add(x.id);s.items.push(x)}});
+    s.raw+=raw.length;s.next=!!l.next&&raw.length>0;
+    renderSearchView();
+  }catch(e){toast(e.message||'Erro ao carregar mais');if(sState.view==='search')renderSearchView()}
+}
+
+function artistRow(a){
+  const item=document.createElement('div');item.className='search-result-item';
+  const img=imgOf(a);
+  const sub=(a.genres||[]).slice(0,2).join(', ')||'Artista';
+  item.innerHTML=`${img?`<img src="${esc(img)}" class="result-img round" alt="">`:`<div class="result-img round ph">${esc(initialOf(a.name))}</div>`}
+    <div class="result-info"><div class="result-name">${esc(a.name)}</div><div class="result-sub">${esc(sub)}</div></div>`;
+  const btn=document.createElement('button');btn.className='btn btn-ghost result-btn';btn.textContent='Ver álbuns';
+  const act=()=>openArtistView(a);
+  btn.onclick=ev=>{ev.stopPropagation();act()};item.onclick=act;item.appendChild(btn);
+  return item;
+}
+function albumRow(album){
+  const item=document.createElement('div');item.className='search-result-item';
+  const img=imgOf(album);
+  const inLib=DB.albums.find(a=>a.spotifyId===album.id);
+  item.innerHTML=`${img?`<img src="${esc(img)}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
+    <div class="result-info">
+      <div class="result-name">${esc(album.name)}</div>
+      <div class="result-sub">${esc(namesOf(album.artists))} · ${esc(String(album.release_date||'').slice(0,4))}</div>
+    </div>`;
+  const btn=document.createElement('button');
+  btn.className='btn '+(inLib?'btn-ghost':'btn-primary')+' result-btn';
+  btn.textContent=inLib?'Abrir':'+ Adicionar';
+  const act=()=>{
+    if(inLib){closeAdd();openDetail(inLib.id);return}
+    importAlbum(album.id);
+  };
+  btn.onclick=ev=>{ev.stopPropagation();act()};
+  item.onclick=act;item.appendChild(btn);
+  return item;
+}
+function trackRow(t){
+  const item=document.createElement('div');item.className='search-result-item';
+  const img=imgOf(t.album);
+  const bigImg=imgOf(t.album,0);
+  const done=!!(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===t.id);
+  item.innerHTML=`${img?`<img src="${esc(img)}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
+    <div class="result-info">
+      <div class="result-name">${esc(t.name)}</div>
+      <div class="result-sub">${esc(namesOf(t.artists))} · ${esc(t.album&&t.album.name||'')}</div>
+    </div>`;
+  const act=()=>{
+    closeSearchPanel();
+    openStModal({
+      spotifyTrackId:t.id,
+      name:t.name,
+      artist:namesOf(t.artists),
+      albumTitle:(t.album&&t.album.name)||'',
+      albumSpotifyId:(t.album&&t.album.id)||'',
+      cover:bigImg,
+      duration:t.duration_ms||0,
+      previewUrl:t.preview_url||'',
+      year:String((t.album&&t.album.release_date)||'').slice(0,4),
+    });
+  };
+  const btn=document.createElement('button');
+  btn.className='btn '+(done?'btn-ghost':'btn-primary')+' result-btn';
+  btn.textContent=done?'✓ Avaliada':'Avaliar';
+  btn.onclick=ev=>{ev.stopPropagation();act()};
+  item.onclick=act;item.appendChild(btn);
+  return item;
+}
+
+// ── todos os álbuns de um artista ──
+async function openArtistView(a){
+  sState.view='artist';
+  sState.artist={id:a.id,name:a.name};
+  sState.aa={items:[],raw:0,next:false,mode:'endpoint',loading:false,keys:new Set()};
+  const box=document.getElementById('searchResults');
+  box.innerHTML='';
+  const head=document.createElement('div');head.className='artist-head';
+  const back=document.createElement('button');back.className='back-btn';back.textContent='← Voltar aos resultados';
+  back.onclick=ev=>{ev.stopPropagation();backToResults()};
+  head.appendChild(back);
+  const img=imgOf(a);
+  const info=document.createElement('div');info.className='artist-head-info';
+  info.innerHTML=`${img?`<img src="${esc(img)}" class="result-img round" alt="">`:''}<div><div class="result-name">${esc(a.name)}</div><div class="result-sub">Todos os álbuns e singles</div></div>`;
+  head.appendChild(info);
+  const list=document.createElement('div');list.id='artistAlbums';
+  list.innerHTML='<div class="spinner"></div>';
+  box.appendChild(head);box.appendChild(list);
+  document.getElementById('searchPanel').scrollTop=0;
+  await loadArtistAlbums(0);
+}
+function backToResults(){
+  sState.view='search';sState.artist=null;
+  renderSearchView();
+  document.getElementById('searchPanel').scrollTop=0;
+}
+function renderArtistAlbums(){
+  const list=document.getElementById('artistAlbums');if(!list)return;
+  const panel=document.getElementById('searchPanel');const pt=panel.scrollTop;
+  const aa=sState.aa;
+  list.innerHTML='';
+  if(!aa.items.length){list.innerHTML='<div class="sp-empty">Nenhum álbum encontrado para este artista.</div>';return}
+  aa.items.forEach(x=>list.appendChild(albumRow(x)));
+  if(aa.next)moreBtn(list,()=>loadArtistAlbums(aa.raw));
+  panel.scrollTop=pt;
+}
+async function loadArtistAlbums(offset){
+  const art=sState.artist,aa=sState.aa;
+  if(!art||aa.loading)return;
+  aa.loading=true;
+  const list=document.getElementById('artistAlbums');
+  try{
+    const token=await getSpotifyToken();
+    if(!token)return;
+    let l=null,rawItems=[];
+    if(aa.mode==='endpoint'){
+      try{
+        l=await spJson(`/artists/${art.id}/albums?include_groups=album,single&limit=${SP_PAGE}&offset=${offset}`,token);
+        rawItems=l.items||[];
+      }catch(e){
+        if(offset>0)throw e;
+        aa.mode='search';
+      }
+    }
+    if(aa.mode==='search'){
+      const d=await spJson(`/search?q=${encodeURIComponent('artist:"'+art.name+'"')}&type=album&limit=${SP_PAGE}&offset=${offset}`,token);
+      l=d.albums||{};rawItems=l.items||[];
+    }
+    if(sState.artist!==art)return;
+    let items=rawItems.filter(Boolean);
+    if(aa.mode==='search')items=items.filter(x=>(x.artists||[]).some(ar=>ar.id===art.id));
+    items.forEach(x=>{
+      const k=String(x.name||'').toLowerCase()+'|'+String(x.release_date||'').slice(0,4);
+      if(!aa.keys.has(k)){aa.keys.add(k);aa.items.push(x)}
+    });
+    aa.raw+=rawItems.length;
+    aa.next=!!l.next&&rawItems.length>0;
+    aa.items.sort((x,y)=>String(y.release_date||'').localeCompare(String(x.release_date||'')));
+    renderArtistAlbums();
+  }catch(e){
+    if(sState.artist!==art)return;
+    console.error(e);
+    const w=list&&list.querySelector('.more-wrap');if(w)w.remove();
+    if(list&&!aa.items.length)list.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao carregar álbuns.')+'</div>';
+    else toast(e.message||'Erro ao carregar álbuns.');
+  }finally{aa.loading=false}
+}
+function moreBtn(container,onClick){
+  const old=container.querySelector('.more-wrap');if(old)old.remove();
+  const w=document.createElement('div');w.className='more-wrap';
+  const b=document.createElement('button');b.className='btn btn-ghost';b.style.cssText='width:100%;font-size:13px';b.textContent='Ver mais álbuns';
+  b.onclick=ev=>{ev.stopPropagation();b.disabled=true;b.textContent='Carregando…';onClick()};
+  w.appendChild(b);container.appendChild(w);
+}
+document.getElementById('searchPanel').addEventListener('scroll',function(){
+  if(this.scrollTop+this.clientHeight>=this.scrollHeight-60){const b=this.querySelector('.more-wrap button:not([disabled])');if(b)b.click()}
+});
 
 let serverTokenState=null;
 async function fetchServerToken(){
@@ -1634,111 +1917,6 @@ async function getSpotifyToken(silent){
 
 function showError(msg){
   document.getElementById('searchResults').innerHTML=`<div style="padding:1rem;color:var(--red);font-size:13px;border:1px solid rgba(239,68,68,.2);border-radius:var(--radius);margin-top:.75rem">${msg}</div>`;
-}
-
-function moreBtn(container,onClick){
-  const old=container.querySelector('.more-wrap');if(old)old.remove();
-  const w=document.createElement('div');w.className='more-wrap';
-  const b=document.createElement('button');b.className='btn btn-ghost';b.style.cssText='width:100%;font-size:13px';b.textContent='Ver mais resultados';
-  b.onclick=ev=>{ev.stopPropagation();b.disabled=true;b.textContent='Carregando…';onClick()};
-  w.appendChild(b);container.appendChild(w);
-}
-function spError(sr,d,offset){
-  const msg='Erro do Spotify: '+(d.error.message||d.error.status||'tente novamente');
-  if(offset>0){const w=sr.querySelector('.more-wrap');if(w)w.remove();toast(msg);return}
-  sr.innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">'+msg+'</div>';
-}
-document.getElementById('searchPanel').addEventListener('scroll',function(){
-  if(this.scrollTop+this.clientHeight>=this.scrollHeight-60){const b=this.querySelector('.more-wrap button:not([disabled])');if(b)b.click()}
-});
-function albumRow(album,token){
-  const item=document.createElement('div');item.className='search-result-item';
-  const img=(album.images[1]||album.images[0]||{}).url;
-  const inLib=DB.albums.find(a=>a.spotifyId===album.id);
-  item.innerHTML=`${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
-    <div class="result-info">
-      <div class="result-name">${album.name}</div>
-      <div class="result-sub">${album.artists.map(a=>a.name).join(', ')} · ${album.release_date?.slice(0,4)||''}</div>
-    </div>`;
-  const btn=document.createElement('button');
-  btn.className='btn '+(inLib?'btn-ghost':'btn-primary')+' result-btn';
-  btn.textContent=inLib?'Abrir':'+ Adicionar';
-  const act=()=>{
-    if(inLib){closeAdd();openDetail(inLib.id);return}
-    importAlbum(album.id,token);
-  };
-  btn.onclick=ev=>{ev.stopPropagation();act()};
-  item.onclick=act;
-  item.appendChild(btn);
-  return item;
-}
-async function searchSpotify(q,offset=0){
-  const sr=document.getElementById('searchResults');
-  if(offset===0)sr.innerHTML='<div class="spinner"></div>';
-  const token=await getSpotifyToken();
-  if(!token)return;
-  try{
-    const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=album&limit=10&offset=${offset}`,{headers:{Authorization:'Bearer '+token}});
-    const data=await res.json();
-    if(data.error){spError(sr,data,offset);return}
-    if(searchType!=='album'||document.getElementById('spotifySearch').value.trim()!==q.trim())return;
-    const albums=(data.albums?.items||[]).filter(Boolean);
-    if(offset===0)sr.innerHTML='';else{const w=sr.querySelector('.more-wrap');if(w)w.remove()}
-    if(!albums.length&&offset===0){sr.innerHTML='<div style="padding:1rem;color:var(--text3);font-size:13px">Nenhum resultado encontrado.</div>';return}
-    albums.forEach(album=>sr.appendChild(albumRow(album,token)));
-    if(data.albums?.next&&albums.length)moreBtn(sr,()=>searchSpotify(q,offset+10));
-  }catch(e){sr.innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">Erro na busca.</div>'}
-}
-
-function trackRow(t){
-  const item=document.createElement('div');item.className='search-result-item';
-  const img=(t.album?.images?.[1]||t.album?.images?.[0]||{}).url;
-  const bigImg=t.album?.images?.[0]?.url||'';
-  const alreadyStandalone=!!(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===t.id);
-  item.innerHTML=`
-    ${img?`<img src="${img}" class="result-img" alt="">`:`<div class="result-img ph">♪</div>`}
-    <div class="result-info">
-      <div class="result-name">${t.name}</div>
-      <div class="result-sub">${t.artists.map(a=>a.name).join(', ')} · ${t.album?.name||''}</div>
-    </div>`;
-  const act=()=>{
-    closeSearchPanel();
-    openStModal({
-      spotifyTrackId:t.id,
-      name:t.name,
-      artist:t.artists.map(a=>a.name).join(', '),
-      albumTitle:t.album?.name||'',
-      albumSpotifyId:t.album?.id||'',
-      cover:bigImg,
-      duration:t.duration_ms||0,
-      previewUrl:t.preview_url||'',
-      year:t.album?.release_date?.slice(0,4)||'',
-    });
-  };
-  const btn=document.createElement('button');
-  btn.className='btn '+(alreadyStandalone?'btn-ghost':'btn-primary')+' result-btn';
-  btn.textContent=alreadyStandalone?'✓ Avaliada':'Avaliar';
-  btn.onclick=ev=>{ev.stopPropagation();act()};
-  item.onclick=act;
-  item.appendChild(btn);
-  return item;
-}
-async function searchSpotifyTracks(q,offset=0){
-  const sr=document.getElementById('searchResults');
-  if(offset===0)sr.innerHTML='<div class="spinner"></div>';
-  const token=await getSpotifyToken();
-  if(!token)return;
-  try{
-    const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=track&limit=10&offset=${offset}`,{headers:{Authorization:'Bearer '+token}});
-    const data=await res.json();
-    if(data.error){spError(sr,data,offset);return}
-    if(searchType!=='track'||document.getElementById('spotifySearch').value.trim()!==q.trim())return;
-    const tracks=(data.tracks?.items||[]).filter(Boolean);
-    if(offset===0)sr.innerHTML='';else{const w=sr.querySelector('.more-wrap');if(w)w.remove()}
-    if(!tracks.length&&offset===0){sr.innerHTML='<div style="padding:1rem;color:var(--text3);font-size:13px">Nenhuma música encontrada.</div>';return}
-    tracks.forEach(t=>sr.appendChild(trackRow(t)));
-    if(data.tracks?.next&&tracks.length)moreBtn(sr,()=>searchSpotifyTracks(q,offset+10));
-  }catch(e){sr.innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">Erro na busca.</div>'}
 }
 
 function openStModal(trackData){
@@ -1840,35 +2018,26 @@ function closeStModal(){
   document.getElementById('stOverlay').classList.remove('open');
 }
 
-async function importAlbumFromHistory(spotifyId){
-  if(DB.albums.find(a=>a.spotifyId===spotifyId)){
-    closeAdd();
-    setTimeout(()=>openDetail(DB.albums.find(a=>a.spotifyId===spotifyId).id),100);
-    return;
-  }
-  const token=await getSpotifyToken();
-  if(!token)return;
-  importAlbum(spotifyId,token);
-}
 async function importAlbum(albumId,token){
-  document.getElementById('searchResults').innerHTML='<div class="spinner"></div>';
+  const box=document.getElementById('searchResults');
+  box.innerHTML='<div class="spinner"></div>';
   try{
-    const [albumRes,tracksRes]=await Promise.all([
-      fetch(`https://api.spotify.com/v1/albums/${albumId}`,{headers:{Authorization:'Bearer '+token}}),
-      fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks?limit=50`,{headers:{Authorization:'Bearer '+token}})
-    ]);
-    const albumData=await albumRes.json();
-    const tracksData=await tracksRes.json();
+    token=token||await getSpotifyToken();
+    if(!token)return;
+    const albumData=await spJson(`/albums/${albumId}`,token);
+    if(!albumData||!albumData.name)throw new Error('Álbum não encontrado no Spotify.');
+    const trackItems=await fetchAlbumTracks(albumId,token);
+    if(DB.albums.find(a=>a.spotifyId===albumId)){toast('Álbum já na biblioteca!');closeAdd();return}
     const album={
       id:uid(),spotifyId:albumId,
       title:albumData.name,
-      artist:albumData.artists.map(a=>a.name).join(', '),
-      cover:albumData.images[0]?.url||'',
-      year:albumData.release_date?.slice(0,4)||'',
-      genre:albumData.genres?.[0]||'',
-      popularity:albumData.popularity||null,
-      spotifyUrl:albumData.external_urls?.spotify||'',
-      tracks:(tracksData.items||[]).map((t,i)=>{
+      artist:namesOf(albumData.artists),
+      cover:imgOf(albumData,0),
+      year:String(albumData.release_date||'').slice(0,4),
+      genre:(albumData.genres||[])[0]||'',
+      popularity:albumData.popularity!=null?albumData.popularity:null,
+      spotifyUrl:(albumData.external_urls&&albumData.external_urls.spotify)||'',
+      tracks:trackItems.map((t,i)=>{
         const standalone=(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===t.id);
         return {
           id:uid(),num:i+1,name:t.name,
@@ -1882,20 +2051,15 @@ async function importAlbum(albumId,token){
       }),
       diary:{},favorite:false,addedAt:Date.now()
     };
-    if(DB.albums.find(a=>a.spotifyId===albumId)){toast('Álbum já na biblioteca!');return}
     DB.albums.push(album);
-    // save to search history
-    if(!DB.searchHistory)DB.searchHistory=[];
-    DB.searchHistory=DB.searchHistory.filter(h=>h.spotifyId!==albumId);
-    DB.searchHistory.unshift({spotifyId:albumId,title:album.title,artist:album.artist,cover:album.cover,year:album.year,inLibrary:true});
-    if(DB.searchHistory.length>12)DB.searchHistory=DB.searchHistory.slice(0,12);
     save();
     closeAdd();renderHome();
     if(document.getElementById('sec-library').classList.contains('active'))renderLibrary();
     toast('Álbum adicionado!');
     setTimeout(()=>openDetail(album.id),200);
   }catch(e){
-    document.getElementById('searchResults').innerHTML='<div style="padding:1rem;color:var(--red);font-size:13px">Erro ao importar álbum.</div>';
+    console.error(e);
+    box.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao importar álbum.')+'</div>';
   }
 }
 
@@ -1925,7 +2089,7 @@ function toast(msg){
 // ─── EXPORT / IMPORT ────────────────────────────────────────
 function exportData(){
   const data={...DB};
-  delete data.spotifyToken;delete data.spotifyTokenExp;delete data.spotifyClientId;delete data.spotifyClientSecret;
+  delete data.spotifyToken;delete data.spotifyTokenExp;delete data.spotifyClientId;delete data.spotifyClientSecret;delete data.sync;delete data.artistPhotoCache;
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -1945,7 +2109,8 @@ function importData(e){
       if(!confirm(`Importar ${count} álbum${count!==1?'s':''}?
 
 Isso substituirá seus dados atuais.`)){e.target.value='';return}
-      DB={...DB,...imported,spotifyClientId:DB.spotifyClientId||'',spotifyClientSecret:DB.spotifyClientSecret||'',spotifyToken:DB.spotifyToken||'',spotifyTokenExp:DB.spotifyTokenExp||0};
+      DB={...DB,...imported,spotifyClientId:DB.spotifyClientId||'',spotifyClientSecret:DB.spotifyClientSecret||'',spotifyToken:DB.spotifyToken||'',spotifyTokenExp:DB.spotifyTokenExp||0,sync:DB.sync,profile:AUTH.user?DB.profile:(imported.profile||DB.profile)};
+      ensureSyncState();
       save();renderHome();
       if(document.getElementById('sec-library').classList.contains('active'))renderLibrary();
       toast(`${count} álbum${count!==1?'s':''} importado${count!==1?'s':''}!`);
@@ -1955,6 +2120,516 @@ Isso substituirá seus dados atuais.`)){e.target.value='';return}
     e.target.value='';
   };
   reader.readAsText(file);
+}
+
+// ─── CONTA (Supabase) ─────────────────────────────────────────
+const SB_URL='https://dwffsxtyielemjfbltlq.supabase.co';
+const SB_KEY='sb_publishable_1XOdMmR3Xqz1qtUNEaYqbA_Wvq2Y8LZ';
+const USERNAME_RE=/^[a-z0-9_]{3,20}$/;
+let authTab='login';
+
+function authErr(data,status){
+  const code=(data&&(data.error_code||data.code||data.error))||'';
+  const msg=(data&&(data.msg||data.message||data.error_description))||'';
+  const map={
+    invalid_credentials:'E-mail ou senha incorretos.',
+    user_already_exists:'Este e-mail já tem uma conta. Tente entrar.',
+    email_exists:'Este e-mail já tem uma conta. Tente entrar.',
+    weak_password:'Senha fraca. Use pelo menos 8 caracteres, misturando letras e números.',
+    email_not_confirmed:'Confirme seu e-mail antes de entrar (veja sua caixa de entrada).',
+    over_request_rate_limit:'Muitas tentativas. Aguarde um pouco e tente de novo.',
+    over_email_send_rate_limit:'Limite de e-mails atingido. Tente novamente mais tarde.',
+    email_address_invalid:'E-mail inválido.',
+    signup_disabled:'Cadastros estão desativados no momento.',
+    validation_failed:'Dados inválidos. Confira os campos.',
+    same_password:'A nova senha precisa ser diferente da atual.',
+    email_address_not_authorized:'Não foi possível enviar e-mail para este endereço agora (configuração de e-mail pendente).'
+  };
+  if(map[code])return map[code];
+  if(status===429)return map.over_request_rate_limit;
+  if(/Invalid login credentials/i.test(msg))return map.invalid_credentials;
+  if(/already registered/i.test(msg))return map.user_already_exists;
+  if(/rate limit/i.test(msg))return map.over_request_rate_limit;
+  return msg||('Erro '+status);
+}
+async function sbReq(path,opts){
+  opts=opts||{};
+  const h=Object.assign({apikey:SB_KEY},opts.headers||{});
+  if(opts.token)h.Authorization='Bearer '+opts.token;
+  if(opts.body!==undefined)h['Content-Type']='application/json';
+  let res;
+  try{res=await fetch(SB_URL+path,{method:opts.method||'GET',headers:h,body:opts.body!==undefined?JSON.stringify(opts.body):undefined})}
+  catch(e){const er=new Error('Sem conexão com o servidor. Verifique sua internet.');er.network=true;throw er}
+  const text=await res.text();let data=null;try{data=text?JSON.parse(text):null}catch(e){}
+  if(!res.ok){const er=new Error(authErr(data,res.status));er.status=res.status;er.data=data;throw er}
+  return data;
+}
+function sessionFrom(d){
+  return {access_token:d.access_token,refresh_token:d.refresh_token,
+    expires_at:d.expires_at||Math.floor(Date.now()/1000)+(d.expires_in||3600),
+    user:d.user?{id:d.user.id,email:d.user.email}:null};
+}
+function saveSession(){try{localStorage.setItem('myspotlist_session',JSON.stringify(AUTH.session))}catch(e){}}
+function loadSession(){try{return JSON.parse(localStorage.getItem('myspotlist_session')||'null')}catch(e){return null}}
+function clearSession(){AUTH.session=null;AUTH.user=null;try{localStorage.removeItem('myspotlist_session')}catch(e){}}
+let refreshing=null;
+async function refreshSession(){
+  if(refreshing)return refreshing;
+  refreshing=(async()=>{
+    const s=AUTH.session;
+    if(!s||!s.refresh_token){const er=new Error('Sessão expirada. Entre novamente.');er.authFailed=true;throw er}
+    try{
+      const d=await sbReq('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:s.refresh_token}});
+      const ns=sessionFrom(d);if(!ns.user)ns.user=s.user;
+      AUTH.session=ns;AUTH.user=ns.user;saveSession();return ns;
+    }catch(e){if(e.status===400||e.status===401)e.authFailed=true;throw e}
+  })();
+  try{return await refreshing}finally{refreshing=null}
+}
+async function getToken(){
+  if(!AUTH.session){const er=new Error('Você não está conectado.');er.authFailed=true;throw er}
+  if(AUTH.session.expires_at-60<Date.now()/1000)await refreshSession();
+  return AUTH.session.access_token;
+}
+async function sbAuthed(path,opts){
+  opts=opts||{};
+  let token=await getToken();
+  try{return await sbReq(path,Object.assign({},opts,{token}))}
+  catch(e){
+    if(e.status===401||(e.data&&e.data.code==='PGRST303')){
+      await refreshSession();
+      return await sbReq(path,Object.assign({},opts,{token:AUTH.session.access_token}));
+    }
+    throw e;
+  }
+}
+function parseAuthHash(){
+  const q=new URLSearchParams(location.search);
+  const h=location.hash.replace(/^#/,'');
+  let out={};
+  if(q.get('error_description')||q.get('error')){
+    out={error:q.get('error_description')||q.get('error')};
+    history.replaceState(null,'',location.pathname);
+  }
+  if(h&&/access_token=|error=/.test(h)){
+    const p=new URLSearchParams(h);
+    history.replaceState(null,'',location.pathname+location.search);
+    if(p.get('error'))return {error:(p.get('error_description')||p.get('error')).replace(/\+/g,' ')};
+    if(p.get('access_token'))out={session:{access_token:p.get('access_token'),refresh_token:p.get('refresh_token'),
+      expires_at:Number(p.get('expires_at'))||Math.floor(Date.now()/1000)+(Number(p.get('expires_in'))||3600),user:null},type:p.get('type')||''};
+  }
+  return out;
+}
+
+// ── nome de usuário único ──
+let unTimer=null;
+function setHint(el,text,cls){el.textContent=text;el.className='field-hint'+(cls?' '+cls:'');el.dataset.state=cls||''}
+function watchUsername(inputId,hintId,current){
+  const inp=document.getElementById(inputId),hint=document.getElementById(hintId);
+  clearTimeout(unTimer);
+  const v=inp.value.trim().toLowerCase();
+  setHint(hint,'','');
+  if(!v)return;
+  if(!USERNAME_RE.test(v)){setHint(hint,'Use 3 a 20 caracteres: letras minúsculas, números e _','err');return}
+  if(current&&v===current){setHint(hint,'Este é o seu usuário atual','ok');return}
+  setHint(hint,'Verificando…','');
+  unTimer=setTimeout(async()=>{
+    try{
+      const ok=await sbReq('/rest/v1/rpc/username_available',{method:'POST',body:{name:v}});
+      if(inp.value.trim().toLowerCase()!==v)return;
+      setHint(hint,ok?('@'+v+' está disponível'):('@'+v+' já está em uso'),ok?'ok':'err');
+    }catch(e){setHint(hint,'Não foi possível verificar agora','')}
+  },400);
+}
+
+// ── telas de entrada ──
+function setAuthMsg(text,cls){const el=document.getElementById('authMsg');el.textContent=text||'';el.className='auth-msg'+(cls?' '+cls:'')}
+function setAuthTab(tab){
+  authTab=tab;
+  const reset=tab==='reset',signup=tab==='signup';
+  document.getElementById('authtab-login').classList.toggle('active',tab==='login');
+  document.getElementById('authtab-signup').classList.toggle('active',signup);
+  document.getElementById('authTabs').style.display=reset?'none':'flex';
+  document.getElementById('authUserWrap').style.display=signup?'block':'none';
+  document.getElementById('authEmailWrap').style.display=reset?'none':'block';
+  document.getElementById('authPassLbl').textContent=reset?'Nova senha':'Senha';
+  const pw=document.getElementById('authPassword');
+  pw.autocomplete=tab==='login'?'current-password':'new-password';
+  pw.value='';
+  document.getElementById('authSubmit').textContent=reset?'Salvar nova senha':(signup?'Criar conta':'Entrar');
+  document.getElementById('authTitle').textContent=reset?'Definir nova senha':(signup?'Criar sua conta':'Entrar');
+  document.getElementById('authForgot').style.display=tab==='login'?'block':'none';
+  document.getElementById('authOAuth').style.display=reset?'none':'block';
+  document.getElementById('authGuest').style.display=reset?'none':'block';
+  setAuthMsg('');
+}
+function openAuth(tab,msg){
+  document.getElementById('profileCard').style.display='none';
+  document.getElementById('authCard').style.display='block';
+  document.getElementById('loginScreen').classList.add('open');
+  document.body.style.overflow='hidden';
+  closeSettings();
+  setAuthTab(tab||'login');
+  if(msg)setAuthMsg(msg,'err');
+  loadProviders();
+}
+const OAUTH_ICONS={
+  google:'<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>',
+  spotify:'<svg width="18" height="18" viewBox="0 0 24 24" fill="#1db954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>'
+};
+async function loadProviders(){
+  const box=document.getElementById('authOAuth');
+  box.innerHTML='';
+  try{
+    const s=await sbReq('/auth/v1/settings');
+    const ext=(s&&s.external)||{};
+    const list=['google','spotify'].filter(k=>ext[k]);
+    if(!list.length)return;
+    const names={google:'Google',spotify:'Spotify'};
+    box.innerHTML='<div class="divider-or">ou</div>'+list.map(k=>`<button type="button" class="btn btn-ghost oauth-btn" onclick="oauthLogin('${k}')">${OAUTH_ICONS[k]}<span>Continuar com ${names[k]}</span></button>`).join('');
+  }catch(e){box.innerHTML=''}
+}
+function oauthLogin(provider){
+  location.href=SB_URL+'/auth/v1/authorize?provider='+provider+'&redirect_to='+encodeURIComponent(location.origin+location.pathname);
+}
+async function submitAuth(){
+  const mode=authTab;
+  const email=(document.getElementById('authEmail').value||'').trim();
+  const password=document.getElementById('authPassword').value||'';
+  const btn=document.getElementById('authSubmit');
+  setAuthMsg('');
+  if(mode==='reset'){
+    if(password.length<8){setAuthMsg('A senha precisa ter pelo menos 8 caracteres.','err');return}
+    btn.disabled=true;
+    try{
+      await sbReq('/auth/v1/user',{method:'PUT',token:AUTH.session.access_token,body:{password}});
+      toast('Senha alterada!');
+      await onSignedIn(AUTH.session);
+    }catch(e){setAuthMsg(e.message,'err')}
+    btn.disabled=false;return;
+  }
+  if(!/^\S+@\S+\.\S+$/.test(email)){setAuthMsg('Digite um e-mail válido.','err');return}
+  if(password.length<8){setAuthMsg('A senha precisa ter pelo menos 8 caracteres.','err');return}
+  const label=btn.textContent;btn.disabled=true;btn.textContent='Aguarde…';
+  try{
+    if(mode==='signup'){
+      const username=(document.getElementById('authUsername').value||'').trim().toLowerCase();
+      if(!USERNAME_RE.test(username)){setAuthMsg('Escolha um nome de usuário de 3 a 20 caracteres (letras minúsculas, números e _).','err');return}
+      const free=await sbReq('/rest/v1/rpc/username_available',{method:'POST',body:{name:username}});
+      if(!free){setAuthMsg('O usuário @'+username+' já está em uso. Escolha outro.','err');return}
+      const d=await sbReq('/auth/v1/signup',{method:'POST',body:{email,password,data:{username,display_name:username}}});
+      if(d&&d.access_token)await onSignedIn(sessionFrom(d),{isNew:true});
+      else{setAuthTab('login');setAuthMsg('Conta criada! Enviamos um e-mail de confirmação. Confirme e depois entre.','ok')}
+    }else{
+      const d=await sbReq('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});
+      await onSignedIn(sessionFrom(d));
+    }
+  }catch(e){setAuthMsg(e.message||'Erro ao entrar.','err')}
+  finally{btn.disabled=false;btn.textContent=label}
+}
+async function forgotPassword(){
+  const email=(document.getElementById('authEmail').value||'').trim();
+  if(!/^\S+@\S+\.\S+$/.test(email)){setAuthMsg('Digite seu e-mail acima e clique em "Esqueci minha senha".','err');return}
+  try{
+    await sbReq('/auth/v1/recover?redirect_to='+encodeURIComponent(location.origin+location.pathname),{method:'POST',body:{email}});
+    setAuthMsg('Se existir uma conta com esse e-mail, enviamos um link para redefinir a senha.','ok');
+  }catch(e){setAuthMsg(e.message,'err')}
+}
+function continueAsGuest(){
+  STORE_KEY='myspotlist_db';DB=loadDB(STORE_KEY);
+  if(DB.profile){enterGuest();return}
+  openLogin(false);
+}
+function enterGuest(){
+  clearSession();
+  try{localStorage.setItem('myspotlist_mode','guest')}catch(e){}
+  STORE_KEY='myspotlist_db';DB=loadDB(STORE_KEY);
+  closeLogin();applyProfile();renderHome();showWelcomeIfFirst();
+}
+function updateGuestBanner(){
+  const b=document.getElementById('guestBanner');if(!b)return;
+  let off=false,mode='';
+  try{off=localStorage.getItem('myspotlist_banner_off')==='1';mode=localStorage.getItem('myspotlist_mode')}catch(e){}
+  b.style.display=(!AUTH.user&&mode==='guest'&&!off)?'flex':'none';
+}
+function dismissGuestBanner(){try{localStorage.setItem('myspotlist_banner_off','1')}catch(e){}updateGuestBanner()}
+
+async function onSignedIn(sess,opts){
+  opts=opts||{};
+  AUTH.session=sess;AUTH.user=sess.user;saveSession();
+  try{localStorage.setItem('myspotlist_mode','user')}catch(e){}
+  STORE_KEY='myspotlist_db_'+sess.user.id;DB=loadDB(STORE_KEY);ensureSyncState();
+  closeLogin();
+  applyProfile();renderHome();
+  try{await loadServerProfile()}
+  catch(e){if(e.authFailed){signOutLocal('Sua sessão expirou. Entre novamente.');return}}
+  applyProfile();
+  offerMigration();
+  await syncNow();
+  refreshViews();
+  if(!DB.profile||!DB.profile.username)openLogin(true,{complete:true});
+  else if(opts.isNew&&!DB.profile.avatar)openLogin(true,{complete:true});
+  else showWelcomeIfFirst();
+}
+async function loadServerProfile(){
+  const rows=await sbAuthed('/rest/v1/profiles?select=id,username,display_name,avatar&id=eq.'+AUTH.user.id);
+  let p=rows&&rows[0];
+  if(!p){
+    const created=await sbAuthed('/rest/v1/profiles',{method:'POST',body:{id:AUTH.user.id,display_name:(AUTH.user.email||'').split('@')[0]},headers:{Prefer:'return=representation'}});
+    p=created&&created[0];
+  }
+  if(p)DB.profile={name:p.display_name||p.username||(AUTH.user.email||'').split('@')[0],username:p.username||'',avatar:p.avatar||null};
+  save(true);
+}
+async function signOut(){
+  clearTimeout(syncTimer);
+  if(AUTH.user){
+    await syncNow();
+    if(syncState.status==='error'&&!confirm('Há alterações que ainda não foram sincronizadas. Sair mesmo assim?'))return;
+    try{await sbAuthed('/auth/v1/logout',{method:'POST'})}catch(e){}
+  }
+  signOutLocal();
+}
+function signOutLocal(msg){
+  const id=AUTH.user&&AUTH.user.id;
+  clearTimeout(syncTimer);
+  clearSession();
+  if(id){try{localStorage.removeItem('myspotlist_db_'+id)}catch(e){}}
+  try{localStorage.setItem('myspotlist_mode','none')}catch(e){}
+  STORE_KEY='myspotlist_db';DB=loadDB(STORE_KEY);
+  closeSettings();closeDetail();renderHome();
+  openAuth('login',msg);
+}
+async function deleteAccount(){
+  if(!AUTH.user)return;
+  const t=prompt('Isso apaga sua conta e todos os seus álbuns e avaliações, para sempre.\n\nDigite EXCLUIR para confirmar:');
+  if(t!=='EXCLUIR')return;
+  try{await sbAuthed('/rest/v1/rpc/delete_my_account',{method:'POST',body:{}})}
+  catch(e){toast(e.message||'Não foi possível excluir a conta.');return}
+  signOutLocal();
+  toast('Conta excluída.');
+}
+function guestDataCount(){const g=loadDB('myspotlist_db');return (g.albums||[]).length+(g.standaloneTracks||[]).length}
+function importGuestData(){
+  if(!AUTH.user)return;
+  const g=loadDB('myspotlist_db');
+  const ga=g.albums||[],gt=g.standaloneTracks||[];
+  if(!ga.length&&!gt.length){toast('Não há dados locais para importar.');return}
+  ensureSyncState();
+  let added=0;
+  const haveA=new Set(DB.albums.map(albumKey)),haveT=new Set(DB.standaloneTracks.map(trackKey));
+  ga.forEach(a=>{const k=albumKey(a);if(!haveA.has(k)){DB.albums.push(a);haveA.add(k);added++}});
+  gt.forEach(t=>{const k=trackKey(t);if(!haveT.has(k)){DB.standaloneTracks.push(t);haveT.add(k);added++}});
+  try{localStorage.setItem('myspotlist_migrated_'+AUTH.user.id,'1')}catch(e){}
+  save();refreshViews();refreshAccountSection();
+  toast(added?`${added} item(ns) importado(s) para a sua conta.`:'Seus dados locais já estavam na conta.');
+}
+function offerMigration(){
+  if(!AUTH.user)return;
+  const flag='myspotlist_migrated_'+AUTH.user.id;
+  try{if(localStorage.getItem(flag))return}catch(e){}
+  const n=guestDataCount();
+  if(!n){try{localStorage.setItem(flag,'1')}catch(e){}return}
+  if(confirm(`Encontramos ${n} item(ns) salvos neste navegador, sem conta.\n\nImportar para a sua conta?`))importGuestData();
+  else{try{localStorage.setItem(flag,'1')}catch(e){}}
+}
+function refreshAccountSection(){
+  const el=document.getElementById('accountBody');if(!el)return;
+  if(!AUTH.user){
+    el.innerHTML='<p>Você está usando o MySpotList sem conta: seus dados ficam só neste navegador.</p><button class="btn btn-primary" onclick="openAuth(\'signup\')" style="font-size:13px">Criar conta ou entrar</button>';
+    return;
+  }
+  const st=syncState;
+  let label='Aguardando';
+  if(st.status==='syncing')label='Sincronizando…';
+  else if(st.status==='error')label='Erro: '+esc(st.msg);
+  else if(st.status==='ok')label='Sincronizado'+(DB.sync&&DB.sync.lastSync?' às '+new Date(DB.sync.lastSync).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'');
+  const cls=st.status==='ok'?'ok':(st.status==='error'?'err':'');
+  const n=guestDataCount();
+  el.innerHTML=`<div class="p-name">${esc(AUTH.user.email||'')}</div>
+    <div class="p-sub">${DB.profile&&DB.profile.username?'@'+esc(DB.profile.username):'Sem nome de usuário'}</div>
+    <div style="margin-top:.7rem"><span class="status-pill ${cls}"><i></i>${label}</span></div>
+    <div class="flex-gap" style="margin-top:.9rem">
+      <button class="btn btn-ghost" onclick="syncNow(true)" style="font-size:13px">Sincronizar agora</button>
+      ${n?`<button class="btn btn-ghost" onclick="importGuestData()" style="font-size:13px">Importar dados deste navegador (${n})</button>`:''}
+      <button class="btn btn-ghost" onclick="signOut()" style="font-size:13px">Sair</button>
+    </div>
+    <button class="link-btn danger" onclick="deleteAccount()" style="margin-top:.9rem">Excluir minha conta</button>`;
+}
+
+// ── sincronização ──
+function stable(v){
+  if(Array.isArray(v))return '['+v.map(stable).join(',')+']';
+  if(v&&typeof v==='object')return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+stable(v[k])).join(',')+'}';
+  const j=JSON.stringify(v);return j===undefined?'null':j;
+}
+function hashStr(s){let h=5381,h2=52711;for(let i=0;i<s.length;i++){const ch=s.charCodeAt(i);h=((h<<5)+h+ch)|0;h2=(((h2<<5)+h2)^ch)|0}return s.length+':'+(h>>>0).toString(36)+(h2>>>0).toString(36)}
+function itemHash(it){const o=Object.assign({},it);delete o.updatedAt;return hashStr(stable(o))}
+const albumKey=a=>a.spotifyId?('sp_'+a.spotifyId):a.id;
+const trackKey=t=>t.spotifyTrackId||t.id;
+function ensureSyncState(){
+  if(!DB.sync)DB.sync={};
+  const S=DB.sync;
+  if(!S.albums)S.albums={};
+  if(!S.tracks)S.tracks={};
+  if(!S.lastPull)S.lastPull={albums:'1970-01-01T00:00:00Z',tracks:'1970-01-01T00:00:00Z'};
+  if(!DB.standaloneTracks)DB.standaloneTracks=[];
+}
+const syncState={status:'idle',msg:''};
+let syncTimer=null,syncing=false,syncAgain=false;
+function setSyncState(status,msg){
+  syncState.status=status;syncState.msg=msg||'';
+  if(document.getElementById('settingsOverlay').classList.contains('open'))refreshAccountSection();
+}
+function scheduleSync(ms){
+  if(!AUTH.user)return;
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(()=>syncNow(),ms||2000);
+}
+function collectLocalChanges(){
+  ensureSyncState();
+  const S=DB.sync;
+  const ch={ups:{albums:[],tracks:[]},dels:{albums:[],tracks:[]}};
+  const seen={albums:new Set(),tracks:new Set()};
+  DB.albums.forEach(a=>{
+    const k=albumKey(a);seen.albums.add(k);
+    const h=itemHash(a);
+    if(S.albums[k]!==h){a.updatedAt=Date.now();ch.ups.albums.push({k,item:a,h})}
+  });
+  DB.standaloneTracks.forEach(t=>{
+    const k=trackKey(t);seen.tracks.add(k);
+    const h=itemHash(t);
+    if(S.tracks[k]!==h){t.updatedAt=Date.now();ch.ups.tracks.push({k,item:t,h})}
+  });
+  Object.keys(S.albums).forEach(k=>{if(!seen.albums.has(k))ch.dels.albums.push(k)});
+  Object.keys(S.tracks).forEach(k=>{if(!seen.tracks.has(k))ch.dels.tracks.push(k)});
+  return ch;
+}
+function applyRemoteRow(type,r,ch){
+  const S=DB.sync;
+  const list=type==='albums'?DB.albums:DB.standaloneTracks;
+  const keyOf=type==='albums'?albumKey:trackKey;
+  const k=r.id;
+  const idx=list.findIndex(x=>keyOf(x)===k);
+  const local=idx>=0?list[idx]:null;
+  const ups=ch.ups[type],dels=ch.dels[type];
+  const upI=ups.findIndex(u=>u.k===k),delI=dels.indexOf(k);
+  const rData=r.data||{};
+  const rTime=Number(rData.updatedAt)||new Date(r.updated_at).getTime();
+  if(r.deleted_at){
+    if(!local){delete S[type][k];return false}
+    if(upI>=0&&(local.updatedAt||0)>rTime)return false;
+    list.splice(idx,1);delete S[type][k];
+    if(upI>=0)ups.splice(upI,1);
+    return true;
+  }
+  if(!local){list.push(rData);S[type][k]=itemHash(rData);return true}
+  if(upI<0&&delI<0){
+    const rh=itemHash(rData);
+    if(itemHash(local)===rh){S[type][k]=rh;return false}
+    list[idx]=rData;S[type][k]=rh;return true;
+  }
+  if(delI>=0)return false;
+  if(rTime>(local.updatedAt||0)){list[idx]=rData;S[type][k]=itemHash(rData);ups.splice(upI,1);return true}
+  return false;
+}
+async function pullRemote(ch){
+  const S=DB.sync;let changed=false;
+  for(const type of ['albums','tracks']){
+    const since=new Date(Math.max(0,new Date(S.lastPull[type]).getTime()-5000)).toISOString();
+    let offset=0,maxTs=S.lastPull[type];
+    const PAGE_N=500;
+    for(let guard=0;guard<200;guard++){
+      const rows=await sbAuthed(`/rest/v1/${type}?select=id,data,updated_at,deleted_at&updated_at=gte.${encodeURIComponent(since)}&order=updated_at.asc,id.asc&limit=${PAGE_N}&offset=${offset}`);
+      for(const r of (rows||[])){
+        if(applyRemoteRow(type,r,ch))changed=true;
+        if(new Date(r.updated_at)>new Date(maxTs))maxTs=r.updated_at;
+      }
+      if(!rows||rows.length<PAGE_N)break;
+      offset+=rows.length;
+    }
+    S.lastPull[type]=maxTs;
+  }
+  return changed;
+}
+async function pushLocal(ch){
+  const S=DB.sync,id=AUTH.user.id;
+  for(const type of ['albums','tracks']){
+    const rows=[];const now=new Date().toISOString();
+    ch.ups[type].forEach(u=>rows.push({user_id:id,id:u.k,data:u.item,deleted_at:null}));
+    ch.dels[type].forEach(k=>rows.push({user_id:id,id:k,data:{id:k,deleted:true,updatedAt:Date.now()},deleted_at:now}));
+    for(let i=0;i<rows.length;i+=40){
+      await sbAuthed(`/rest/v1/${type}?on_conflict=user_id,id`,{method:'POST',body:rows.slice(i,i+40),headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});
+    }
+    ch.ups[type].forEach(u=>{S[type][u.k]=u.h});
+    ch.dels[type].forEach(k=>{delete S[type][k]});
+  }
+}
+async function syncNow(manual){
+  if(!AUTH.user)return;
+  if(syncing){syncAgain=true;return}
+  syncing=true;setSyncState('syncing');
+  try{
+    ensureSyncState();
+    const ch=collectLocalChanges();
+    const changed=await pullRemote(ch);
+    await pushLocal(ch);
+    DB.sync.lastSync=Date.now();
+    save(true);
+    setSyncState('ok');
+    if(changed){
+      refreshViews();
+      const cur=DB.albums.find(a=>a.id===currentAlbumId);
+      if(document.getElementById('detailOverlay').classList.contains('open')&&cur&&_detailRef&&cur!==_detailRef)openDetail(cur.id);
+    }
+    if(manual)toast('Sincronizado!');
+  }catch(e){
+    console.error(e);
+    if(e.authFailed)signOutLocal('Sua sessão expirou. Entre novamente.');
+    else setSyncState('error',e.message||'Erro ao sincronizar');
+    if(manual&&!e.authFailed)toast(e.message||'Erro ao sincronizar');
+  }finally{
+    syncing=false;
+    if(syncAgain){syncAgain=false;scheduleSync(500)}
+  }
+}
+function refreshViews(){
+  renderHome();
+  const act=document.querySelector('.section.active');
+  if(act){
+    const id=act.id.replace('sec-','');
+    if(id==='library')renderLibrary();
+    else if(id==='rankings')renderRankings();
+    else if(id==='favorites')renderFavorites();
+  }
+  if(document.getElementById('detailOverlay').classList.contains('open')&&!DB.albums.some(a=>a.id===currentAlbumId))closeDetail();
+}
+window.addEventListener('online',()=>scheduleSync(500));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AUTH.user)scheduleSync(400)});
+setInterval(()=>{if(AUTH.user&&!document.hidden)syncNow()},60000);
+
+async function initApp(){
+  if(window.matchMedia('(max-width:720px)').matches)document.getElementById('spotifySearch').placeholder='Pesquise artista, álbum ou música';
+  const hashRes=parseAuthHash();
+  renderHome();
+  let pendingMsg=hashRes.error||'';
+  let sess=null;
+  if(hashRes.session){
+    AUTH.session=hashRes.session;
+    try{
+      const u=await sbReq('/auth/v1/user',{token:hashRes.session.access_token});
+      AUTH.session.user={id:u.id,email:u.email};AUTH.user=AUTH.session.user;sess=AUTH.session;
+    }catch(e){pendingMsg=e.message;clearSession()}
+    if(sess&&hashRes.type==='recovery'){saveSession();openAuth('reset');return}
+  }else{
+    const stored=loadSession();
+    if(stored&&stored.user){AUTH.session=stored;AUTH.user=stored.user;sess=stored}
+  }
+  if(sess){await onSignedIn(sess);return}
+  let mode=null;try{mode=localStorage.getItem('myspotlist_mode')}catch(e){}
+  const g=loadDB('myspotlist_db');
+  if(mode==='guest'||(mode!=='none'&&g.profile)){enterGuest();return}
+  openAuth('login',pendingMsg);
 }
 
 // ─── PERFIL / LOGIN ──────────────────────────────────────────
@@ -1991,14 +2666,27 @@ function applyProfile(){
   document.getElementById('settingsName').textContent=p.name;
   document.getElementById('settingsAvLabel').textContent=avatarLabel(p.avatar);
 }
-function openLogin(editing){
+function openLogin(editing,opts){
+  opts=opts||{};
   loginEditing=!!editing;
   const p=DB.profile||{};
-  document.getElementById('loginName').value=editing?(p.name||''):'';
-  loginAvatar=editing&&p.avatar?{...p.avatar}:null;
-  document.getElementById('loginTitle').textContent=editing?'Editar perfil':'Criar seu perfil';
-  document.getElementById('loginSubmit').textContent=editing?'Salvar':'Entrar';
-  document.getElementById('loginCancel').style.display=editing?'inline-flex':'none';
+  const acct=!!AUTH.user;
+  document.getElementById('authCard').style.display='none';
+  document.getElementById('profileCard').style.display='block';
+  document.getElementById('loginName').value=(editing||acct)?(p.name||''):'';
+  loginAvatar=(editing||acct)&&p.avatar?{...p.avatar}:null;
+  document.getElementById('loginTitle').textContent=opts.complete?'Complete seu perfil':(editing?'Editar perfil':'Criar seu perfil');
+  document.getElementById('loginSubmit').textContent=(editing||acct)?'Salvar':'Entrar';
+  const cancel=document.getElementById('loginCancel');
+  if(acct&&opts.complete&&!p.username){cancel.style.display='none'}
+  else{cancel.style.display='inline-flex';cancel.textContent=(editing||acct)?(opts.complete?'Pular':'Cancelar'):'Voltar'}
+  document.getElementById('loginUserWrap').style.display=acct?'block':'none';
+  if(acct){
+    document.getElementById('loginUsername').value=p.username||'';
+    document.getElementById('loginUserHint').textContent='';
+    if(p.username)watchUsername('loginUsername','loginUserHint',p.username);
+  }
+  document.getElementById('loginNote').textContent=acct?'Seu perfil fica salvo na sua conta.':'Seu perfil fica salvo neste navegador, sem senha.';
   document.getElementById('loginScreen').classList.add('open');
   document.body.style.overflow='hidden';
   setAvatarType(loginAvatar&&loginAvatar.type?loginAvatar.type:'artist');
@@ -2007,6 +2695,10 @@ function openLogin(editing){
 function closeLogin(){
   document.getElementById('loginScreen').classList.remove('open');
   document.body.style.overflow='';
+}
+function cancelProfile(){
+  if(AUTH.user||loginEditing){closeLogin();return}
+  openAuth('login');
 }
 function setAvatarType(type){
   loginAvType=type;
@@ -2108,10 +2800,29 @@ function updateLoginPreview(){
   document.getElementById('loginPreviewName').textContent=name||'Seu nome';
   document.getElementById('loginPreviewLabel').textContent=avatarLabel(loginAvatar);
 }
-function submitLogin(){
+async function submitLogin(){
   const name=document.getElementById('loginName').value.trim();
   if(!name){toast('Digite seu nome');document.getElementById('loginName').focus();return}
+  if(AUTH.user){
+    const username=(document.getElementById('loginUsername').value||'').trim().toLowerCase();
+    if(!USERNAME_RE.test(username)){toast('Escolha um nome de usuário válido: 3 a 20 caracteres (letras minúsculas, números e _).');document.getElementById('loginUsername').focus();return}
+    const btn=document.getElementById('loginSubmit');btn.disabled=true;
+    try{
+      await sbAuthed('/rest/v1/profiles?id=eq.'+AUTH.user.id,{method:'PATCH',body:{username,display_name:name,avatar:loginAvatar||null},headers:{Prefer:'return=minimal'}});
+    }catch(e){
+      btn.disabled=false;
+      if(e.data&&e.data.code==='23505')toast('Este nome de usuário já está em uso.');
+      else toast(e.message||'Erro ao salvar o perfil.');
+      return;
+    }
+    btn.disabled=false;
+    DB.profile={name,username,avatar:loginAvatar||null};
+    save(true);applyProfile();closeLogin();refreshAccountSection();toast('Perfil salvo!');
+    if(!localStorage.getItem('myspotlist_welcome'))showWelcomeIfFirst();
+    return;
+  }
   DB.profile={name,avatar:loginAvatar||null};
+  try{localStorage.setItem('myspotlist_mode','guest')}catch(e){}
   save();applyProfile();closeLogin();
   if(loginEditing)toast('Perfil atualizado!');else showWelcomeIfFirst();
 }
@@ -2128,8 +2839,7 @@ function showWelcomeIfFirst(){
   if(!seen&&!DB.albums.length)openWelcome();
 }
 
-renderHome();
-if(DB.profile){applyProfile();showWelcomeIfFirst();}else openLogin(false);
+initApp();
 </script>
 </body>
 </html>
