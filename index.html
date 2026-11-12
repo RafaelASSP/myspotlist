@@ -304,7 +304,7 @@ nav{
 .track-fav{background:none;border:none;cursor:pointer;font-size:13px;color:var(--text3);padding:2px 4px;transition:color .15s;flex-shrink:0}
 .track-fav.active,.track-fav:hover{color:var(--accent)}
 .track-input{
-  width:60px;background:var(--bg3);
+  width:74px;background:var(--bg3);
   border:1px solid var(--border);border-radius:6px;
   padding:4px 8px;color:var(--text);
   font-size:13px;font-family:'Sora',sans-serif;
@@ -598,7 +598,7 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
   .settings-body{padding:1.1rem}
   .track-row{gap:.5rem}
   .track-duration{display:none}
-  .track-input{width:54px}
+  .track-input{width:70px}
   .rank-item{padding:.6rem .75rem;gap:.7rem}
   .rank-pos{width:24px;font-size:1.2rem}
   .rank-img,.rank-img-ph{width:42px;height:42px}
@@ -730,6 +730,14 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 .oauth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:.55rem;font-size:13.5px;padding:10px}
 .guest-banner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:var(--accent-dim);border:1px solid rgba(29,185,84,.25);border-radius:12px;padding:.85rem 1.1rem;margin-bottom:1.5rem;font-size:13px;color:var(--text2)}
 .gb-actions{display:flex;align-items:center;gap:.8rem}
+
+/* ─── COMPARTILHAR ─── */
+.share-box{margin-top:1rem;padding:1rem;border:1px solid rgba(29,185,84,.25);background:var(--accent-dim);border-radius:12px}
+.share-title{font-size:13px;font-weight:600;margin-bottom:.6rem}
+.share-text{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;line-height:1.55;resize:vertical;min-height:84px;outline:none}
+.share-text:focus{border-color:var(--accent)}
+.share-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
+.share-actions .btn{font-size:12.5px;padding:7px 14px}
 </style>
 </head>
 <body>
@@ -1019,7 +1027,7 @@ details.adv summary{cursor:pointer;font-size:12.5px;color:var(--text2);font-weig
 const AUTH={session:null,user:null};
 let STORE_KEY='myspotlist_db';
 function emptyDB(){return {albums:[],standaloneTracks:[],spotifyClientId:'',spotifyClientSecret:'',spotifyToken:'',spotifyTokenExp:0}}
-function loadDB(key){try{return Object.assign(emptyDB(),JSON.parse(localStorage.getItem(key)||'{}'))}catch(e){return emptyDB()}}
+function loadDB(key){try{return normalizeScores(Object.assign(emptyDB(),JSON.parse(localStorage.getItem(key)||'{}')))}catch(e){return emptyDB()}}
 let DB=loadDB(STORE_KEY);
 let currentAlbumId = null;
 let searchDebounce = null;
@@ -1059,10 +1067,71 @@ function avgTracks(album){
   if(!rated.length)return null;
   return rated.reduce((a,t)=>a+parseFloat(t.score),0)/rated.length;
 }
-function fmtScore(s){
-  if(s===null||s===undefined)return'—';
-  return parseFloat(s).toFixed(1);
+function fmtNote(n){
+  if(n===null||n===undefined||n==='')return '—';
+  const v=Math.round(parseFloat(n)*100)/100;
+  if(isNaN(v))return '—';
+  return String(v).replace('.',',');
 }
+function fmtScore(s){return fmtNote(s)}
+function roundScore(s){
+  if(s===''||s===null||s===undefined)return s;
+  const n=parseFloat(s);
+  return isNaN(n)?'':Math.round(n*100)/100;
+}
+function normalizeScores(d){
+  (d.albums||[]).forEach(a=>(a.tracks||[]).forEach(t=>{const r=roundScore(t.score);if(r!==t.score)t.score=r}));
+  (d.standaloneTracks||[]).forEach(t=>{const r=roundScore(t.score);if(r!==t.score)t.score=r});
+  return d;
+}
+function sanitizeScoreInput(inp){
+  let raw=inp.value;
+  if(raw==='')return '';
+  if(/\.\d{3,}/.test(raw)){raw=raw.replace(/(\.\d{2})\d+/,'$1');inp.value=raw}
+  let n=parseFloat(raw);
+  if(isNaN(n))return '';
+  if(n>10){n=10;inp.value='10'}
+  if(n<0){n=0;inp.value='0'}
+  return Math.round(n*100)/100;
+}
+const APP_URL=(location.protocol.indexOf('http')===0&&!/^(localhost|127\.|192\.168\.)/.test(location.hostname))?location.origin:'https://myspotlist-sigma.vercel.app';
+function shareAlbumText(album){
+  const avg=avgTracks(album);
+  const total=album.tracks.length;
+  const rated=album.tracks.filter(t=>t.score!==''&&t.score!==null&&t.score!==undefined).length;
+  const partial=rated<total?` (${rated} de ${total} faixas avaliadas)`:'';
+  return `🎧 Dei nota ${fmtNote(avg)} ao álbum "${album.title}", de ${album.artist}${partial}, no MySpotList.\n\nAvalie seus álbuns e músicas preferidos: ${APP_URL}`;
+}
+function shareTrackText(track){
+  return `🎧 Dei nota ${fmtNote(track.score)} à música "${track.name}", de ${track.artist}, no MySpotList.\n\nAvalie seus álbuns e músicas preferidos: ${APP_URL}`;
+}
+function buildShareBox(getText,canShow){
+  const box=document.createElement('div');box.className='share-box';
+  const title=document.createElement('div');title.className='share-title';title.textContent='Compartilhar avaliação';
+  const ta=document.createElement('textarea');ta.className='share-text';ta.rows=4;ta.value=getText();
+  let edited=false;ta.oninput=()=>{edited=true};
+  const actions=document.createElement('div');actions.className='share-actions';
+  const copy=document.createElement('button');copy.className='btn btn-primary';copy.textContent='Copiar texto';
+  copy.onclick=async()=>{
+    try{await navigator.clipboard.writeText(ta.value)}
+    catch(e){ta.select();try{document.execCommand('copy')}catch(e2){}}
+    copy.textContent='Copiado!';setTimeout(()=>{copy.textContent='Copiar texto'},1800);
+    toast('Texto copiado!');
+  };
+  const wa=document.createElement('button');wa.className='btn btn-ghost';wa.textContent='WhatsApp';
+  wa.onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(ta.value),'_blank','noopener');
+  actions.appendChild(copy);actions.appendChild(wa);
+  if(navigator.share){
+    const sh=document.createElement('button');sh.className='btn btn-ghost';sh.textContent='Mais opções…';
+    sh.onclick=()=>{navigator.share({text:ta.value}).catch(()=>{})};
+    actions.appendChild(sh);
+  }
+  box.appendChild(title);box.appendChild(ta);box.appendChild(actions);
+  box.update=()=>{if(!edited)ta.value=getText();box.style.display=canShow()?'block':'none'};
+  box.reveal=()=>{if(!edited)ta.value=getText();box.style.display=canShow()?'block':'none';if(canShow())box.scrollIntoView({behavior:'smooth',block:'nearest'})};
+  return box;
+}
+let stShare=null;
 function coverEl(album,size='full'){
   if(album.cover){
     const img=document.createElement('img');
@@ -1122,7 +1191,7 @@ function renderStats(){
     {val:artists,lbl:'Artistas'},
     {val:ratedTracks,lbl:'Faixas avaliadas'},
     {val:topArtist?topArtist[0]:'—',lbl:'Artista mais ouvido',small:true},
-    {val:globalAvg?globalAvg.toFixed(2):'—',lbl:'Média geral'},
+    {val:fmtNote(globalAvg),lbl:'Média geral'},
     {val:last?last.title:'—',lbl:'Último álbum',small:true},
   ];
   const grid=document.getElementById('statsGrid');
@@ -1144,7 +1213,7 @@ function albumCard(album){
   info.innerHTML=`
     <div class="album-title">${album.title}</div>
     <div class="album-artist">${album.artist}</div>
-    <div class="album-rating" style="color:${scoreColor(avg)}">${avg?avg.toFixed(1):'—'}</div>`;
+    <div class="album-rating" style="color:${scoreColor(avg)}">${fmtNote(avg)}</div>`;
   card.appendChild(info);
   if(album.favorite){
     const b=document.createElement('div');b.className='fav-badge';b.textContent='♥';card.appendChild(b);
@@ -1215,7 +1284,7 @@ function renderRankings(){
     const img=coverEl(a,'small');img.className='rank-img';
     const info=document.createElement('div');info.className='rank-info';
     info.innerHTML=`<h4>${a.title}</h4><p>${a.artist}</p>`;
-    const score=document.createElement('div');score.className='rank-score';score.style.color=scoreColor(avg);score.textContent=avg.toFixed(1);
+    const score=document.createElement('div');score.className='rank-score';score.style.color=scoreColor(avg);score.textContent=fmtNote(avg);
     div.appendChild(pos);div.appendChild(img);div.appendChild(info);div.appendChild(score);
     ra.appendChild(div);
   });
@@ -1245,7 +1314,7 @@ function renderRankings(){
     const imgHtml=photo
       ?`<img src="${photo}" class="rank-img" style="border-radius:50%;object-fit:cover" alt="">`
       :`<div class="rank-img-ph" style="border-radius:50%">♪</div>`;
-    div.innerHTML=`<div class="rank-pos${i<3?' top':''}">${i+1}</div>${imgHtml}<div class="rank-info"><h4>${ar.name}</h4><p>${ar.albumCount} álbum${ar.albumCount!==1?'s':''} · ${ar.count} faixas</p></div><div class="rank-score" style="color:${scoreColor(ar.avg)}">${ar.avg?ar.avg.toFixed(1):'—'}</div>`;
+    div.innerHTML=`<div class="rank-pos${i<3?' top':''}">${i+1}</div>${imgHtml}<div class="rank-info"><h4>${ar.name}</h4><p>${ar.albumCount} álbum${ar.albumCount!==1?'s':''} · ${ar.count} faixas</p></div><div class="rank-score" style="color:${scoreColor(ar.avg)}">${fmtNote(ar.avg)}</div>`;
     rar.appendChild(div);
     // async: load photo if not cached
     if(!photo&&photo!==null){
@@ -1304,7 +1373,7 @@ function renderRankings(){
         <h4>${t.name}</h4>
         <p>${t.artist} · <span style="color:var(--text3)">${t.albumTitle}</span></p>
       </div>
-      <div class="rank-score" style="color:${scoreColor(t.score)}">${t.score.toFixed(1)}</div>`;
+      <div class="rank-score" style="color:${scoreColor(t.score)}">${fmtNote(t.score)}</div>`;
     rt.appendChild(div);
   });
 }
@@ -1401,7 +1470,7 @@ function renderDetailHeader(album){
       </div>
       <div class="popularity-bar"><div class="popularity-fill" style="width:${album.popularity}%"></div></div>
     </div>`:''}
-    <div class="modal-avg" style="color:${scoreColor(avg)}">${avg?avg.toFixed(2):'—'}</div>
+    <div class="modal-avg" style="color:${scoreColor(avg)}">${fmtNote(avg)}</div>
     <div class="modal-avg-lbl">Média das faixas</div>
     <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;align-items:center">
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 14px" onclick="toggleAlbumFav()">
@@ -1465,21 +1534,20 @@ function renderTracks(album){
       favBtn.textContent='♥';
       favBtn.onclick=()=>{track.favorite=!track.favorite;save();favBtn.classList.toggle('active',track.favorite)};
       const inp=document.createElement('input');
-      inp.type='number';inp.min='0';inp.max='10';inp.step='0.1';
+      inp.type='number';inp.min='0';inp.max='10';inp.step='0.5';
       inp.className='track-input';
       inp.value=track.score!==undefined&&track.score!==''?track.score:'';
       inp.placeholder='—';
       inp.oninput=()=>{
-        const v=inp.value===''?'':Math.min(10,Math.max(0,parseFloat(inp.value)||0));
-        if(v!==''&&v!==inp.value)inp.value=v;
-        track.score=inp.value===''?'':parseFloat(inp.value);
+        track.score=sanitizeScoreInput(inp);
         save();
         dot.className=`track-dot ${dotClass(track.score)}`;
         const avg=avgTracks(album);
-        document.querySelector('.modal-avg').textContent=avg?avg.toFixed(2):'—';
+        document.querySelector('.modal-avg').textContent=fmtNote(avg);
         document.querySelector('.modal-avg').style.color=scoreColor(avg);
         const fc=document.getElementById('tab-tracks');
         if(fc&&fc._updateFooter)fc._updateFooter();
+        if(fc&&fc._updateShare)fc._updateShare();
       };
       row.appendChild(dot);row.appendChild(num);row.appendChild(name);row.appendChild(favBtn);
       if(track.previewUrl){
@@ -1524,8 +1592,13 @@ function renderTracks(album){
     saveBtn.style.background='var(--accent2)';
     setTimeout(()=>{saveBtn.textContent='✓ Salvar avaliação';saveBtn.style.background='';},2000);
     toast('Avaliação salva!');
+    shareBox.reveal();
   };
   cont.appendChild(saveBtn);
+  const shareBox=buildShareBox(()=>shareAlbumText(album),()=>avgTracks(album)!==null&&!!album.savedAt);
+  shareBox.update();
+  cont.appendChild(shareBox);
+  cont._updateShare=()=>shareBox.update();
 }
 
 function renderDiary(album){
@@ -1940,18 +2013,18 @@ function openStModal(trackData){
   scoreLbl.style.cssText='font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;flex-shrink:0';
   scoreLbl.textContent='Nota';
   const scoreInp=document.createElement('input');
-  scoreInp.type='number';scoreInp.min='0';scoreInp.max='10';scoreInp.step='0.1';
+  scoreInp.type='number';scoreInp.min='0';scoreInp.max='10';scoreInp.step='0.5';
   scoreInp.className='track-input';scoreInp.style.width='80px';scoreInp.style.fontSize='1.1rem';
   scoreInp.value=track.score!==''&&track.score!=null?track.score:'';
   scoreInp.placeholder='0–10';
   const scoreDisplay=document.createElement('div');
   scoreDisplay.style.cssText=`font-family:'Sora',sans-serif;font-size:1.75rem;font-weight:700;color:${scoreColor(track.score)}`;
-  scoreDisplay.textContent=track.score!==''&&track.score!=null?parseFloat(track.score).toFixed(1):'—';
+  scoreDisplay.textContent=fmtNote(track.score);
   scoreInp.oninput=()=>{
-    const v=scoreInp.value===''?'':Math.min(10,Math.max(0,parseFloat(scoreInp.value)||0));
-    track.score=v===''?'':v;
-    scoreDisplay.textContent=v!==''?parseFloat(v).toFixed(1):'—';
+    track.score=sanitizeScoreInput(scoreInp);
+    scoreDisplay.textContent=fmtNote(track.score);
     scoreDisplay.style.color=scoreColor(track.score);
+    if(typeof stShare!=='undefined'&&stShare)stShare.update();
   };
   scoreWrap.appendChild(scoreLbl);scoreWrap.appendChild(scoreInp);scoreWrap.appendChild(scoreDisplay);
   b.appendChild(scoreWrap);
@@ -1999,8 +2072,13 @@ function openStModal(trackData){
     saveBtn.textContent='✓ Salvo!';saveBtn.style.background='var(--accent2)';
     setTimeout(()=>{saveBtn.textContent='✓ Salvar avaliação';saveBtn.style.background='';},2000);
     toast('Música avaliada!');
+    stSaved=true;stShare.reveal();
   };
   b.appendChild(saveBtn);
+  let stSaved=!!existing;
+  stShare=buildShareBox(()=>shareTrackText(track),()=>stSaved&&track.score!==''&&track.score!==null&&track.score!==undefined);
+  stShare.update();
+  b.appendChild(stShare);
   if(existing){
     const delBtn=document.createElement('button');
     delBtn.className='btn btn-ghost';delBtn.style.cssText='width:100%;font-size:12.5px;padding:7px;margin-top:.5rem;color:var(--red);border-color:rgba(239,68,68,.3)';
