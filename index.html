@@ -1176,6 +1176,20 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
 .fp-cover i{position:absolute;right:5px;bottom:5px;font-style:normal;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(8,10,12,.86)}
 .fp-t{font-size:11.5px;margin-top:.35rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
 @media(max-width:520px){.fc-grid{grid-template-columns:repeat(3,1fr)}}
+
+.search-filters{display:flex;gap:.4rem;padding:.55rem .6rem .35rem;position:sticky;top:0;background:var(--bg2);z-index:3;border-bottom:1px solid var(--border)}
+.sf-chip{border:1px solid var(--border);background:none;color:var(--text3);border-radius:20px;padding:5px 13px;font-size:12px;font-family:'Sora',sans-serif;cursor:pointer;transition:all .15s}
+.sf-chip:hover{color:var(--text);border-color:var(--border2)}
+.sf-chip.active{background:var(--accent-dim);color:var(--accent);border-color:rgba(29,185,84,.45);font-weight:600}
+.result-note{font-weight:700;font-size:13px;margin-left:.2rem;flex-shrink:0}
+.draft-note{margin-top:.9rem;padding:.65rem .85rem;border:1px dashed var(--border2);border-radius:10px;font-size:12.5px;line-height:1.5;color:var(--text2);background:var(--bg3)}
+.draft-note b{color:var(--text)}
+.sep-box{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:12px;padding:.8rem .95rem;margin-bottom:.7rem}
+.sep-head{display:flex;align-items:center;gap:.7rem}
+.sep-head .sep-t{flex:1;min-width:0;font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sep-head .sep-s{font-size:1.25rem;font-weight:800}
+.sep-tag{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:600;margin-bottom:.35rem}
+.sep-box .ev-review{margin-top:.6rem;background:var(--bg2)}
 </style>
 </head>
 <body>
@@ -1623,6 +1637,8 @@ function emptyDB(){return {albums:[],standaloneTracks:[],spotifyClientId:'',spot
 function loadDB(key){try{return normalizeScores(Object.assign(emptyDB(),JSON.parse(localStorage.getItem(key)||'{}')))}catch(e){return emptyDB()}}
 let DB=loadDB(STORE_KEY);
 let currentAlbumId = null;
+let DRAFT=null; // álbum aberto por indicação ou link: só vai para a biblioteca quando a avaliação for salva
+const findAlbum=id=>DB.albums.find(a=>a.id===id)||(DRAFT&&DRAFT.id===id?DRAFT:null);
 let searchDebounce = null;
 
 function save(noSync){try{localStorage.setItem(STORE_KEY,JSON.stringify(DB))}catch(e){console.error(e)}if(!noSync&&AUTH.user)scheduleSync()}
@@ -1771,7 +1787,7 @@ function shareCardAlbum(album){
     user:shareUserLabel(),token:tokenFor('album',albumKey(album))};
 }
 function shareCardTrack(t){
-  return {kind:'track',title:t.name,artist:t.artist,cover:t.cover,score:parseFloat(t.score),tracks:null,review:t.note,album:t.albumTitle,
+  return {kind:'track',title:t.name,artist:t.artist,cover:t.cover,score:parseFloat(t.score),tracks:null,review:t.note,date:t.diary&&t.diary.date,album:t.albumTitle,
     user:shareUserLabel(),token:tokenFor('track',trackKey(t))};
 }
 function buildShareBox(getText,canShow,getHint,getCard){
@@ -1973,20 +1989,34 @@ function setSectionFilter(sec,q){
 }
 
 // ─── RANKINGS ────────────────────────────────────────────────
+const normName=s=>String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 async function fetchArtistPhoto(artistName){
-  // check cache first
   if(!DB.artistPhotoCache)DB.artistPhotoCache={};
+  // descarta fotos guardadas pela busca antiga, que podia trocar um artista por outro parecido
+  if(DB.artistPhotoCacheV!==2){DB.artistPhotoCache={};DB.artistPhotoCacheV=2}
   if(DB.artistPhotoCache[artistName]!==undefined)return DB.artistPhotoCache[artistName];
   const token=await getSpotifyToken(true).catch(()=>null);
-  if(!token){DB.artistPhotoCache[artistName]=null;return null;}
+  if(!token){DB.artistPhotoCache[artistName]=null;return null}
   try{
-    const res=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`,{headers:{Authorization:'Bearer '+token}});
-    const data=await res.json();
-    const img=data.artists?.items?.[0]?.images?.[0]?.url||null;
+    // álbuns com vários artistas ("A, B"): tenta cada nome, na ordem
+    const names=String(artistName).split(/\s*,\s*|\s+&\s+/).filter(Boolean);
+    if(!names.includes(artistName))names.unshift(artistName);
+    let img=null;
+    for(const nm of names){
+      const wanted=normName(nm);
+      for(const q of [`artist:"${nm}"`,nm]){
+        const d=await spJson(`/search?q=${encodeURIComponent(q)}&type=artist&limit=10`,token);
+        // só vale o artista com o MESMO nome (sem acento/maiúscula); o mais popular entre eles
+        const hits=((d.artists&&d.artists.items)||[]).filter(a=>a&&normName(a.name)===wanted&&a.images&&a.images.length)
+          .sort((x,y)=>(y.popularity||0)-(x.popularity||0));
+        if(hits.length){img=hits[0].images[0].url;break}
+      }
+      if(img)break;
+    }
     DB.artistPhotoCache[artistName]=img;
-    save();
+    save(true);
     return img;
-  }catch(e){DB.artistPhotoCache[artistName]=null;return null;}
+  }catch(e){return null}
 }
 
 function renderRankings(){
@@ -2151,14 +2181,14 @@ function renderFavTracks(){
 let _detailRef=null;
 function openDetail(id){
   currentAlbumId=id;
-  const album=DB.albums.find(a=>a.id===id);
+  const album=findAlbum(id);
   if(!album)return;
   _detailRef=album;_unsaved=false;
   renderDetailHeader(album);
   renderTracks(album);
   document.getElementById('detailOverlay').classList.add('open');
 }
-function closeDetail(){stopPreview();if(_unsaved){_unsaved=false;toast('Notas alteradas, mas ainda não salvas: use "Salvar avaliação".')}document.getElementById('detailOverlay').classList.remove('open')}
+function closeDetail(){stopPreview();if(DRAFT&&DRAFT.id===currentAlbumId&&!DB.albums.some(a=>a.id===DRAFT.id)){DRAFT=null;if(_unsaved)toast('O álbum não foi salvo na sua biblioteca.')}else if(_unsaved){_unsaved=false;toast('Notas alteradas, mas ainda não salvas: use "Salvar avaliação".')}document.getElementById('detailOverlay').classList.remove('open')}
 function closeDetailIfOutside(e){if(e.target===document.getElementById('detailOverlay'))closeDetail()}
 
 function fmtDuration(ms){
@@ -2197,8 +2227,8 @@ function renderDetailHeader(album){
     <div class="modal-avg-lbl">Média das faixas</div>
     <div id="comAvgHost"></div>
     <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;align-items:center">
-      <button class="btn btn-ghost fav-btn${DB.albums.find(a=>a.id===currentAlbumId)?.favorite?' on':''}" onclick="toggleAlbumFav()">
-        ${HEART}<span>${DB.albums.find(a=>a.id===currentAlbumId)?.favorite?'Favorito':'Favoritar'}</span>
+      <button class="btn btn-ghost fav-btn${findAlbum(currentAlbumId)?.favorite?' on':''}" onclick="toggleAlbumFav()">
+        ${HEART}<span>${findAlbum(currentAlbumId)?.favorite?'Favorito':'Favoritar'}</span>
       </button>
       ${album.spotifyId&&AUTH.user?`<button type="button" class="btn btn-ghost fav-btn" onclick="openSuggestForAlbum(currentAlbumId)">${SEND_ICON}<span>Indicar</span></button>`:''}
       ${album.spotifyUrl?`<a href="${album.spotifyUrl}" target="_blank" class="spotify-link">
@@ -2207,14 +2237,16 @@ function renderDetailHeader(album){
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 14px;color:var(--red);border-color:rgba(239,68,68,.3)" onclick="deleteAlbum()">Excluir</button>
     </div>`;
   h.appendChild(meta);
+  if(DRAFT&&DRAFT.id===album.id&&!DB.albums.some(a=>a.id===album.id)){const n=document.createElement('div');n.className='draft-note';n.innerHTML='<b>Ainda não está na sua biblioteca.</b> O álbum só será salvo se você avaliar e clicar em “Salvar avaliação”.';meta.appendChild(n)}
   {const host=document.getElementById('comAvgHost');if(host&&AUTH.user&&album.spotifyId)host.appendChild(buildComAvg('sp_'+album.spotifyId,()=>avgTracks(album),()=>!!album.savedAt))}
 }
 function toggleAlbumFav(){
-  const album=DB.albums.find(a=>a.id===currentAlbumId);if(!album)return;
+  const album=findAlbum(currentAlbumId);if(!album)return;
   album.favorite=!album.favorite;save();
   renderDetailHeader(album);{const b=document.querySelector('#detailHeader .fav-btn');if(b&&album.favorite)b.classList.add('pop')}toast(album.favorite?'Adicionado aos favoritos':'Removido dos favoritos');
 }
 function deleteAlbum(){
+  if(DRAFT&&DRAFT.id===currentAlbumId){DRAFT=null;closeDetail();return}
   if(!confirm('Remover este álbum?'))return;
   DB.albums=DB.albums.filter(a=>a.id!==currentAlbumId);save();closeDetail();
   renderHome();if(document.getElementById('sec-library').classList.contains('active'))renderLibrary();
@@ -2311,8 +2343,9 @@ function renderTracks(album){
   saveBtn.style.cssText='width:100%;margin-top:1rem;font-size:13.5px;padding:10px';
   saveBtn.textContent='✓ Salvar avaliação';
   saveBtn.onclick=()=>{
-    const al=DB.albums.find(a=>a.id===currentAlbumId);
+    const al=findAlbum(currentAlbumId);
     if(!al)return;
+    if(DRAFT&&DRAFT.id===al.id&&!DB.albums.some(a=>a.id===al.id)){DB.albums.push(al);DRAFT=null}
     {const dd=ensureDiary(al),de=document.getElementById('dDate');dd.date=(de&&de.value)||dd.date||todayStr()}
     al.savedAt=Date.now();
     renderDetailHeader(al);
@@ -2332,6 +2365,7 @@ function renderTracks(album){
   shareBox.update();
   cont.appendChild(shareBox);
   ensureToken('album',albumKey(album)).then(()=>shareBox.update());
+  const sepHost=document.createElement('div');sepHost.id='sepOwn';sepHost.style.marginTop='1.2rem';cont.appendChild(sepHost);renderSeparateTracksBox(album,sepHost);
   const ixHost=document.createElement('div');ixHost.id='ixOwn';cont.appendChild(ixHost);
   {const k=albumKey(album);if(AUTH.user&&DB.sync&&DB.sync.pub&&DB.sync.pub.albums&&DB.sync.pub.albums[k]!==undefined){buildInteractions(AUTH.user.id,'album',k,{self:true}).then(el=>{if(ixHost.isConnected)ixHost.replaceChildren(el)})}}
   cont._updateShare=()=>shareBox.update();
@@ -2342,22 +2376,26 @@ const MOODS=['Feliz','Triste','Calmo','Energético','Nostálgico','Romântico','
 const PRESET_TAGS=['Perfeito pra madrugada','Melhor do ano','Muito repetitivo','Produção incrível','Letra profunda','Descoberta nova','Nostalgia','Revisitado'];
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function ensureDiary(album){if(!album.diary)album.diary={};return album.diary}
-function renderDiarySection(album,cont){
+function renderDiarySection(album,cont,opts){
+  opts=opts||{};
+  const p=opts.prefix||'d',isTrack=!!opts.track;
+  const changed=()=>{if(opts.onChange)opts.onChange();else markUnsaved()};
   const d0=album.diary||{};
   const wrap=document.createElement('div');wrap.className='review-sec';
   wrap.innerHTML=`
-    <div class="diary-field"><label>Minha review</label><textarea id="dNote" maxlength="2000" placeholder="O que você achou deste álbum? Escreva sua review…"></textarea></div>
-    <div class="diary-field"><label>Data em que ouvi</label><input type="date" id="dDate"></div>
-    <div class="diary-field"><label>Mood</label><div class="tags-wrap" id="dMoods"></div></div>
-    <div class="diary-field"><label>Tags</label><div class="tags-wrap" id="dTags"></div>
-      <div class="tag-add"><input type="text" id="dTagNew" maxlength="24" placeholder="Criar nova tag…" autocomplete="off"><button type="button" class="btn btn-ghost" id="dTagBtn">Adicionar</button></div>
+    <div class="diary-field"><label>Minha review</label><textarea id="${p}Note" maxlength="2000" placeholder="${isTrack?'O que você achou desta música? Escreva sua review…':'O que você achou deste álbum? Escreva sua review…'}"></textarea></div>
+    <div class="diary-field"><label>Data em que ouvi</label><input type="date" id="${p}Date"></div>
+    <div class="diary-field"><label>Mood</label><div class="tags-wrap" id="${p}Moods"></div></div>
+    <div class="diary-field"><label>Tags</label><div class="tags-wrap" id="${p}Tags"></div>
+      <div class="tag-add"><input type="text" id="${p}TagNew" maxlength="24" placeholder="Criar nova tag…" autocomplete="off"><button type="button" class="btn btn-ghost" id="${p}TagBtn">Adicionar</button></div>
     </div>`;
   cont.appendChild(wrap);
-  const note=wrap.querySelector('#dNote'),date=wrap.querySelector('#dDate');
-  note.value=d0.note||'';
+  const q=s=>wrap.querySelector('#'+p+s);
+  const note=q('Note'),date=q('Date');
+  note.value=isTrack?(album.note||''):(d0.note||'');
   date.value=d0.date||todayStr();
-  note.oninput=()=>{ensureDiary(album).note=note.value;save();markUnsaved()};
-  date.onchange=()=>{ensureDiary(album).date=date.value||todayStr();save();markUnsaved()};
+  note.oninput=()=>{if(isTrack)album.note=note.value;else ensureDiary(album).note=note.value;save();changed()};
+  date.onchange=()=>{ensureDiary(album).date=date.value||todayStr();save();changed()};
   const drawChips=()=>{
     const cur=album.diary||{};
     const mk=(box,items,key)=>{
@@ -2369,28 +2407,65 @@ function renderDiarySection(album,cont){
         el.onclick=()=>{
           const dd=ensureDiary(album),list=dd[key]||[];
           dd[key]=list.includes(t)?list.filter(x=>x!==t):[...list,t];
-          save();markUnsaved();drawChips();
+          save();changed();drawChips();
         };
         box.appendChild(el);
       });
     };
-    mk(wrap.querySelector('#dMoods'),MOODS,'moods');
+    mk(q('Moods'),MOODS,'moods');
     const custom=(cur.tags||[]).filter(t=>!PRESET_TAGS.includes(t));
-    mk(wrap.querySelector('#dTags'),[...PRESET_TAGS,...custom],'tags');
+    mk(q('Tags'),[...PRESET_TAGS,...custom],'tags');
   };
   drawChips();
   const addTag=()=>{
-    const inp=wrap.querySelector('#dTagNew');
+    const inp=q('TagNew');
     const t=inp.value.trim().replace(/\s+/g,' ');
     if(!t)return;
     const dd=ensureDiary(album),list=dd.tags||[];
     if(list.some(x=>x.toLowerCase()===t.toLowerCase())){inp.value='';return}
-    if(list.length>=15){toast('Limite de 15 tags por álbum.');return}
+    if(list.length>=15){toast('Limite de 15 tags.');return}
     dd.tags=[...list,t];inp.value='';
-    save();markUnsaved();drawChips();
+    save();changed();drawChips();
   };
-  wrap.querySelector('#dTagBtn').onclick=addTag;
-  wrap.querySelector('#dTagNew').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();addTag()}};
+  q('TagBtn').onclick=addTag;
+  q('TagNew').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();addTag()}};
+}
+const trackHasOwnReview=t=>!!((t.note&&t.note.trim())||(t.diary&&((t.diary.moods||[]).length||(t.diary.tags||[]).length)));
+// música avaliada separadamente: vale também quando o álbum já está salvo, se ela tem review/mood/tags próprios
+function albumTrackFor(t){
+  for(const al of DB.albums){if(!al.savedAt)continue;const x=al.tracks.find(y=>y.spotifyTrackId&&y.spotifyTrackId===t.spotifyTrackId&&isRatedTrack(y));if(x)return x}
+  return null;
+}
+const trackScoreDiffers=t=>{const x=albumTrackFor(t);return !!x&&Math.abs(parseFloat(x.score)-parseFloat(t.score))>0.001};
+const trackIsSeparate=t=>isRatedTrack(t)&&(trackHasOwnReview(t)||trackScoreDiffers(t));
+const publishableTrack=t=>isRatedTrack(t)&&(!trackInSavedAlbum(t)||trackIsSeparate(t));
+function trackAlbumKey(t){
+  if(t.albumSpotifyId)return 'sp_'+t.albumSpotifyId;
+  const a=DB.albums.find(x=>x.spotifyId&&x.tracks.some(y=>y.spotifyTrackId&&y.spotifyTrackId===t.spotifyTrackId));
+  return a?albumKey(a):null;
+}
+// músicas avaliadas separadamente que pertencem a este álbum (para a caixa à parte)
+function separateTracksOf(album){
+  return (DB.standaloneTracks||[]).filter(t=>t.savedAt&&trackIsSeparate(t)&&(
+    (album.spotifyId&&t.albumSpotifyId===album.spotifyId)||album.tracks.some(x=>x.spotifyTrackId&&x.spotifyTrackId===t.spotifyTrackId)));
+}
+function sepBoxEl(t,openFn){
+  const box=document.createElement('div');box.className='sep-box';
+  box.innerHTML=`<div class="sep-tag">Avaliação separada da música</div>
+    <div class="sep-head"><div class="sep-t">${esc(t.name)}</div><div class="sep-s" style="color:${scoreColor(t.score)}">${fmtNote(t.score)}</div></div>`;
+  if(t.review&&String(t.review).trim())box.insertAdjacentHTML('beforeend',`<div class="ev-review">${esc(t.review)}</div>`);
+  if(t.listened_at)box.insertAdjacentHTML('beforeend',`<div class="ev-meta">Ouvida em <b>${fmtDateBR(t.listened_at)}</b></div>`);
+  const ch=chipsHtml([...(t.moods||[]),...(t.tags||[])]);if(ch)box.insertAdjacentHTML('beforeend',ch);
+  if(openFn){const b=document.createElement('button');b.type='button';b.className='btn btn-ghost';b.style.cssText='margin-top:.7rem;font-size:12px;padding:6px 14px';b.textContent='Abrir avaliação da música';b.onclick=openFn;box.appendChild(b)}
+  return box;
+}
+function renderSeparateTracksBox(album,host){
+  host.innerHTML='';
+  const list=separateTracksOf(album);
+  if(!list.length)return;
+  const title=document.createElement('div');title.className='soc-title';title.textContent=list.length===1?'Música avaliada separadamente':'Músicas avaliadas separadamente';
+  host.appendChild(title);
+  list.forEach(t=>{const d=t.diary||{};host.appendChild(sepBoxEl({name:t.name,score:t.score,review:t.note,listened_at:d.date,moods:d.moods,tags:d.tags},()=>openStModal(t)))});
 }
 
 // ─── PAINEL DE BUSCA ──────────────────────────────────────────
@@ -2508,7 +2583,7 @@ async function fetchAlbumTracks(id,token){
 }
 
 let searchSeq=0;
-let sState={q:'',view:'search',sec:{artist:{items:[],raw:0,next:false},album:{items:[],raw:0,next:false},track:{items:[],raw:0,next:false}},artist:null,aa:{items:[],raw:0,next:false,mode:'endpoint',loading:false,keys:new Set()}};
+let sState={q:'',view:'search',filter:'all',sec:{artist:{items:[],raw:0,next:false},album:{items:[],raw:0,next:false},track:{items:[],raw:0,next:false}},artist:null,aa:{items:[],raw:0,next:false,mode:'endpoint',loading:false,keys:new Set()}};
 
 function onSearchInput(v){
   clearTimeout(searchDebounce);
@@ -2533,29 +2608,58 @@ async function runSearch(q){
       sState.sec[t]={items:raw.filter(Boolean),raw:raw.length,next:!!l.next};
     });
     renderSearchView();
+    autoFillFilter();
   }catch(e){
     if(seq!==searchSeq)return;
     console.error(e);
     box.innerHTML='<div class="sp-err">'+esc(e.message||'Erro na busca.')+'</div>';
   }
 }
+function autoFillFilter(){
+  const f=sState.filter;
+  if(!f||f==='all')return;
+  const s=sState.sec[f];
+  if(s&&s.next&&(f==='track'?dedupeTracks(s.items).length:s.items.length)<10)loadMoreSection(f);
+}
+function setSearchFilter(f){
+  sState.filter=f;
+  renderSearchView();autoFillFilter();
+  document.getElementById('searchPanel').scrollTop=0;
+}
+// a mesma música aparece várias vezes (álbum, single, coletânea): no filtro "Músicas" mostra uma só
+function dedupeTracks(items){
+  const seen=new Set(),out=[];
+  items.forEach(t=>{const k=normName(t.name)+'|'+normName((t.artists&&t.artists[0]&&t.artists[0].name)||'');if(!seen.has(k)){seen.add(k);out.push(t)}});
+  return out;
+}
 function renderSearchView(){
   const box=document.getElementById('searchResults');
   const panel=document.getElementById('searchPanel');const pt=panel.scrollTop;
   box.innerHTML='';
   const labels={artist:'Artistas',album:'Álbuns',track:'Músicas'};
+  const f=sState.filter||'all';
+  const bar=document.createElement('div');bar.className='search-filters';
+  [['all','Tudo'],['artist','Artistas'],['album','Álbuns'],['track','Músicas']].forEach(([id,l])=>{
+    const b=document.createElement('button');b.type='button';b.className='sf-chip'+(f===id?' active':'');b.textContent=l;b.dataset.f=id;
+    b.onclick=ev=>{ev.stopPropagation();setSearchFilter(id)};bar.appendChild(b);
+  });
+  box.appendChild(bar);
   let any=false;
-  ['artist','album','track'].forEach(t=>{
-    const s=sState.sec[t];if(!s.items.length)return;any=true;
-    const h=document.createElement('div');h.className='sec-head';h.textContent=labels[t];box.appendChild(h);
-    s.items.forEach(it=>box.appendChild(t==='artist'?artistRow(it):t==='album'?albumRow(it):trackRow(it)));
+  (f==='all'?['artist','album','track']:[f]).forEach(t=>{
+    const s=sState.sec[t];
+    const items=(t==='track'&&f==='track')?dedupeTracks(s.items):s.items;
+    if(!items.length)return;any=true;
+    if(f==='all'){const h=document.createElement('div');h.className='sec-head';h.textContent=labels[t];box.appendChild(h)}
+    items.forEach(it=>box.appendChild(t==='artist'?artistRow(it):t==='album'?albumRow(it):trackRow(it)));
     if(s.next){
-      const b=document.createElement('button');b.className='sec-more';b.textContent='Ver mais '+labels[t].toLowerCase();
-      b.onclick=ev=>{ev.stopPropagation();b.disabled=true;b.textContent='Carregando…';loadMoreSection(t)};
-      box.appendChild(b);
+      if(f==='all'){
+        const b=document.createElement('button');b.className='sec-more';b.textContent='Ver mais '+labels[t].toLowerCase();
+        b.onclick=ev=>{ev.stopPropagation();b.disabled=true;b.textContent='Carregando…';loadMoreSection(t)};
+        box.appendChild(b);
+      }else moreBtn(box,()=>loadMoreSection(t),'Ver mais '+labels[t].toLowerCase());
     }
   });
-  if(!any)box.innerHTML='<div class="sp-empty">Nenhum resultado para “'+esc(sState.q)+'”.</div>';
+  if(!any)box.insertAdjacentHTML('beforeend','<div class="sp-empty">Nenhum resultado para “'+esc(sState.q)+'”'+(f==='all'?'':' em '+labels[f].toLowerCase())+'.</div>');
   panel.scrollTop=pt;
 }
 async function loadMoreSection(t){
@@ -2630,6 +2734,7 @@ function trackRow(t){
   const btn=document.createElement('button');
   btn.className='btn '+(done?'btn-ghost':'btn-primary')+' result-btn';
   btn.textContent=done?'✓ Avaliada':'Avaliar';
+  if(done&&done.score!==''&&done.score!==null&&done.score!==undefined){const pill=document.createElement('span');pill.className='result-note';pill.style.color=scoreColor(done.score);pill.textContent=fmtNote(done.score);item.appendChild(pill)}
   btn.onclick=ev=>{ev.stopPropagation();act()};
   item.onclick=act;item.appendChild(btn);
   return item;
@@ -2809,6 +2914,11 @@ function openStModal(trackData){
   paintFav();
   favBtn.onclick=()=>{track.favorite=!track.favorite;paintFav();if(track.favorite)favBtn.classList.add('pop')};
   favRow.appendChild(favBtn);
+  if(AUTH.user&&track.spotifyTrackId){
+    const sg=document.createElement('button');sg.type='button';sg.className='btn btn-ghost fav-btn';sg.innerHTML=SEND_ICON+'<span>Indicar</span>';
+    sg.onclick=()=>openSuggest({item:'track',key:track.spotifyTrackId,title:track.name,artist:track.artist,cover:track.cover,album:track.albumTitle,albumId:track.albumSpotifyId||''});
+    favRow.appendChild(sg);
+  }
   // preview
   if(track.previewUrl){
     const prevBtn=document.createElement('button');
@@ -2818,29 +2928,21 @@ function openStModal(trackData){
     favRow.appendChild(prevBtn);
   }
   b.appendChild(favRow);
-  // note
-  const noteLbl=document.createElement('div');
-  noteLbl.style.cssText='font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:.4rem';
-  noteLbl.textContent='Minha review';
-  const noteInp=document.createElement('textarea');
-  noteInp.style.cssText="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13.5px;font-family:'Sora',sans-serif;outline:none;resize:vertical;min-height:70px;transition:border-color .18s";
-  noteInp.placeholder='O que você achou desta música?';
-  noteInp.value=track.note||'';
-  noteInp.onfocus=()=>noteInp.style.borderColor='var(--accent)';
-  noteInp.onblur=()=>noteInp.style.borderColor='var(--border)';
-  b.appendChild(noteLbl);b.appendChild(noteInp);
+  renderDiarySection(track,b,{track:true,prefix:'st',onChange:()=>{if(typeof stShare!=='undefined'&&stShare)stShare.update()}});
   b.appendChild(document.createElement('div')).style.height='.75rem';
   // save btn
   const saveBtn=document.createElement('button');
   saveBtn.className='btn btn-primary';saveBtn.style.cssText='width:100%;font-size:13.5px;padding:10px;margin-top:.25rem';
   saveBtn.textContent='✓ Salvar avaliação';
   saveBtn.onclick=()=>{
-    track.note=noteInp.value;
+    {const dd=ensureDiary(track),de=document.getElementById('stDate');dd.date=(de&&de.value)||dd.date||todayStr()}
     track.savedAt=Date.now();
     if(!DB.standaloneTracks)DB.standaloneTracks=[];
     const idx=DB.standaloneTracks.findIndex(s=>s.spotifyTrackId===track.spotifyTrackId);
     if(idx>=0)DB.standaloneTracks[idx]=track;
     else DB.standaloneTracks.push(track);
+    // a nota desta música já vale nos álbuns da biblioteca que ainda não foram avaliados
+    DB.albums.forEach(al=>{if(al.savedAt)return;al.tracks.forEach(x=>{if(x.spotifyTrackId&&x.spotifyTrackId===track.spotifyTrackId&&!isRatedTrack(x)&&isRatedTrack(track)){x.score=track.score;if(track.favorite)x.favorite=true}})});
     save();renderHome();
     if(document.getElementById('sec-rankings').classList.contains('active'))renderRankings();
     saveBtn.textContent='✓ Salvo!';saveBtn.style.background='var(--accent2)';
@@ -2872,39 +2974,43 @@ function closeStModal(){
   document.getElementById('stOverlay').classList.remove('open');
 }
 
+async function buildSpotifyAlbum(albumId,token){
+  const albumData=await spJson(`/albums/${albumId}`,token);
+  if(!albumData||!albumData.name)throw new Error('Álbum não encontrado no Spotify.');
+  const trackItems=await fetchAlbumTracks(albumId,token);
+  return {
+    id:uid(),spotifyId:albumId,
+    title:albumData.name,
+    artist:namesOf(albumData.artists),
+    cover:imgOf(albumData,0),
+    year:String(albumData.release_date||'').slice(0,4),
+    genre:(albumData.genres||[])[0]||'',
+    popularity:albumData.popularity!=null?albumData.popularity:null,
+    spotifyUrl:(albumData.external_urls&&albumData.external_urls.spotify)||'',
+    tracks:trackItems.map((t,i)=>{
+      // a nota de uma música avaliada separadamente já entra na avaliação do álbum completo
+      const standalone=(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===t.id);
+      return {
+        id:uid(),num:i+1,name:t.name,
+        spotifyTrackId:t.id,
+        disc:t.disc_number||1,
+        duration:t.duration_ms||0,
+        previewUrl:t.preview_url||'',
+        score:standalone?standalone.score:'',
+        favorite:standalone?standalone.favorite:false
+      };
+    }),
+    diary:{},favorite:false,addedAt:Date.now()
+  };
+}
 async function importAlbum(albumId,token){
   const box=document.getElementById('searchResults');
   box.innerHTML='<div class="spinner"></div>';
   try{
     token=token||await getSpotifyToken();
     if(!token)return;
-    const albumData=await spJson(`/albums/${albumId}`,token);
-    if(!albumData||!albumData.name)throw new Error('Álbum não encontrado no Spotify.');
-    const trackItems=await fetchAlbumTracks(albumId,token);
     if(DB.albums.find(a=>a.spotifyId===albumId)){toast('Álbum já na biblioteca!');closeAdd();return}
-    const album={
-      id:uid(),spotifyId:albumId,
-      title:albumData.name,
-      artist:namesOf(albumData.artists),
-      cover:imgOf(albumData,0),
-      year:String(albumData.release_date||'').slice(0,4),
-      genre:(albumData.genres||[])[0]||'',
-      popularity:albumData.popularity!=null?albumData.popularity:null,
-      spotifyUrl:(albumData.external_urls&&albumData.external_urls.spotify)||'',
-      tracks:trackItems.map((t,i)=>{
-        const standalone=(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===t.id);
-        return {
-          id:uid(),num:i+1,name:t.name,
-          spotifyTrackId:t.id,
-          disc:t.disc_number||1,
-          duration:t.duration_ms||0,
-          previewUrl:t.preview_url||'',
-          score:standalone?standalone.score:'',
-          favorite:standalone?standalone.favorite:false
-        };
-      }),
-      diary:{},favorite:false,addedAt:Date.now()
-    };
+    const album=await buildSpotifyAlbum(albumId,token);
     DB.albums.push(album);
     save();
     closeAdd();renderHome();
@@ -2915,6 +3021,19 @@ async function importAlbum(albumId,token){
     console.error(e);
     box.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao importar álbum.')+'</div>';
   }
+}
+// abre o álbum para avaliar SEM adicionar à biblioteca (indicação, convite, link ou avaliação de outra pessoa)
+async function openDraftAlbum(spId){
+  const have=DB.albums.find(a=>a.spotifyId===spId);
+  if(have){openDetail(have.id);return}
+  toast('Abrindo o álbum…');
+  try{
+    const token=await getSpotifyToken();
+    if(!token)throw new Error('Não foi possível falar com o Spotify agora.');
+    const album=await buildSpotifyAlbum(spId,token);
+    DRAFT=album;
+    openDetail(album.id);
+  }catch(e){toast(e.message||'Não foi possível abrir o álbum.')}
 }
 
 function addManual(){
@@ -3492,7 +3611,7 @@ function refreshViews(){
     else if(id==='rankings')renderRankings();
     else if(id==='favorites')renderFavorites();
   }
-  if(document.getElementById('detailOverlay').classList.contains('open')&&!DB.albums.some(a=>a.id===currentAlbumId))closeDetail();
+  if(document.getElementById('detailOverlay').classList.contains('open')&&!findAlbum(currentAlbumId))closeDetail();
 }
 window.addEventListener('online',()=>scheduleSync(500));
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AUTH.user)scheduleSync(400)});
@@ -3570,7 +3689,7 @@ async function publishPending(){
   Object.keys(S.pub.albums).forEach(k=>{if(!seenA.has(k)&&!delA.includes(k))delA.push(k)});
   DB.standaloneTracks.forEach(t=>{
     const k=trackKey(t);seenT.add(k);
-    if(isRatedTrack(t)&&!trackInSavedAlbum(t)){if(S.pub.tracks[k]!==trackStamp(t))pendT.push(t)}
+    if(publishableTrack(t)){if(S.pub.tracks[k]!==trackStamp(t))pendT.push(t)}
     else if(S.pub.tracks[k]!==undefined)delT.push(k);
   });
   Object.keys(S.pub.tracks).forEach(k=>{if(!seenT.has(k)&&!delT.includes(k))delT.push(k)});
@@ -3584,19 +3703,27 @@ async function publishPending(){
   if(!share)return;
   const me=AUTH.user.id;
   if(!S.tok)S.tok={albums:{},tracks:{}};
-  const up=async(table,conflict,rows,newCols)=>{
+  if(!SOC.lvl)SOC.lvl={};
+  // levels: colunas que podem faltar no banco (SQL novo ainda não rodado); tira uma camada por vez
+  const up=async(table,conflict,rows,levels)=>{
     const bucket=table==='shared_albums'?'albums':'tracks';
     for(let i=0;i<rows.length;i+=20){
       const batch=rows.slice(i,i+20);
-      let res=null;
-      if(!SOC.noNewCols){
-        try{res=await sbAuthed(`/rest/v1/${table}?on_conflict=${conflict}&select=key,share_token`,{method:'POST',body:batch,headers:{Prefer:'resolution=merge-duplicates,return=representation'}})}
-        catch(e){if(e.authFailed||e.network||!isMissingTable(e))throw e;SOC.noNewCols=true}
+      for(;;){
+        const lv=SOC.lvl[table]||0,minimal=lv>=levels.length;
+        const strip=new Set(levels.slice(0,lv).flat());
+        const payload=batch.map(r=>{const o={...r};strip.forEach(k=>{delete o[k]});return o});
+        try{
+          const sel=minimal?'':'&select=key,share_token';
+          const res=await sbAuthed(`/rest/v1/${table}?on_conflict=${conflict}${sel}`,{method:'POST',body:payload,headers:{Prefer:'resolution=merge-duplicates,'+(minimal?'return=minimal':'return=representation')}});
+          if(Array.isArray(res))res.forEach(r=>{if(r&&r.share_token)S.tok[bucket][r.key]=r.share_token});
+          break;
+        }catch(e){
+          if(e.authFailed||e.network||!isMissingTable(e)||minimal)throw e;
+          SOC.lvl[table]=lv+1;
+          if(lv+1>=levels.length)SOC.noNewCols=true;
+        }
       }
-      if(SOC.noNewCols){
-        const legacy=batch.map(r=>{const o={...r};newCols.forEach(k=>{delete o[k]});return o});
-        await sbAuthed(`/rest/v1/${table}?on_conflict=${conflict}`,{method:'POST',body:legacy,headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});
-      }else if(Array.isArray(res))res.forEach(r=>{if(r&&r.share_token)S.tok[bucket][r.key]=r.share_token});
     }
   };
   const del=async(table,keys)=>{
@@ -3616,14 +3743,18 @@ async function publishPending(){
           moods:(a.diary&&a.diary.moods&&a.diary.moods.length)?a.diary.moods:null,
           tags:(a.diary&&a.diary.tags&&a.diary.tags.length)?a.diary.tags:null};
       });
-      await up('shared_albums','user_id,key',rows,['review','listened_at','moods','tags']);
+      await up('shared_albums','user_id,key',rows,[['review','listened_at','moods','tags']]);
       pendA.forEach(a=>{S.pub.albums[albumKey(a)]=a.savedAt});
     }
     if(pendT.length){
       const rows=pendT.map(t=>({user_id:me,key:trackKey(t),name:t.name,artist:t.artist,album_title:t.albumTitle||null,cover:t.cover||null,
         score:r2(parseFloat(t.score)),saved_at:new Date(trackStamp(t)).toISOString(),
-        review:(t.note&&t.note.trim())?t.note.trim().slice(0,2000):null}));
-      await up('shared_tracks','user_id,key',rows,['review']);
+        review:(t.note&&t.note.trim())?t.note.trim().slice(0,2000):null,
+        listened_at:(t.diary&&t.diary.date)||null,
+        moods:(t.diary&&t.diary.moods&&t.diary.moods.length)?t.diary.moods:null,
+        tags:(t.diary&&t.diary.tags&&t.diary.tags.length)?t.diary.tags:null,
+        album_key:trackAlbumKey(t)}));
+      await up('shared_tracks','user_id,key',rows,[['listened_at','moods','tags','album_key'],['review']]);
       pendT.forEach(t=>{S.pub.tracks[trackKey(t)]=trackStamp(t)});
     }
     if(delA.length){await del('shared_albums',delA);delA.forEach(k=>{delete S.pub.albums[k]})}
@@ -4182,6 +4313,11 @@ function renderEvalDetails(ev,list,actions){
   if(ev.listened_at)list.insertAdjacentHTML('beforeend',`<div class="ev-meta">Ouvido em <b>${fmtDateBR(ev.listened_at)}</b></div>`);
   if(ev.moods&&ev.moods.length)list.insertAdjacentHTML('beforeend',`<div class="soc-title">Mood</div>${chipsHtml(ev.moods)}`);
   if(ev.tags&&ev.tags.length)list.insertAdjacentHTML('beforeend',`<div class="soc-title">Tags</div>${chipsHtml(ev.tags)}`);
+  if(ev.kind==='album'&&ev.extra_tracks&&ev.extra_tracks.length){
+    const t=document.createElement('div');t.className='soc-title';t.textContent=ev.extra_tracks.length===1?'Música avaliada separadamente':'Músicas avaliadas separadamente';
+    list.appendChild(t);
+    ev.extra_tracks.forEach(x=>list.appendChild(sepBoxEl({name:x.name,score:parseFloat(x.score),review:x.review,listened_at:x.listened_at,moods:x.moods,tags:x.tags})));
+  }
   if(ev.kind==='album'&&String(ev.key).startsWith('sp_')&&AUTH.user){
     list.appendChild(buildComAvg(ev.key,()=>{const m=DB.albums.find(a=>albumKey(a)===ev.key);return m?avgTracks(m):null},()=>true));
   }
@@ -4195,8 +4331,8 @@ function renderEvalDetails(ev,list,actions){
       const spId=String(ev.key).slice(3);
       const mine=DB.albums.find(a=>a.spotifyId===spId);
       const btn=document.createElement('button');btn.className='btn '+(mine?'btn-ghost':'btn-primary');btn.style.width='100%';
-      btn.textContent=mine?'Abrir na minha biblioteca':'Adicionar à minha biblioteca para avaliar também';
-      btn.onclick=()=>{closeEval();closeFriend();if(mine)openDetail(mine.id);else importAlbum(spId)};
+      btn.textContent=mine?'Abrir na minha biblioteca':'Avaliar este álbum também';
+      btn.onclick=()=>{closeEval();closeFriend();if(mine)openDetail(mine.id);else openDraftAlbum(spId)};
       actions.appendChild(btn);
       if(AUTH.user){
         const sg=document.createElement('button');sg.type='button';sg.className='btn btn-ghost';sg.style.cssText='width:100%;margin-top:.5rem';sg.textContent='Indicar a um amigo';
@@ -4208,6 +4344,11 @@ function renderEvalDetails(ev,list,actions){
     const btn=document.createElement('button');btn.className='btn btn-primary';btn.style.width='100%';btn.textContent='Avaliar também';
     btn.onclick=()=>{closeEval();closeFriend();openStModal({spotifyTrackId:ev.key,name:ev.title,artist:ev.artist,albumTitle:ev.album_title||'',cover:ev.cover||'',duration:0,previewUrl:'',year:''})};
     actions.appendChild(btn);
+    if(AUTH.user&&/^[A-Za-z0-9]{10,40}$/.test(String(ev.key))){
+      const sg=document.createElement('button');sg.type='button';sg.className='btn btn-ghost';sg.style.cssText='width:100%;margin-top:.5rem';sg.textContent='Indicar a um amigo';
+      sg.onclick=()=>openSuggest({item:'track',key:ev.key,title:ev.title,artist:ev.artist,cover:ev.cover,album:ev.album_title||'',albumId:''});
+      actions.appendChild(sg);
+    }
   }
 }
 async function showEvaluation(ev,needsFetch){
@@ -4241,9 +4382,11 @@ async function showEvaluation(ev,needsFetch){
         try{r=await sbAuthed(`/rest/v1/shared_albums?select=tracks,review,listened_at,moods,tags,year&user_id=eq.${a.id}&key=eq.${encodeURIComponent(ev.key)}`)}
         catch(e){r=await sbAuthed(`/rest/v1/shared_albums?select=tracks,year&user_id=eq.${a.id}&key=eq.${encodeURIComponent(ev.key)}`)}
         Object.assign(ev,(r&&r[0])||{});
+        try{ev.extra_tracks=await sbAuthed(`/rest/v1/shared_tracks?select=key,name,score,review,listened_at,moods,tags,saved_at&user_id=eq.${a.id}&album_key=eq.${encodeURIComponent(ev.key)}&order=saved_at.desc`)||[]}catch(e){ev.extra_tracks=[]}
       }else{
         let r;
-        try{r=await sbAuthed(`/rest/v1/shared_tracks?select=review&user_id=eq.${a.id}&key=eq.${encodeURIComponent(ev.key)}`)}catch(e){r=[]}
+        try{r=await sbAuthed(`/rest/v1/shared_tracks?select=review,listened_at,moods,tags&user_id=eq.${a.id}&key=eq.${encodeURIComponent(ev.key)}`)}
+        catch(e){try{r=await sbAuthed(`/rest/v1/shared_tracks?select=review&user_id=eq.${a.id}&key=eq.${encodeURIComponent(ev.key)}`)}catch(e2){r=[]}}
         Object.assign(ev,(r&&r[0])||{});
       }
     }catch(e){list.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao carregar a avaliação.')+'</div>';return}
@@ -4266,7 +4409,7 @@ async function openSharedEvaluation(token){
     if(!r){toast('Esta avaliação não está mais disponível.');SHARE_OPEN=false;clearShareHash();return}
     SOC.profiles[r.author_id]=SOC.profiles[r.author_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar};
     await showEvaluation({kind:r.kind,key:r.key,title:r.title,artist:r.artist,cover:r.cover,score:parseFloat(r.score),saved_at:r.saved_at,album_title:r.album_title,year:r.year,
-      tracks:r.tracks,review:r.review,listened_at:r.listened_at,moods:r.moods,tags:r.tags,friendship_id:r.friendship_id,
+      tracks:r.tracks,review:r.review,listened_at:r.listened_at,moods:r.moods,tags:r.tags,extra_tracks:r.extra_tracks,friendship_id:r.friendship_id,
       author:{id:r.author_id,username:r.username,display_name:r.display_name,avatar:r.avatar},relation:r.relation},false);
   }catch(e){
     SHARE_OPEN=false;clearShareHash();
@@ -4485,8 +4628,8 @@ function openCommAlbum(r){
     const spId=String(r.key).slice(3);
     const mine=DB.albums.find(a=>a.spotifyId===spId);
     const btn=document.createElement('button');btn.className='btn '+(mine?'btn-ghost':'btn-primary');btn.style.width='100%';
-    btn.textContent=mine?'Abrir na minha biblioteca':'Adicionar à minha biblioteca para avaliar também';
-    btn.onclick=()=>{closeEval();if(mine)openDetail(mine.id);else importAlbum(spId)};
+    btn.textContent=mine?'Abrir na minha biblioteca':'Avaliar este álbum também';
+    btn.onclick=()=>{closeEval();if(mine)openDetail(mine.id);else openDraftAlbum(spId)};
     b.appendChild(btn);
     if(AUTH.user){
       const sg=document.createElement('button');sg.type='button';sg.className='btn btn-ghost';sg.style.cssText='width:100%;margin-top:.5rem';sg.textContent='Indicar a um amigo';
@@ -4814,8 +4957,8 @@ function notifParts(n){
   switch(n.type){
     case 'like':return [who,'curtiu sua avaliação de',t,''];
     case 'comment':return [who,'comentou na sua avaliação de',t,r.snippet?`: “${r.snippet}”`:''];
-    case 'recommend':return [who,'indicou',t,' para você'+msg];
-    case 'invite':return [who,'convidou você para avaliar',t,msg];
+    case 'recommend':return [who,r.item==='track'?'indicou a música':'indicou',t,' para você'+msg];
+    case 'invite':return [who,r.item==='track'?'convidou você para avaliar a música':'convidou você para avaliar',t,msg];
     case 'friend_request':return [who,'quer ser seu amigo','',''];
     case 'friend_accept':return [who,'aceitou seu pedido de amizade','',''];
     default:return [who,'interagiu com você','',''];
@@ -4897,6 +5040,7 @@ function openMyEvaluation(kind,key){
 }
 function openSuggestionView(n){
   const r=n.ref||{};
+  if(r.item==='track')return openTrackSuggestionView(n);
   const who=nameOf({display_name:n.display_name,username:n.username});
   const body=document.getElementById('evalBody');body.innerHTML='';
   const head=document.createElement('div');head.className='st-header';
@@ -4910,9 +5054,33 @@ function openSuggestionView(n){
   const spId=String(r.key||'').replace(/^sp_/,'');
   const mine=DB.albums.find(a=>a.spotifyId===spId);
   const btn=document.createElement('button');btn.type='button';btn.className='btn '+(mine?'btn-ghost':'btn-primary');btn.style.cssText='width:100%;margin-top:1rem';
-  btn.textContent=mine?'Abrir na minha biblioteca':(n.type==='invite'?'Adicionar e avaliar agora':'Adicionar à minha biblioteca');
-  btn.onclick=()=>{closeEval();if(mine)openDetail(mine.id);else importAlbum(spId)};
+  btn.textContent=mine?'Abrir na minha biblioteca':'Avaliar este álbum';
+  btn.onclick=()=>{closeEval();if(mine)openDetail(mine.id);else openDraftAlbum(spId)};
+  if(!mine)b.insertAdjacentHTML('beforeend','<div class="ev-when" style="margin-top:.6rem">Ele só entra na sua biblioteca se você avaliar e salvar.</div>');
   b.appendChild(btn);
+  body.appendChild(b);
+  document.getElementById('evalOverlay').classList.add('open');
+}
+
+function openTrackSuggestionView(n){
+  const r=n.ref||{};
+  const who=nameOf({display_name:n.display_name,username:n.username});
+  const body=document.getElementById('evalBody');body.innerHTML='';
+  const head=document.createElement('div');head.className='st-header';
+  head.innerHTML=`${r.cover?`<img src="${esc(r.cover)}" class="st-cover" alt="">`:'<div class="st-cover-ph">♪</div>'}
+    <div style="flex:1;min-width:0"><div style="font-size:1.1rem;font-weight:600;line-height:1.25">${esc(r.title||'Música')}</div>
+    <div style="color:var(--accent);font-size:.88rem;margin:.15rem 0 .2rem">${esc(r.artist||'')}</div>
+    ${r.album?`<div class="ev-when">${esc(r.album)}</div>`:''}
+    <div class="ev-when" style="margin-top:.35rem">${esc(who)} ${n.type==='invite'?'convidou você para avaliar esta música':'indicou esta música para você'} · ${timeAgo(n.created_at)}</div></div>`;
+  body.appendChild(head);
+  const b=document.createElement('div');b.className='st-body';
+  if(r.message)b.insertAdjacentHTML('beforeend',`<div class="ev-review">${esc(r.message)}</div>`);
+  const mine=(DB.standaloneTracks||[]).find(s=>s.spotifyTrackId===r.key);
+  const btn=document.createElement('button');btn.type='button';btn.className='btn '+(mine?'btn-ghost':'btn-primary');btn.style.cssText='width:100%;margin-top:1rem';
+  btn.textContent=mine?'Abrir minha avaliação':'Avaliar esta música';
+  btn.onclick=()=>{closeEval();openStModal({spotifyTrackId:r.key,name:r.title,artist:r.artist,albumTitle:r.album||'',albumSpotifyId:r.album_id||'',cover:r.cover||'',duration:0,previewUrl:'',year:''})};
+  b.appendChild(btn);
+  if(!mine)b.insertAdjacentHTML('beforeend','<div class="ev-when" style="margin-top:.6rem">Ela só fica salva se você avaliar e salvar.</div>');
   body.appendChild(b);
   document.getElementById('evalOverlay').classList.add('open');
 }
@@ -4922,6 +5090,8 @@ const SG={album:null,kind:'recommend',sel:new Set()};
 function openSuggest(album){
   if(!AUTH.user){openAuth('signup');return}
   SG.album=album;SG.sel=new Set();
+  const trk=album.item==='track';
+  document.getElementById('sgk-recommend').textContent=trk?'Indicar a música':'Indicar o álbum';
   document.getElementById('sgAlbum').innerHTML=`${album.cover?`<img src="${esc(album.cover)}" alt="">`:'<div class="ph">♪</div>'}<div style="min-width:0"><div style="font-weight:600;font-size:14px">${esc(album.title)}</div><div style="font-size:12px;color:var(--text3)">${esc(album.artist)}</div></div>`;
   document.getElementById('sgMsg').value='';
   setSuggestKind('recommend');renderSuggestFriends();
@@ -4931,8 +5101,9 @@ function closeSuggest(){document.getElementById('suggestOverlay').classList.remo
 function setSuggestKind(k){
   SG.kind=k;
   ['recommend','invite'].forEach(x=>document.getElementById('sgk-'+x).classList.toggle('active',x===k));
-  document.getElementById('sgTitle').textContent=k==='recommend'?'Indicar a um amigo':'Convidar para avaliar';
-  document.getElementById('sgMsg').placeholder=k==='recommend'?'Ex.: você precisa ouvir este álbum!':'Ex.: vamos ouvir e avaliar juntos?';
+  const trk=SG.album&&SG.album.item==='track';
+  document.getElementById('sgTitle').textContent=k==='recommend'?(trk?'Indicar música a um amigo':'Indicar a um amigo'):'Convidar para avaliar';
+  document.getElementById('sgMsg').placeholder=k==='recommend'?(trk?'Ex.: você precisa ouvir esta música!':'Ex.: você precisa ouvir este álbum!'):'Ex.: vamos ouvir e avaliar juntos?';
   document.getElementById('sgSend').textContent=k==='recommend'?'Enviar indicação':'Enviar convite';
 }
 function renderSuggestFriends(){
@@ -4954,15 +5125,21 @@ async function sendSuggest(){
   if(!SG.sel.size){toast('Escolha pelo menos um amigo.');return}
   const a=SG.album,btn=document.getElementById('sgSend');btn.disabled=true;
   try{
-    const n=await socRpc('suggest_album',{to_ids:[...SG.sel],p_kind:SG.kind,album_key:a.key,p_title:a.title,p_artist:a.artist,p_cover:a.cover||'',p_message:document.getElementById('sgMsg').value.trim()});
+    const item=a.item==='track'?'track':'album',msg=document.getElementById('sgMsg').value.trim();
+    let n;
+    try{n=await socRpc('suggest_item',{to_ids:[...SG.sel],p_kind:SG.kind,p_item:item,item_key:a.key,p_title:a.title,p_artist:a.artist,p_cover:a.cover||'',p_message:msg,p_album:a.album||'',p_album_id:a.albumId||''})}
+    catch(e){
+      if(!isMissingTable(e)||item!=='album')throw e;
+      n=await socRpc('suggest_album',{to_ids:[...SG.sel],p_kind:SG.kind,album_key:a.key,p_title:a.title,p_artist:a.artist,p_cover:a.cover||'',p_message:msg});
+    }
     const w=n===1?'amigo':'amigos';
     toast(SG.kind==='recommend'?`Indicação enviada para ${n} ${w}!`:`Convite enviado para ${n} ${w}!`);
     closeSuggest();
-  }catch(e){toast(isMissingTable(e)?'Para usar, rode o supabase-interacao.sql no Supabase.':(e.message||'Não foi possível enviar.'))}
+  }catch(e){toast(isMissingTable(e)?'Para usar, rode o supabase-musicas.sql (e o supabase-interacao.sql) no Supabase.':(e.message||'Não foi possível enviar.'))}
   btn.disabled=false;
 }
 function openSuggestForAlbum(id){
-  const a=DB.albums.find(x=>x.id===id);if(!a||!a.spotifyId)return;
+  const a=findAlbum(id);if(!a||!a.spotifyId)return;
   openSuggest({key:'sp_'+a.spotifyId,title:a.title,artist:a.artist,cover:a.cover});
 }
 
@@ -5009,6 +5186,12 @@ function bgBlur(ctx,img,W,H){
   }else{const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#10281c');g.addColorStop(1,'#080a0c');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
   const v=ctx.createLinearGradient(0,H*.55,0,H);v.addColorStop(0,'rgba(8,10,12,0)');v.addColorStop(1,'rgba(8,10,12,.65)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
 }
+function fitText(ctx,text,maxW,size,weight,min){
+  fitFont(ctx,text,maxW,size,weight,min);
+  let t=String(text==null?'':text);
+  if(ctx.measureText(t).width>maxW){while(t.length>1&&ctx.measureText(t+'…').width>maxW)t=t.slice(0,-1);t=t.replace(/[ ,.;]+$/,'')+'…'}
+  return t;
+}
 function fitFont(ctx,text,maxW,size,weight,min){let s=size;for(;;){ctx.font=`${weight} ${s}px ${IMG_FONT}`;if(ctx.measureText(text).width<=maxW||s<=min)break;s-=2}return s}
 function wrapText(ctx,text,maxW,maxLines){
   const words=String(text||'').replace(/\s+/g,' ').trim().split(' ');const lines=[];let cur='';
@@ -5036,10 +5219,10 @@ function drawPoster(ctx,W,H,img,d,sc,col){
   brand(ctx,72,100,36);
   muted(ctx,28,500,.55);ctx.textAlign='right';ctx.fillText(fmtDateBR(d.date||todayStr()),W-72,100);
   coverShadow(ctx,150,150,780,780,38,70,30);drawCover(ctx,img,150,150,780,780,38);
-  ctx.textAlign='left';ctx.fillStyle='#fff';fitFont(ctx,d.title,936,66,700,34);ctx.fillText(d.title,72,1034);
-  muted(ctx,40,500,.68);fitFont(ctx,d.artist,936,40,500,26);ctx.fillText(d.artist,72,1092);
+  ctx.textAlign='left';ctx.fillStyle='#fff';ctx.fillText(fitText(ctx,d.title,936,66,700,34),72,1034);
+  muted(ctx,40,500,.68);ctx.fillText(fitText(ctx,d.artist,690,40,500,26),72,1092);
   ctx.fillStyle='#f59e0b';ctx.font=`700 54px ${IMG_FONT}`;ctx.fillText(starsText(d.score),72,1195);
-  muted(ctx,28,500,.6);ctx.fillText(d.user||'',72,1248);
+  muted(ctx,28,500,.6);ctx.fillText(fitText(ctx,d.user||'',640,28,500,18),72,1248);
   scoreBadge(ctx,W-72-98,1170,98,sc,col,80);
   muted(ctx,22,500,.35);ctx.textAlign='center';ctx.fillText('myspotlist',W/2,1316);
 }
@@ -5047,37 +5230,48 @@ function drawStory(ctx,W,H,img,d,sc,col){
   bgBlur(ctx,img,W,H);
   brand(ctx,W/2,128,44,'center');muted(ctx,26,600,.5);ctx.textAlign='center';ctx.fillText(d.kind==='track'?'MINHA AVALIAÇÃO · MÚSICA':'MINHA AVALIAÇÃO',W/2,182);
   coverShadow(ctx,110,240,860,860,44,80,34);drawCover(ctx,img,110,240,860,860,44);
-  ctx.textAlign='center';ctx.fillStyle='#fff';fitFont(ctx,d.title,920,72,700,36);ctx.fillText(d.title,W/2,1196);
-  muted(ctx,40,500,.68);fitFont(ctx,d.artist,920,40,500,26);ctx.fillText(d.artist,W/2,1262);
+  ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText(fitText(ctx,d.title,920,72,700,34),W/2,1196);
+  muted(ctx,40,500,.68);ctx.fillText(fitText(ctx,d.artist,920,40,500,24),W/2,1262);
   muted(ctx,28,600,.45);ctx.fillText('NOTA',W/2,1362);
-  ctx.fillStyle=col;ctx.font=`800 250px ${IMG_FONT}`;ctx.fillText(sc,W/2,1560);
+  ctx.fillStyle=col;fitFont(ctx,sc,900,250,800,120);ctx.fillText(sc,W/2,1560);
   ctx.fillStyle='#f59e0b';ctx.font=`700 58px ${IMG_FONT}`;ctx.fillText(starsText(d.score),W/2,1650);
   muted(ctx,36,500,.78);
   if(d.review){const lines=wrapText(ctx,'“'+d.review+'”',880,2);lines.forEach((l,i)=>ctx.fillText(l,W/2,1740+i*50))}
   else if(d.total){ctx.fillText(`${d.rated} de ${d.total} faixas avaliadas`,W/2,1745)}
-  muted(ctx,30,500,.5);ctx.fillText(d.user||'',W/2,1862);
+  muted(ctx,30,500,.5);ctx.fillText(fitText(ctx,d.user||'',900,30,500,20),W/2,1862);
 }
 function drawTracksCard(ctx,W,H,img,d,sc,col){
   bgBlur(ctx,img,W,H);
   drawCover(ctx,img,72,72,230,230,28);
-  ctx.textAlign='left';ctx.fillStyle='#fff';fitFont(ctx,d.title,520,56,700,30);ctx.fillText(d.title,334,140);
-  muted(ctx,34,500,.68);fitFont(ctx,d.artist,520,34,500,24);ctx.fillText(d.artist,334,196);
-  muted(ctx,26,500,.5);ctx.fillText(`${d.rated} de ${d.total} faixas avaliadas`,334,250);
+  // a nota grande ocupa o canto direito: o título só usa o espaço que sobra
+  let sf=120;ctx.font=`800 ${sf}px ${IMG_FONT}`;let sw=ctx.measureText(sc).width;
+  if(W-72-sw-36-334<330){sf=96;ctx.font=`800 ${sf}px ${IMG_FONT}`;sw=ctx.measureText(sc).width}
+  const tw=Math.max(240,W-72-sw-36-334);
+  ctx.textAlign='left';ctx.fillStyle='#fff';
+  fitFont(ctx,d.title,tw,56,700,40);
+  let lines;
+  if(ctx.measureText(d.title).width<=tw)lines=[d.title];
+  else{ctx.font=`700 40px ${IMG_FONT}`;lines=wrapText(ctx,d.title,tw,2)}
+  const size=lines.length===1?parseInt(ctx.font.match(/(\d+)px/)[1],10):40,y0=lines.length===1?140:112;
+  lines.forEach((l,i)=>{ctx.font=`700 ${size}px ${IMG_FONT}`;ctx.fillStyle='#fff';ctx.fillText(l,334,y0+i*48)});
+  const ay=y0+(lines.length-1)*48+56;
+  muted(ctx,34,500,.68);ctx.fillText(fitText(ctx,d.artist,tw,34,500,22),334,ay);
+  muted(ctx,26,500,.5);ctx.fillText(fitText(ctx,`${d.rated} de ${d.total} faixas avaliadas`,tw,26,500,18),334,ay+54);
   muted(ctx,22,600,.45);ctx.textAlign='right';ctx.fillText('MÉDIA',W-72,100);
-  ctx.fillStyle=col;ctx.font=`800 120px ${IMG_FONT}`;ctx.fillText(sc,W-72,208);
+  ctx.fillStyle=col;ctx.font=`800 ${sf}px ${IMG_FONT}`;ctx.fillText(sc,W-72,100+sf*0.9);
   ctx.fillStyle='rgba(255,255,255,.12)';ctx.fillRect(72,338,W-144,2);
   const tr=(d.tracks||[]).slice(0,11),step=76;
   tr.forEach((t,i)=>{
     const y=420+i*step,tc=toneColor(t.s);
     muted(ctx,28,500,.4);ctx.textAlign='left';ctx.fillText(String(i+1),72,y);
-    ctx.fillStyle='#fff';fitFont(ctx,t.n,520,32,500,22);ctx.fillText(t.n,134,y);
+    ctx.fillStyle='#fff';ctx.fillText(fitText(ctx,t.n,520,32,500,22),134,y);
     rr(ctx,700,y-20,220,14,7);ctx.fillStyle='rgba(255,255,255,.12)';ctx.fill();
     rr(ctx,700,y-20,Math.max(14,220*(t.s/10)),14,7);ctx.fillStyle=tc;ctx.fill();
     ctx.fillStyle=tc;ctx.font=`700 36px ${IMG_FONT}`;ctx.textAlign='right';ctx.fillText(fmtNote(t.s),W-72,y+2);
   });
-  if((d.tracks||[]).length>11){muted(ctx,26,500,.5);ctx.textAlign='left';ctx.fillText(`+ ${d.tracks.length-11} faixas`,134,420+11*step)}
-  muted(ctx,26,500,.55);ctx.textAlign='left';ctx.fillText(d.user||'',72,1290);
-  brand(ctx,W-72,1290,30,'right');
+  if((d.tracks||[]).length>11){muted(ctx,26,500,.5);ctx.textAlign='left';ctx.fillText(`+ ${d.tracks.length-11} ${d.tracks.length-11===1?'faixa':'faixas'}`,134,420+11*step)}
+  muted(ctx,26,500,.55);ctx.textAlign='left';ctx.fillText(fitText(ctx,d.user||'',420,26,500,18),72,1314);
+  brand(ctx,W-72,1314,30,'right');
 }
 function drawMinimal(ctx,W,H,img,d,sc,col){
   ctx.fillStyle='#0b0e11';ctx.fillRect(0,0,W,H);
@@ -5085,11 +5279,11 @@ function drawMinimal(ctx,W,H,img,d,sc,col){
   coverShadow(ctx,72,170,500,500,26,60,24);drawCover(ctx,img,72,170,500,500,26);
   const x=632,mw=W-72-x;
   muted(ctx,24,600,.45);ctx.textAlign='left';ctx.fillText('NOTA',x,236);
-  ctx.fillStyle=col;ctx.font=`800 170px ${IMG_FONT}`;ctx.fillText(sc,x,396);
+  ctx.fillStyle=col;fitFont(ctx,sc,mw,170,800,80);ctx.fillText(sc,x,396);
   ctx.fillStyle='#f59e0b';ctx.font=`700 52px ${IMG_FONT}`;ctx.fillText(starsText(d.score),x,474);
   ctx.fillStyle='#fff';ctx.font=`700 44px ${IMG_FONT}`;const tl=wrapText(ctx,d.title,mw,3);tl.forEach((l,i)=>ctx.fillText(l,x,560+i*54));
-  muted(ctx,30,500,.62);ctx.fillText(wrapText(ctx,d.artist,mw,1)[0]||'',x,560+tl.length*54+14);
-  brand(ctx,72,990,34);muted(ctx,26,500,.5);ctx.textAlign='right';ctx.fillText(d.user||'',W-72,990);
+  muted(ctx,30,500,.62);ctx.fillText(fitText(ctx,d.artist,mw,30,500,20),x,560+tl.length*54+14);
+  brand(ctx,72,990,34);muted(ctx,26,500,.5);ctx.textAlign='right';ctx.fillText(fitText(ctx,d.user||'',380,26,500,18),W-72,990);
 }
 async function drawEvalCard(canvas,tpl,d){
   const sizes={poster:[1080,1350],story:[1080,1920],tracks:[1080,1350],minimal:[1080,1080]};
@@ -5125,34 +5319,35 @@ async function drawSummaryCard(canvas,tpl,s){
   if(tpl==='top5'){
     ctx.textAlign='left';brand(ctx,72,110,34);
     ctx.fillStyle='#fff';ctx.font=`800 84px ${IMG_FONT}`;ctx.fillText('Top álbuns',72,215);
-    muted(ctx,32,500,.55);ctx.fillText(s.heading+' · '+s.label,72,266);
+    muted(ctx,32,500,.55);ctx.fillText(fitText(ctx,s.heading+' · '+s.label,936,32,500,20),72,266);
     if(!s.items.length){muted(ctx,40,500,.5);ctx.textAlign='center';ctx.fillText('Sem avaliações neste período',W/2,700)}
     s.items.slice(0,5).forEach((it,i)=>{
       const y=330+i*180;
       muted(ctx,64,800,.28);ctx.textAlign='left';ctx.fillText(String(i+1),72,y+98);
       coverShadow(ctx,170,y,150,150,16,24,10);drawCover(ctx,imgs[i],170,y,150,150,16);
-      ctx.fillStyle='#fff';fitFont(ctx,it.title,450,40,700,26);ctx.textAlign='left';ctx.fillText(it.title,350,y+66);
-      muted(ctx,30,500,.6);fitFont(ctx,it.artist,450,30,500,22);ctx.fillText(it.artist,350,y+112);
-      ctx.fillStyle=toneColor(it.score);ctx.font=`800 74px ${IMG_FONT}`;ctx.textAlign='right';ctx.fillText(fmtNote(it.score),W-72,y+96);
+      const st=fmtNote(it.score);ctx.font=`800 74px ${IMG_FONT}`;const sw=ctx.measureText(st).width,tw=Math.max(200,W-72-sw-36-350);
+      ctx.fillStyle='#fff';ctx.textAlign='left';ctx.fillText(fitText(ctx,it.title,tw,40,700,24),350,y+66);
+      muted(ctx,30,500,.6);ctx.fillText(fitText(ctx,it.artist,tw,30,500,20),350,y+112);
+      ctx.fillStyle=toneColor(it.score);ctx.font=`800 74px ${IMG_FONT}`;ctx.textAlign='right';ctx.fillText(st,W-72,y+96);
     });
     muted(ctx,28,500,.6);ctx.textAlign='left';
-    ctx.fillText(`${s.albums} ${s.albums===1?'álbum':'álbuns'} · ${s.tracks} ${s.tracks===1?'música':'músicas'}${s.avg!=null?' · média '+fmtNote(s.avg):''}`,72,1262);
-    muted(ctx,26,500,.45);ctx.textAlign='right';ctx.fillText(s.user||'',W-72,1262);
+    ctx.fillText(fitText(ctx,`${s.albums} ${s.albums===1?'álbum':'álbuns'} · ${s.tracks} ${s.tracks===1?'música':'músicas'}${s.avg!=null?' · média '+fmtNote(s.avg):''}`,640,28,500,18),72,1262);
+    muted(ctx,26,500,.45);ctx.textAlign='right';ctx.fillText(fitText(ctx,s.user||'',280,26,500,16),W-72,1262);
     return;
   }
   brand(ctx,W/2,120,44,'center');
   ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`800 100px ${IMG_FONT}`;ctx.fillText(s.heading,W/2,268);
   muted(ctx,34,500,.55);ctx.fillText(s.label,W/2,326);
   const stats=[[String(s.albums),'ÁLBUNS','#fff'],[String(s.tracks),'MÚSICAS','#fff'],[s.avg!=null?fmtNote(s.avg):'—','NOTA MÉDIA',s.avg!=null?toneColor(s.avg):'#fff']];
-  stats.forEach(([v,l,col],i)=>{const cx=216+i*324;ctx.fillStyle=col;ctx.font=`800 118px ${IMG_FONT}`;ctx.textAlign='center';ctx.fillText(v,cx,526);muted(ctx,24,600,.45);ctx.fillText(l,cx,574)});
+  stats.forEach(([v,l,col],i)=>{const cx=216+i*324;ctx.fillStyle=col;fitFont(ctx,v,300,118,800,56);ctx.textAlign='center';ctx.fillText(v,cx,526);muted(ctx,24,600,.45);ctx.fillText(l,cx,574)});
   const x0=50,y0=650,cell=320,gap=20;
   for(let i=0;i<9;i++){
     const x=x0+(i%3)*(cell+gap),y=y0+Math.floor(i/3)*(cell+gap),it=s.items[i];
     if(it){drawCover(ctx,imgs[i],x,y,cell,cell,22);pillText(ctx,fmtNote(it.score),x+cell-14,y+cell-14,toneColor(it.score),30)}
     else{rr(ctx,x,y,cell,cell,22);ctx.fillStyle='rgba(255,255,255,.05)';ctx.fill()}
   }
-  if(s.topArtist){muted(ctx,28,600,.45);ctx.textAlign='center';ctx.fillText('ARTISTA MAIS AVALIADO',W/2,1742);ctx.fillStyle='#fff';fitFont(ctx,s.topArtist,900,60,700,30);ctx.fillText(s.topArtist,W/2,1812)}
-  muted(ctx,26,500,.45);ctx.textAlign='center';ctx.fillText(s.user||'',W/2,1880);
+  if(s.topArtist){muted(ctx,28,600,.45);ctx.textAlign='center';ctx.fillText('ARTISTA MAIS AVALIADO',W/2,1742);ctx.fillStyle='#fff';ctx.fillText(fitText(ctx,s.topArtist,900,60,700,30),W/2,1812)}
+  muted(ctx,26,500,.45);ctx.textAlign='center';ctx.fillText(fitText(ctx,s.user||'',900,26,500,18),W/2,1880);
 }
 let SUMP='week',sumPanel=null;
 function openSummary(){document.getElementById('summaryOverlay').classList.add('open');setSummaryPeriod(SUMP)}
