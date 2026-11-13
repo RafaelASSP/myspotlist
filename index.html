@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#080a0c">
+<meta name="description" content="Avalie álbuns faixa por faixa, compare com seus amigos e compartilhe suas reviews.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MySpotList">
+<meta property="og:title" content="MySpotList — Diário pessoal de música">
+<meta property="og:description" content="Avalie álbuns faixa por faixa, compare com seus amigos e compartilhe suas reviews.">
+<meta property="og:image" content="https://myspotlist-sigma.vercel.app/app-icon.png">
+<meta property="og:url" content="https://myspotlist-sigma.vercel.app/">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -967,6 +975,207 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
 .sp-title{font-size:15px;font-weight:700;line-height:1.25;margin-top:2px}
 .sp-sub{font-size:12px;color:var(--text3)}
 .sp-cta{font-size:12.5px;color:var(--text2);line-height:1.55;margin-top:.7rem}
+
+/* ─── MENU MINIMALISTA ─── */
+.nav-links{gap:1.6rem;margin-left:1.2rem}
+.nav-link{background:none !important;box-shadow:none !important;border-radius:0;padding:8px 0;margin:0;color:var(--text3);font-weight:500;position:relative}
+.nav-link:hover{color:var(--text2)}
+.nav-link.active{color:var(--text)}
+.nav-link.active::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;border-radius:2px;background:var(--accent)}
+.nav-link:focus-visible{outline:1px solid var(--accent);outline-offset:4px;border-radius:4px}
+
+/* ─── NOTA COM − / + ─── */
+.score-step{display:inline-flex;align-items:stretch;border:1px solid var(--border);border-radius:10px;background:var(--bg3);overflow:hidden;flex-shrink:0;transition:border-color .15s}
+.score-step:focus-within{border-color:var(--accent)}
+.step-btn{width:26px;border:none;background:none;color:var(--text2);font-size:17px;line-height:1;cursor:pointer;font-family:'Sora',sans-serif;padding:0;transition:background .12s,color .12s}
+.step-btn:hover{background:var(--bg4);color:var(--text)}
+.step-btn:active{background:rgba(29,185,84,.18);color:var(--accent)}
+.score-step .track-input{width:42px;border:none;border-radius:0;background:transparent;padding:6px 0;font-size:13px;box-shadow:none}
+.score-step .track-input:focus{box-shadow:none}
+.score-step.lg .step-btn{width:34px;font-size:20px}
+.score-step.lg .track-input{width:54px;font-size:1.05rem}
+
+/* ─── NOTIFICAÇÕES ─── */
+.bell-wrap{position:relative;flex-shrink:0}
+.bell-btn{position:relative;width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:none;color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s}
+.bell-btn:hover{border-color:var(--border2);color:var(--text)}
+.bell-btn svg{width:18px;height:18px}
+.bell-badge{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;border-radius:9px;background:var(--accent);color:#080a0c;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg)}
+.notif-panel{display:none;position:absolute;top:calc(100% + 10px);right:0;width:min(400px,calc(100vw - 2rem));max-height:min(70vh,520px);overflow-y:auto;background:var(--bg2);border:1px solid var(--border2);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.65);z-index:160}
+.notif-panel.open{display:block}
+.np-head{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:1}
+.np-head b{font-size:13.5px}
+.np-head .link-btn{font-size:12px}
+.np-empty{padding:2rem 1rem;text-align:center;color:var(--text3);font-size:13px;line-height:1.6}
+.notif-item{display:flex;gap:.75rem;align-items:flex-start;padding:.8rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;position:relative}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--bg3)}
+.notif-item.unread{background:rgba(29,185,84,.05)}
+.notif-item.unread::before{content:'';position:absolute;left:5px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--accent)}
+.ni-body{flex:1;min-width:0}
+.ni-text{font-size:12.5px;line-height:1.5;color:var(--text2)}
+.ni-text b{color:var(--text);font-weight:600}
+.ni-time{font-size:11px;color:var(--text3);margin-top:2px}
+.ni-cover{width:40px;height:40px;border-radius:7px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
+.ni-actions{display:flex;gap:.4rem;margin-top:.5rem}
+.ni-actions .btn{font-size:11.5px;padding:5px 11px}
+@media(max-width:720px){.notif-panel{position:fixed;left:.5rem;right:.5rem;top:calc(62px + env(safe-area-inset-top,0px));width:auto;max-height:calc(100vh - 170px)}.nav-badge{right:calc(50% - 20px)}}
+
+/* ─── SOCIAL ─── */
+.act-mine{background:linear-gradient(180deg,var(--bg2),#0b0e11);border:1px solid var(--border);border-radius:14px;margin-bottom:1.6rem;overflow:hidden}
+.act-mine .am-head{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem;border-bottom:1px solid var(--border)}
+.act-mine .am-head b{font-size:13px}
+.act-mine .notif-item:hover{background:var(--bg3)}
+.friend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1rem}
+.friend-card{background:linear-gradient(180deg,var(--bg2),#0b0e11);border:1px solid var(--border);border-radius:16px;padding:1.1rem;transition:border-color .2s,transform .2s,box-shadow .2s}
+.friend-card:hover{border-color:rgba(29,185,84,.35);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.45)}
+.fc-head{display:flex;align-items:center;gap:.85rem;cursor:pointer}
+.fc-id{flex:1;min-width:0}
+.fc-name{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fc-user{font-size:12px;color:var(--text3)}
+.fc-stats{display:flex;gap:1.1rem;margin:.9rem 0 .8rem}
+.fc-stat b{display:block;font-size:1.05rem;color:var(--accent);line-height:1.2}
+.fc-stat span{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.fc-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.fc-cover{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--bg3);cursor:pointer;transition:transform .2s}
+.fc-cover:hover{transform:scale(1.07);z-index:2}
+.fc-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.fc-cover i{position:absolute;right:3px;bottom:3px;font-style:normal;font-size:10px;font-weight:700;padding:1px 5px;border-radius:9px;background:rgba(8,10,12,.82)}
+.fc-more{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2);background:var(--bg3);border:1px dashed var(--border2)}
+.fc-empty{font-size:12.5px;color:var(--text3);padding:.5rem 0}
+.podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:.8rem;align-items:end;margin-bottom:1.3rem}
+.pod{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0;cursor:default}
+.pod.click{cursor:pointer}
+.pod .av{border:3px solid var(--border2)}
+.pod.p1 .av{border-color:#f5c542;box-shadow:0 0 28px rgba(245,197,66,.28)}
+.pod.p2 .av{border-color:#cfd6de}
+.pod.p3 .av{border-color:#d6945a}
+.pod-name{margin-top:.55rem;font-size:13.5px;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod-val{font-size:12px;color:var(--accent);font-weight:600}
+.pod-base{width:100%;margin-top:.6rem;border-radius:12px 12px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:.5rem;font-size:1.5rem;font-weight:800;background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-bottom:none}
+.pod.p1 .pod-base{height:92px;color:#f5c542}
+.pod.p2 .pod-base{height:68px;color:#cfd6de}
+.pod.p3 .pod-base{height:52px;color:#d6945a}
+.like-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--text3);font-size:12px;font-family:'Sora',sans-serif;cursor:pointer;padding:3px 6px;border-radius:14px;transition:color .15s,background .15s}
+.like-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round;transition:fill .2s}
+.like-btn:hover{background:var(--bg3);color:var(--text2)}
+.like-btn.on{color:var(--accent)}
+.like-btn.on svg{fill:var(--accent)}
+.like-btn.pop svg{animation:heartpop .38s ease}
+.like-btn[disabled]{cursor:default;opacity:.8}
+.cmt-ct{display:inline-flex;align-items:center;gap:6px;color:var(--text3);font-size:12px;padding:3px 6px}
+.cmt-ct svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+.feed-ix{display:flex;align-items:center;gap:.2rem;margin-top:.45rem;margin-left:-6px}
+.feed-snip{font-size:11.5px;color:var(--text3);margin-top:5px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-style:italic}
+
+/* ─── CURTIR E COMENTAR ─── */
+.ix{margin-top:1.3rem;padding-top:1.1rem;border-top:1px solid var(--border)}
+.ix-bar{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem}
+.ix-lock{font-size:12.5px;color:var(--text3);line-height:1.6;background:var(--bg3);border:1px dashed var(--border2);border-radius:10px;padding:.75rem .9rem}
+.ix-comments{display:flex;flex-direction:column;gap:.7rem;margin-bottom:.8rem}
+.ix-c{display:flex;gap:.65rem;align-items:flex-start}
+.ix-c .av{width:30px;height:30px;font-size:12px}
+.ix-cb{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:.55rem .75rem}
+.ix-cw{font-size:12px;color:var(--text3)}
+.ix-cw b{color:var(--text);font-weight:600}
+.ix-ct{font-size:13px;color:var(--text2);line-height:1.55;margin-top:2px;word-break:break-word;white-space:pre-wrap}
+.ix-del{background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;font-family:'Sora',sans-serif;padding:2px 0}
+.ix-del:hover{color:var(--red)}
+.ix-form{display:flex;gap:.5rem;align-items:flex-end}
+.ix-form textarea{flex:1;min-height:42px;max-height:120px;resize:vertical;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:9px 12px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;outline:none;line-height:1.45}
+.ix-form textarea:focus{border-color:var(--accent)}
+.ix-form .btn{padding:9px 16px;font-size:12.5px}
+
+/* média da comunidade com olho */
+.comavg{margin-top:.7rem;font-size:12px}
+.comavg-line{display:flex;align-items:center;gap:.55rem;color:var(--text3);flex-wrap:wrap}
+.comavg-line b{color:var(--text);font-size:13px}
+.comavg-eye{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:none;color:var(--text3);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.comavg-eye:hover{color:var(--text);border-color:var(--border2)}
+.comavg-eye svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.comavg-btn{display:inline-flex;align-items:center;gap:7px;background:none;border:1px dashed var(--border2);color:var(--text3);border-radius:20px;padding:5px 12px;font-size:12px;font-family:'Sora',sans-serif;cursor:pointer}
+.comavg-btn:hover{color:var(--text);border-color:var(--accent)}
+.comavg-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.delta-up{color:var(--green)}.delta-down{color:var(--red)}
+
+/* indicar / convidar */
+.sg-album{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;padding:.7rem;background:var(--bg3);border:1px solid var(--border);border-radius:12px}
+.sg-album img,.sg-album .ph{width:52px;height:52px;border-radius:8px;object-fit:cover;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0}
+.sg-friends{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:.35rem}
+.sg-f{display:flex;align-items:center;gap:.7rem;padding:.5rem .65rem;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s}
+.sg-f:hover{background:var(--bg3)}
+.sg-f.sel{border-color:var(--accent);background:var(--accent-dim)}
+.sg-f .av{width:30px;height:30px;font-size:12px}
+.sg-f span.n{flex:1;min-width:0;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sg-f i{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;color:#080a0c}
+.sg-f.sel i{background:var(--accent);border-color:var(--accent)}
+
+/* imagem para compartilhar */
+.img-toggle{margin-top:.9rem;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12.5px}
+.img-toggle svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.img-panel{margin-top:.9rem}
+.img-chips{margin-bottom:.8rem}
+.img-stage{display:flex;justify-content:center;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:.8rem;position:relative}
+.img-canvas{max-width:100%;max-height:440px;width:auto;height:auto;border-radius:10px;display:block;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.img-panel.loading .img-canvas{opacity:.35}
+.img-actions{display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap}
+.img-actions .btn{font-size:12.5px;padding:8px 16px}
+.img-note{font-size:11.5px;color:var(--text3);margin-top:.5rem;line-height:1.5}
+.link-preview{display:flex;gap:.8rem;align-items:center;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:.65rem .8rem;margin-bottom:.8rem}
+.link-preview img,.link-preview .ph{width:64px;height:64px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3)}
+.lp-t{font-size:13px;font-weight:600;line-height:1.3;color:var(--text)}
+.lp-d{font-size:12px;color:var(--text3);line-height:1.4;margin-top:2px}
+.lp-u{font-size:11px;color:var(--text3);margin-top:3px;opacity:.8}
+
+/* comunidade visual */
+.cover-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1.1rem}
+.cg-card{cursor:pointer;transition:transform .2s}
+.cg-card:hover{transform:translateY(-4px)}
+.cg-cover{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--bg3);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.cg-cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.cg-card:hover .cg-cover img{transform:scale(1.06)}
+.cg-cover .rk{position:absolute;left:8px;top:8px;min-width:28px;height:28px;border-radius:14px;padding:0 8px;background:rgba(8,10,12,.82);backdrop-filter:blur(6px);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800}
+.cg-card:nth-child(1) .rk{color:#f5c542;border-color:rgba(245,197,66,.6)}
+.cg-card:nth-child(2) .rk{color:#cfd6de}
+.cg-card:nth-child(3) .rk{color:#d6945a}
+.cg-t{font-size:13px;font-weight:600;margin-top:.55rem;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cg-s{font-size:11.5px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cg-m{font-size:11px;color:var(--text3);margin-top:1px}
+.artist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.2rem}
+.ag-card{text-align:center;transition:transform .2s}
+.ag-card:hover{transform:translateY(-4px)}
+.ag-photo{position:relative;width:min(130px,100%);aspect-ratio:1;margin:0 auto;border-radius:50%;overflow:hidden;background:var(--bg3);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.ag-photo img,.ag-photo .ph{width:100%;height:100%;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:700;color:#8fd6ac}
+.ag-photo .ph{background:linear-gradient(135deg,#1d3a2b,#10161a)}
+.ag-card .rk{position:absolute;left:6px;top:6px;min-width:26px;height:26px;border-radius:13px;background:rgba(8,10,12,.85);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;z-index:2;padding:0 6px}
+.ag-card:nth-child(1) .rk{color:#f5c542}.ag-card:nth-child(2) .rk{color:#cfd6de}.ag-card:nth-child(3) .rk{color:#d6945a}
+.ag-n{font-size:13.5px;font-weight:600;margin-top:.6rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ag-s{font-size:11.5px;color:var(--text3);margin-top:1px}
+.com-overview{display:block}
+.ov-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:.7rem;margin-bottom:1.8rem}
+.ov-stat{background:linear-gradient(180deg,var(--bg2),#0b0e11);border:1px solid var(--border);border-radius:14px;padding:1rem;text-align:center}
+.ov-stat b{display:block;font-size:1.55rem;color:var(--accent);line-height:1.15;text-shadow:0 0 22px rgba(29,185,84,.25)}
+.ov-stat span{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em}
+.ov-sec{margin-bottom:2rem}
+.ov-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.ov-head h3{font-size:1.02rem;font-weight:600;display:flex;align-items:center;gap:.6rem}
+.ov-head h3::before{content:'';width:4px;height:15px;border-radius:2px;background:var(--accent)}
+.hscroll{display:flex;gap:1rem;overflow-x:auto;padding:.2rem .1rem 1rem;scroll-snap-type:x proximity}
+.hscroll::-webkit-scrollbar{height:6px}
+.hcard{flex:0 0 150px;scroll-snap-align:start}
+.hartist{flex:0 0 118px;scroll-snap-align:start}
+.ov-empty{color:var(--text3);font-size:13px;padding:.4rem 0}
+@media(max-width:720px){.ov-stats{grid-template-columns:repeat(2,1fr)}.ov-stats .ov-stat:last-child{grid-column:1/-1}.friend-grid{grid-template-columns:1fr}.cover-grid{grid-template-columns:repeat(2,1fr)}.hcard{flex-basis:132px}.podium{gap:.4rem}}
+
+.fc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem}
+.fp-album{cursor:pointer;transition:transform .18s}
+.fp-album:hover{transform:translateY(-3px)}
+.fp-cover{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--bg3)}
+.fp-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.fp-cover .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:1.6rem}
+.fp-cover i{position:absolute;right:5px;bottom:5px;font-style:normal;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(8,10,12,.86)}
+.fp-t{font-size:11.5px;margin-top:.35rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
+@media(max-width:520px){.fc-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
@@ -991,6 +1200,16 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
       <div id="addManualWrap">
         <button class="btn btn-ghost" onclick="addManual()" style="width:100%;font-size:13px">Não achou? Adicionar manualmente</button>
       </div>
+    </div>
+  </div>
+  <div class="bell-wrap" id="bellWrap" style="display:none">
+    <button type="button" class="bell-btn" id="bellBtn" onclick="toggleNotifPanel()" aria-label="Notificações" title="Notificações">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+      <span class="bell-badge" id="bellBadge" style="display:none"></span>
+    </button>
+    <div class="notif-panel" id="notifPanel">
+      <div class="np-head"><b>Notificações</b><button type="button" class="link-btn" onclick="markAllRead()">Marcar todas como lidas</button></div>
+      <div id="notifList"></div>
     </div>
   </div>
   <button class="profile-btn" onclick="openProfile()" aria-label="Meu perfil" title="Meu perfil">
@@ -1087,11 +1306,12 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
     <p class="com-intro">Veja quem lidera no MySpotList entre todas as pessoas que escolheram aparecer aqui. Aparecem só o usuário, o avatar e os totais; reviews e anotações não aparecem aqui.</p>
     <div class="com-top">
       <div class="seg" id="comSeg">
+        <button type="button" id="cseg-overview" onclick="setComTab('overview')">Visão geral</button>
         <button type="button" id="cseg-people" onclick="setComTab('people')">Pessoas</button>
         <button type="button" id="cseg-albums" onclick="setComTab('albums')">Álbuns</button>
         <button type="button" id="cseg-artists" onclick="setComTab('artists')">Artistas</button>
       </div>
-      <div class="rank-tools" style="margin:0"><span>Ordenar por</span><select id="comMetric" class="ctl-select" onchange="setComMetric(this.value)"></select></div>
+      <div class="rank-tools" id="comTools" style="margin:0"><span>Ordenar por</span><select id="comMetric" class="ctl-select" onchange="setComMetric(this.value)"></select></div>
     </div>
     <div class="rank-list" id="comList"></div>
     <div class="com-note" id="comNote"></div>
@@ -1114,10 +1334,16 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
       <div class="auth-msg" id="friendMsg"></div>
       <div id="friendRequests"></div>
       <div class="seg" id="socialSeg" style="margin:.4rem 0 1.25rem">
+        <button type="button" id="sseg-activity" onclick="setSocialTab('activity')">Atividade</button>
         <button type="button" id="sseg-friends" onclick="setSocialTab('friends')">Amigos</button>
         <button type="button" id="sseg-rank" onclick="setSocialTab('rank')">Ranking</button>
       </div>
-      <div id="socialFriends"></div>
+      <div id="socialActivity">
+        <div id="actMine"></div>
+        <div class="soc-title" style="margin-top:0">O que seus amigos estão ouvindo</div>
+        <div class="album-grid" id="actFeed"></div>
+      </div>
+      <div id="socialFriends" style="display:none"></div>
       <div id="socialRank" style="display:none">
         <div class="rank-tools"><span>Ordenar por</span>
           <select id="rankMetric" class="ctl-select" onchange="SOC.metric=this.value;renderBoard()">
@@ -1212,6 +1438,42 @@ button.pf-count:hover{border-color:var(--accent);background:var(--accent-dim)}
   <div class="foot-brand"><img src="app-icon.png" alt="">MySpotList</div>
   <div>Seu diário pessoal de música. Dados de músicas e capas fornecidos pelo Spotify; o MySpotList não é afiliado ao Spotify.</div>
 </footer>
+
+<!-- ─── INDICAR / CONVIDAR UM AMIGO ─── -->
+<div class="overlay" id="suggestOverlay" style="z-index:212" onclick="if(event.target===this)closeSuggest()">
+  <div class="st-modal">
+    <button class="modal-close" onclick="closeSuggest()">×</button>
+    <div class="settings-head" id="sgTitle">Indicar a um amigo</div>
+    <div class="st-body">
+      <div class="sg-album" id="sgAlbum"></div>
+      <div class="seg" id="sgSeg" style="margin:0 0 1rem">
+        <button type="button" id="sgk-recommend" onclick="setSuggestKind('recommend')">Indicar o álbum</button>
+        <button type="button" id="sgk-invite" onclick="setSuggestKind('invite')">Convidar para avaliar</button>
+      </div>
+      <div class="soc-title" style="margin-top:0">Para quem?</div>
+      <div id="sgFriends" class="sg-friends"></div>
+      <div class="soc-title">Mensagem (opcional)</div>
+      <textarea id="sgMsg" class="share-text" rows="2" maxlength="280" placeholder="Ex.: você precisa ouvir este álbum!"></textarea>
+      <button type="button" class="btn btn-primary" id="sgSend" onclick="sendSuggest()" style="width:100%;margin-top:1rem;padding:11px">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── RESUMO PARA COMPARTILHAR ─── -->
+<div class="overlay" id="summaryOverlay" style="z-index:208" onclick="if(event.target===this)closeSummary()">
+  <div class="st-modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeSummary()">×</button>
+    <div class="settings-head">Resumo para compartilhar</div>
+    <div class="st-body">
+      <div class="seg" id="sumSeg" style="margin-bottom:1rem">
+        <button type="button" id="sump-week" onclick="setSummaryPeriod('week')">Semana</button>
+        <button type="button" id="sump-month" onclick="setSummaryPeriod('month')">Mês</button>
+        <button type="button" id="sump-all" onclick="setSummaryPeriod('all')">Sempre</button>
+      </div>
+      <div id="sumHost"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ─── MEU PERFIL ─── -->
 <div class="overlay" id="profileOverlay" onclick="if(event.target===this)closeProfile()">
@@ -1454,7 +1716,7 @@ function markUnsaved(){_unsaved=true;const b=document.querySelector('#tab-tracks
 const APP_URL=(location.protocol.indexOf('http')===0&&!/^(localhost|127\.|192\.168\.)/.test(location.hostname))?location.origin:'https://myspotlist-sigma.vercel.app';
 const SHARE_BOXES=new Set();
 function tokenFor(kind,key){const t=DB.sync&&DB.sync.tok;const b=t&&t[kind==='album'?'albums':'tracks'];return (b&&b[key])||null}
-const evalLink=t=>APP_URL+'/#/r/'+t;
+const evalLink=t=>APP_URL+'/r/'+t;
 async function ensureToken(kind,key){
   if(!AUTH.user||typeof SOC==='undefined')return null;
   ensureSyncState();
@@ -1470,7 +1732,17 @@ async function ensureToken(kind,key){
   }catch(e){if(isMissingTable(e))SOC.noNewCols=true}
   return null;
 }
-function notifyShareBoxes(){SHARE_BOXES.forEach(b=>{if(b.isConnected)b.update();else SHARE_BOXES.delete(b)})}
+function refreshComAvgHost(){
+  const host=document.getElementById('comAvgHost'),ov=document.getElementById('detailOverlay');
+  if(!host||!ov||!ov.classList.contains('open')||!_detailRef||!_detailRef.spotifyId||!AUTH.user)return;
+  const album=_detailRef;host.innerHTML='';
+  host.appendChild(buildComAvg('sp_'+album.spotifyId,()=>avgTracks(album),()=>!!album.savedAt));
+}
+function notifyShareBoxes(){
+  SHARE_BOXES.forEach(b=>{if(b.isConnected)b.update();else SHARE_BOXES.delete(b)});
+  Object.keys(COMAVG_CACHE).forEach(k=>{delete COMAVG_CACHE[k]});
+  refreshComAvgHost();
+}
 function shareHint(kind,key){
   if(!AUTH.user)return 'Crie uma conta para compartilhar um link direto para esta avaliação.';
   if(SOC.noNewCols||SOC.unavailable)return '';
@@ -1491,9 +1763,21 @@ function shareTrackText(track){
   const tail=t?`Veja minha avaliação: ${evalLink(t)}`:`Avalie seus álbuns e músicas preferidos: ${APP_URL}`;
   return `🎧 Dei nota ${fmtNote(track.score)} à música "${track.name}", de ${track.artist}, no MySpotList.\n\n${tail}`;
 }
-function buildShareBox(getText,canShow,getHint){
+function shareUserLabel(){const p=DB.profile||{};return p.username?'@'+p.username:(p.name||'')}
+function shareCardAlbum(album){
+  const rated=album.tracks.filter(isRatedTrack);
+  return {kind:'album',title:album.title,artist:album.artist,cover:album.cover,score:avgTracks(album),rated:rated.length,total:album.tracks.length,
+    tracks:rated.map(t=>({n:t.name,s:parseFloat(t.score)})),review:album.diary&&album.diary.note,date:album.diary&&album.diary.date,
+    user:shareUserLabel(),token:tokenFor('album',albumKey(album))};
+}
+function shareCardTrack(t){
+  return {kind:'track',title:t.name,artist:t.artist,cover:t.cover,score:parseFloat(t.score),tracks:null,review:t.note,album:t.albumTitle,
+    user:shareUserLabel(),token:tokenFor('track',trackKey(t))};
+}
+function buildShareBox(getText,canShow,getHint,getCard){
   const box=document.createElement('div');box.className='share-box';
   const title=document.createElement('div');title.className='share-title';title.textContent='Compartilhar avaliação';
+  const preview=document.createElement('div');preview.className='link-preview';preview.style.display='none';
   const ta=document.createElement('textarea');ta.className='share-text';ta.rows=4;ta.value=getText();
   let edited=false;ta.oninput=()=>{edited=true};
   const hint=document.createElement('div');hint.className='share-hint';hint.textContent=getHint?getHint():'';
@@ -1513,8 +1797,39 @@ function buildShareBox(getText,canShow,getHint){
     sh.onclick=()=>{navigator.share({text:ta.value}).catch(()=>{})};
     actions.appendChild(sh);
   }
-  box.appendChild(title);box.appendChild(ta);box.appendChild(hint);box.appendChild(actions);
-  const refresh=()=>{if(!edited)ta.value=getText();if(getHint)hint.textContent=getHint();box.style.display=canShow()?'block':'none'};
+  box.appendChild(title);box.appendChild(preview);box.appendChild(ta);box.appendChild(hint);box.appendChild(actions);
+  let panel=null,imgBtn=null;
+  if(getCard){
+    imgBtn=document.createElement('button');imgBtn.type='button';imgBtn.className='btn btn-ghost img-toggle';
+    imgBtn.innerHTML=IMG_ICON+'<span>Criar imagem para compartilhar</span>';
+    imgBtn.onclick=()=>{
+      const d=getCard();
+      if(!panel){
+        const tpls=d.kind==='album'?[['poster','Pôster'],['story','Story'],['tracks','Faixas'],['minimal','Minimal']]:[['poster','Pôster'],['story','Story'],['minimal','Minimal']];
+        panel=buildImagePanel({templates:tpls,filename:'myspotlist-'+slugify(d.title),draw:(cv,tpl)=>drawEvalCard(cv,tpl,getCard()),text:()=>ta.value});
+        box.appendChild(panel);panel.render();
+        imgBtn.querySelector('span').textContent='Ocultar imagem';
+      }else{
+        const hidden=panel.style.display==='none';
+        panel.style.display=hidden?'':'none';
+        if(hidden)panel.render();
+        imgBtn.querySelector('span').textContent=hidden?'Ocultar imagem':'Criar imagem para compartilhar';
+      }
+    };
+    box.insertBefore(imgBtn,actions.nextSibling);
+  }
+  const refresh=()=>{
+    if(!edited)ta.value=getText();
+    if(getHint)hint.textContent=getHint();
+    const cd=getCard&&getCard();
+    if(cd&&cd.token){
+      const nome=(DB.profile&&(DB.profile.name||DB.profile.username))||'Alguém';
+      const sc=cd.score!=null&&!isNaN(cd.score)?fmtNote(cd.score):'';
+      preview.style.display='flex';
+      preview.innerHTML=`${cd.cover?`<img src="${esc(cd.cover)}" alt="">`:'<div class="ph">♪</div>'}<div style="min-width:0"><div class="lp-t">${esc(cd.title)} · ${esc(cd.artist)}</div><div class="lp-d">${esc(nome)} ${sc?'deu nota '+sc+' '+(cd.kind==='track'?'à música':'ao álbum'):'avaliou'} no MySpotList. Entre para ver a avaliação completa.</div><div class="lp-u">${esc(location.host||'myspotlist')}</div></div>`;
+    }else preview.style.display='none';
+    box.style.display=canShow()?'block':'none';
+  };
   box.update=refresh;
   box.reveal=()=>{refresh();if(canShow())box.scrollIntoView({behavior:'smooth',block:'nearest'})};
   SHARE_BOXES.add(box);
@@ -1880,16 +2195,19 @@ function renderDetailHeader(album){
     </div>`:''}
     <div class="modal-avg" style="color:${scoreColor(avg)}">${fmtNote(avg)}</div>
     <div class="modal-avg-lbl">Média das faixas</div>
+    <div id="comAvgHost"></div>
     <div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;align-items:center">
       <button class="btn btn-ghost fav-btn${DB.albums.find(a=>a.id===currentAlbumId)?.favorite?' on':''}" onclick="toggleAlbumFav()">
         ${HEART}<span>${DB.albums.find(a=>a.id===currentAlbumId)?.favorite?'Favorito':'Favoritar'}</span>
       </button>
+      ${album.spotifyId&&AUTH.user?`<button type="button" class="btn btn-ghost fav-btn" onclick="openSuggestForAlbum(currentAlbumId)">${SEND_ICON}<span>Indicar</span></button>`:''}
       ${album.spotifyUrl?`<a href="${album.spotifyUrl}" target="_blank" class="spotify-link">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
         Abrir no Spotify</a>`:''}
       <button class="btn btn-ghost" style="font-size:12px;padding:5px 14px;color:var(--red);border-color:rgba(239,68,68,.3)" onclick="deleteAlbum()">Excluir</button>
     </div>`;
   h.appendChild(meta);
+  {const host=document.getElementById('comAvgHost');if(host&&AUTH.user&&album.spotifyId)host.appendChild(buildComAvg('sp_'+album.spotifyId,()=>avgTracks(album),()=>!!album.savedAt))}
 }
 function toggleAlbumFav(){
   const album=DB.albums.find(a=>a.id===currentAlbumId);if(!album)return;
@@ -1972,7 +2290,7 @@ function renderTracks(album){
         dur.textContent=fmtDuration(track.duration);
         row.appendChild(dur);
       }
-      row.appendChild(inp);
+      row.appendChild(scoreStepper(inp));
       cont.appendChild(row);
     });
   });
@@ -1997,6 +2315,7 @@ function renderTracks(album){
     if(!al)return;
     {const dd=ensureDiary(al),de=document.getElementById('dDate');dd.date=(de&&de.value)||dd.date||todayStr()}
     al.savedAt=Date.now();
+    renderDetailHeader(al);
     _unsaved=false;saveBtn.classList.remove('btn-pulse');
     save();
     renderHome();
@@ -2009,10 +2328,12 @@ function renderTracks(album){
     if(AUTH.user)syncNow();
   };
   cont.appendChild(saveBtn);
-  const shareBox=buildShareBox(()=>shareAlbumText(album),()=>avgTracks(album)!==null&&!!album.savedAt,()=>shareHint('album',albumKey(album)));
+  const shareBox=buildShareBox(()=>shareAlbumText(album),()=>avgTracks(album)!==null&&!!album.savedAt,()=>shareHint('album',albumKey(album)),()=>shareCardAlbum(album));
   shareBox.update();
   cont.appendChild(shareBox);
   ensureToken('album',albumKey(album)).then(()=>shareBox.update());
+  const ixHost=document.createElement('div');ixHost.id='ixOwn';cont.appendChild(ixHost);
+  {const k=albumKey(album);if(AUTH.user&&DB.sync&&DB.sync.pub&&DB.sync.pub.albums&&DB.sync.pub.albums[k]!==undefined){buildInteractions(AUTH.user.id,'album',k,{self:true}).then(el=>{if(ixHost.isConnected)ixHost.replaceChildren(el)})}}
   cont._updateShare=()=>shareBox.update();
 }
 
@@ -2089,11 +2410,13 @@ function openAddModal(){
 document.addEventListener('click',e=>{
   const ns=document.getElementById('navSearch');
   if(ns&&!e.composedPath().includes(ns))closeSearchPanel();
+  const bw=document.getElementById('bellWrap');
+  if(bw&&!e.composedPath().includes(bw))closeNotifPanel();
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    closeSearchPanel();
-    const order=[['pickOverlay',closePicker],['evalOverlay',closeEval],['friendOverlay',closeFriend],['profileOverlay',closeProfile],['settingsOverlay',closeSettings],['stOverlay',closeStModal],['detailOverlay',closeDetail]];
+    closeSearchPanel();closeNotifPanel();
+    const order=[['pickOverlay',closePicker],['suggestOverlay',closeSuggest],['summaryOverlay',closeSummary],['evalOverlay',closeEval],['friendOverlay',closeFriend],['profileOverlay',closeProfile],['settingsOverlay',closeSettings],['stOverlay',closeStModal],['detailOverlay',closeDetail]];
     for(const [id,fn] of order){const el=document.getElementById(id);if(el&&el.classList.contains('open')){fn();break}}
     return;
   }
@@ -2463,7 +2786,7 @@ function openStModal(trackData){
   scoreLbl.textContent='Nota';
   const scoreInp=document.createElement('input');
   scoreInp.type='text';scoreInp.setAttribute('inputmode','decimal');scoreInp.autocomplete='off';
-  scoreInp.className='track-input';scoreInp.style.width='80px';scoreInp.style.fontSize='1.1rem';
+  scoreInp.className='track-input';
   scoreInp.value=scoreToField(track.score);
   scoreInp.placeholder='0–10';
   scoreInp.onblur=()=>{scoreInp.value=scoreToField(track.score)};
@@ -2476,7 +2799,7 @@ function openStModal(trackData){
     scoreDisplay.style.color=scoreColor(track.score);
     if(typeof stShare!=='undefined'&&stShare)stShare.update();
   };
-  scoreWrap.appendChild(scoreLbl);scoreWrap.appendChild(scoreInp);scoreWrap.appendChild(scoreDisplay);
+  scoreWrap.appendChild(scoreLbl);scoreWrap.appendChild(scoreStepper(scoreInp,true));scoreWrap.appendChild(scoreDisplay);
   b.appendChild(scoreWrap);
   // fav
   const favRow=document.createElement('div');
@@ -2528,7 +2851,7 @@ function openStModal(trackData){
   };
   b.appendChild(saveBtn);
   let stSaved=!!existing;
-  stShare=buildShareBox(()=>shareTrackText(track),()=>stSaved&&track.score!==''&&track.score!==null&&track.score!==undefined,()=>shareHint('track',trackKey(track)));
+  stShare=buildShareBox(()=>shareTrackText(track),()=>stSaved&&track.score!==''&&track.score!==null&&track.score!==undefined,()=>shareHint('track',trackKey(track)),()=>shareCardTrack(track));
   stShare.update();
   b.appendChild(stShare);
   ensureToken('track',trackKey(track)).then(()=>stShare&&stShare.update());
@@ -3177,6 +3500,7 @@ setInterval(()=>{if(AUTH.user&&!document.hidden)syncNow()},60000);
 
 async function initApp(){
   if(window.matchMedia('(max-width:720px)').matches)document.getElementById('spotifySearch').placeholder='Pesquise artista, álbum ou música';
+  {const pm=location.pathname.match(/^\/r\/([0-9a-fA-F-]{36})\/?$/);if(pm){try{history.replaceState(null,'','/#/r/'+pm[1].toLowerCase())}catch(e){}}}
   const hashRes=parseAuthHash();
   try{const nx=localStorage.getItem('myspotlist_next');localStorage.removeItem('myspotlist_next');if(nx&&(hashRes.session||hashRes.error))history.replaceState(null,'',location.pathname+location.search+nx)}catch(e){}
   renderHome();
@@ -3202,8 +3526,9 @@ async function initApp(){
 }
 
 // ─── SOCIAL ───────────────────────────────────────────────────
-const SOC={friends:[],incoming:[],outgoing:[],profiles:{},feed:[],board:[],unavailable:false,polling:false,timer:null,primed:false,lastTs:0,tab:'friends',metric:'albums'};
-function socReset(){SOC.friends=[];SOC.incoming=[];SOC.outgoing=[];SOC.profiles={};SOC.feed=[];SOC.board=[];SOC.unavailable=false;SOC.primed=false;SOC.lastTs=0;SOC.polling=false}
+const SOC={friends:[],incoming:[],outgoing:[],profiles:{},feed:[],board:[],unavailable:false,polling:false,timer:null,primed:false,lastTs:0,tab:'activity',metric:'albums',friendAlbums:{}};
+try{const st=localStorage.getItem('myspotlist_soctab');if(['activity','friends','rank'].includes(st))SOC.tab=st}catch(e){}
+function socReset(){SOC.friendAlbums={};SOC.friends=[];SOC.incoming=[];SOC.outgoing=[];SOC.profiles={};SOC.feed=[];SOC.board=[];SOC.unavailable=false;SOC.primed=false;SOC.lastTs=0;SOC.polling=false}
 const plAlbum=n=>n+' '+(n===1?'álbum':'álbuns');
 const plTrack=n=>n+' '+(n===1?'música':'músicas');
 const isRatedTrack=t=>t.score!==''&&t.score!==null&&t.score!==undefined;
@@ -3337,16 +3662,35 @@ async function loadFriendships(){
 }
 async function loadFeed(){
   const me=AUTH.user.id;
+  let rows=null;
+  if(SOC.feedRpc!==false){
+    try{rows=await socRpc('friends_feed',{max_rows:30})}
+    catch(e){if(isMissingTable(e))SOC.feedRpc=false;else throw e}
+  }
+  if(rows){
+    SOC.feed=rows.map(r=>{
+      SOC.profiles[r.user_id]=SOC.profiles[r.user_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar};
+      return {kind:r.kind,user_id:r.user_id,key:r.key,title:r.title,artist:r.artist,cover:r.cover,album_title:r.album_title,score:parseFloat(r.score),
+        rated:r.rated_tracks,total:r.total_tracks,saved_at:r.saved_at,snippet:r.snippet,likes:r.likes||0,comments:r.comments||0,liked:!!r.liked};
+    });
+    return;
+  }
   const [al,tr]=await Promise.all([
     sbAuthed(`/rest/v1/shared_albums?select=user_id,key,title,artist,cover,avg,rated_tracks,total_tracks,saved_at&user_id=neq.${me}&order=saved_at.desc&limit=30`),
     sbAuthed(`/rest/v1/shared_tracks?select=user_id,key,name,artist,album_title,cover,score,saved_at&user_id=neq.${me}&order=saved_at.desc&limit=30`)
   ]);
   const items=[
-    ...(al||[]).map(r=>({kind:'album',user_id:r.user_id,key:r.key,title:r.title,artist:r.artist,cover:r.cover,score:parseFloat(r.avg),rated:r.rated_tracks,total:r.total_tracks,saved_at:r.saved_at})),
-    ...(tr||[]).map(r=>({kind:'track',user_id:r.user_id,key:r.key,title:r.name,artist:r.artist,album_title:r.album_title,cover:r.cover,score:parseFloat(r.score),saved_at:r.saved_at}))
+    ...(al||[]).map(r=>({kind:'album',user_id:r.user_id,key:r.key,title:r.title,artist:r.artist,cover:r.cover,score:parseFloat(r.avg),rated:r.rated_tracks,total:r.total_tracks,saved_at:r.saved_at,likes:null,comments:null})),
+    ...(tr||[]).map(r=>({kind:'track',user_id:r.user_id,key:r.key,title:r.name,artist:r.artist,album_title:r.album_title,cover:r.cover,score:parseFloat(r.score),saved_at:r.saved_at,likes:null,comments:null}))
   ];
   items.sort((a,b)=>new Date(b.saved_at)-new Date(a.saved_at));
   SOC.feed=items.slice(0,30);
+}
+async function loadFriendAlbums(){
+  const me=AUTH.user.id;
+  const r=await sbAuthed(`/rest/v1/shared_albums?select=user_id,key,title,artist,cover,avg,saved_at&user_id=neq.${me}&order=saved_at.desc&limit=200`);
+  const m={};(r||[]).forEach(a=>{(m[a.user_id]=m[a.user_id]||[]).push(a)});
+  SOC.friendAlbums=m;
 }
 async function loadBoard(){SOC.board=(await socRpc('friend_leaderboard'))||[]}
 function isSocialVisible(){const s=document.getElementById('sec-social');return !!s&&s.classList.contains('active')}
@@ -3356,6 +3700,8 @@ async function socialPoll(){
   try{
     await loadFriendships();
     if(SOC.friends.length)await loadFeed();else SOC.feed=[];
+    try{await loadNotifs()}catch(e){if(e.authFailed)throw e;console.error('notificações',e)}
+    if(isSocialVisible())await loadFriendAlbums();
     if(isSocialVisible()||SOC.tab==='rank')await loadBoard();
     SOC.unavailable=false;
     const newest=SOC.feed.length?new Date(SOC.feed[0].saved_at).getTime():0;
@@ -3370,7 +3716,7 @@ async function socialPoll(){
     if(e.authFailed){signOutLocal('Sua sessão expirou. Entre novamente.');SOC.polling=false;return}
     if(isMissingTable(e))SOC.unavailable=true;else console.error('social',e);
   }finally{SOC.polling=false}
-  updateSocialBadge();renderHomeFeed();renderHeroArt();
+  updateSocialBadge();updateBell();renderHomeFeed();renderHeroArt();
   if(isSocialVisible())renderSocial();
 }
 function socialStart(){
@@ -3381,6 +3727,7 @@ function socialStart(){
 }
 function socialStop(){
   clearInterval(SOC.timer);SOC.timer=null;socReset();
+  NOTIF.items=[];NOTIF.primed=false;NOTIF.seen=new Set();NOTIF.unavailable=false;closeNotifPanel();updateBell();
   updateSocialBadge();
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AUTH.user)socialPoll()});
@@ -3429,6 +3776,21 @@ function feedCard(it){
   info.innerHTML=`<div class="album-title">${esc(it.title)}</div><div class="album-artist">${esc(it.artist)}</div>
     <div class="feed-meta"><span class="feed-who">${esc(nameOf(p))}</span><span class="feed-when">· ${timeAgo(it.saved_at)}</span></div>`;
   info.querySelector('.feed-meta').prepend(avEl(p,'av-sm'));
+  if(it.snippet)info.insertAdjacentHTML('beforeend',`<div class="feed-snip">“${esc(it.snippet)}”</div>`);
+  if(it.likes!==null&&it.likes!==undefined){
+    const ix=document.createElement('div');ix.className='feed-ix';
+    const like=document.createElement('button');like.type='button';like.className='like-btn'+(it.liked?' on':'');like.innerHTML=HEART+'<span>'+it.likes+'</span>';
+    like.title=it.liked?'Descurtir':'Curtir';
+    like.onclick=async ev=>{
+      ev.stopPropagation();
+      const was=it.liked;it.liked=!was;it.likes+=was?-1:1;
+      like.className='like-btn'+(it.liked?' on pop':'');like.innerHTML=HEART+'<span>'+it.likes+'</span>';
+      try{await setLike(it.user_id,it.kind,it.key,!was)}
+      catch(e){it.liked=was;it.likes+=was?1:-1;like.className='like-btn'+(it.liked?' on':'');like.innerHTML=HEART+'<span>'+it.likes+'</span>';toast(e.message||'Não foi possível curtir agora.')}
+    };
+    const cm=document.createElement('span');cm.className='cmt-ct';cm.innerHTML=CMT_ICON+'<span>'+it.comments+'</span>';
+    ix.appendChild(like);ix.appendChild(cm);info.appendChild(ix);
+  }
   card.appendChild(info);
   return card;
 }
@@ -3456,8 +3818,8 @@ function applyHomeTabVisuals(){
 
 // ── aba Social ──
 function setSocialTab(t){
-  SOC.tab=t;
-  if(t==='rank'&&!SOC.board.length)socialPoll();
+  SOC.tab=t;try{localStorage.setItem('myspotlist_soctab',t)}catch(e){}
+  if(t!=='activity'){SOC.polling=false;socialPoll()}
   renderSocial();
 }
 function setFriendMsg(text,cls){const el=document.getElementById('friendMsg');el.textContent=text||'';el.className='auth-msg'+(cls?' '+cls:'')}
@@ -3470,12 +3832,13 @@ function renderSocial(){
   document.getElementById('socialBody').style.display=SOC.unavailable?'none':'block';
   if(SOC.unavailable)return;
   renderRequests();
-  document.getElementById('sseg-friends').classList.toggle('active',SOC.tab==='friends');
-  document.getElementById('sseg-rank').classList.toggle('active',SOC.tab==='rank');
-  document.getElementById('socialFriends').style.display=SOC.tab==='friends'?'block':'none';
-  document.getElementById('socialRank').style.display=SOC.tab==='rank'?'block':'none';
+  const ids={activity:'socialActivity',friends:'socialFriends',rank:'socialRank'};
+  Object.keys(ids).forEach(t=>{
+    document.getElementById('sseg-'+t).classList.toggle('active',SOC.tab===t);
+    document.getElementById(ids[t]).style.display=SOC.tab===t?'block':'none';
+  });
   document.getElementById('rankMetric').value=SOC.metric;
-  if(SOC.tab==='friends')renderFriendList();else renderBoard();
+  if(SOC.tab==='activity')renderActivity();else if(SOC.tab==='friends')renderFriendList();else renderBoard();
 }
 function personRow(uid,subHtml,rightEl,onClick,extraCls){
   const p=SOC.profiles[uid]||{};
@@ -3508,17 +3871,73 @@ function renderRequests(){
     box.appendChild(l);
   }
 }
+function renderActivity(){
+  const mine=document.getElementById('actMine');mine.innerHTML='';
+  if(!NOTIF.unavailable){
+    const items=NOTIF.items.filter(n=>['like','comment','recommend','invite','friend_accept'].includes(n.type)).slice(0,6);
+    const card=document.createElement('div');card.className='act-mine';
+    card.innerHTML='<div class="am-head"><b>Para você</b><button type="button" class="link-btn" onclick="toggleNotifPanel()">Ver notificações</button></div>';
+    if(!items.length)card.insertAdjacentHTML('beforeend','<div class="np-empty">Curtidas, comentários e indicações dos seus amigos aparecem aqui.</div>');
+    else items.forEach(n=>card.appendChild(notifRow(n)));
+    mine.appendChild(card);
+  }
+  const box=document.getElementById('actFeed');box.innerHTML='';
+  if(!SOC.friends.length)box.innerHTML=feedMsg('Adicione amigos pelo @ para ver o que eles estão ouvindo.');
+  else if(!SOC.feed.length)box.innerHTML=feedMsg('Seus amigos ainda não salvaram nenhuma avaliação.');
+  else SOC.feed.forEach(it=>box.appendChild(feedCard(it)));
+}
 function renderFriendList(){
   const box=document.getElementById('socialFriends');box.innerHTML='';
   if(!SOC.friends.length){box.innerHTML='<div class="empty-state"><div class="icon">♪</div><h3>Nenhum amigo ainda</h3><p>Digite o @ de um amigo acima e envie um pedido.</p></div>';return}
   const stats={};SOC.board.forEach(b=>{stats[b.user_id]=b});
-  const l=document.createElement('div');l.className='rank-list';
+  const grid=document.createElement('div');grid.className='friend-grid';
   SOC.friends.forEach(f=>{
+    const p=SOC.profiles[f.user_id]||{};
     const s=stats[f.user_id];
-    const sub=s?`${s.albums_rated} ${s.albums_rated!==1?'álbuns':'álbum'} · ${s.tracks_rated} música${s.tracks_rated!==1?'s':''}${s.avg_score!=null?' · média '+fmtNote(s.avg_score):''}`:'toque para ver o perfil';
-    l.appendChild(personRow(f.user_id,sub,null,()=>openFriend(f.user_id)));
+    const alb=SOC.friendAlbums[f.user_id]||[];
+    const card=document.createElement('div');card.className='friend-card';
+    const head=document.createElement('div');head.className='fc-head';head.onclick=()=>openFriend(f.user_id);
+    head.appendChild(avEl(p,'av-lg'));
+    const id=document.createElement('div');id.className='fc-id';
+    id.innerHTML=`<div class="fc-name">${esc(nameOf(p))}</div><div class="fc-user">${p.username?'@'+esc(p.username):''}</div>`;
+    head.appendChild(id);card.appendChild(head);
+    if(s){
+      const st=document.createElement('div');st.className='fc-stats';
+      st.innerHTML=`<div class="fc-stat"><b>${s.albums_rated}</b><span>álbuns</span></div><div class="fc-stat"><b>${s.tracks_rated}</b><span>músicas</span></div><div class="fc-stat"><b>${s.avg_score!=null?fmtNote(s.avg_score):'—'}</b><span>nota média</span></div>`;
+      card.appendChild(st);
+    }
+    if(!alb.length){card.insertAdjacentHTML('beforeend','<div class="fc-empty">Ainda não salvou nenhum álbum.</div>')}
+    else{
+      const strip=document.createElement('div');strip.className='fc-strip';
+      const show=alb.length>8?7:alb.length;
+      alb.slice(0,show).forEach(a=>{
+        const cv=document.createElement('div');cv.className='fc-cover';cv.title=a.title+' — '+fmtNote(a.avg);
+        cv.innerHTML=`${a.cover?`<img src="${esc(a.cover)}" alt="">`:''}<i style="color:${scoreColor(parseFloat(a.avg))}">${fmtNote(a.avg)}</i>`;
+        cv.onclick=()=>openEval({kind:'album',user_id:f.user_id,key:a.key,title:a.title,artist:a.artist,cover:a.cover,score:parseFloat(a.avg),saved_at:a.saved_at});
+        strip.appendChild(cv);
+      });
+      if(alb.length>8){const m=document.createElement('div');m.className='fc-cover fc-more';m.textContent='+'+(alb.length-7);m.onclick=()=>openFriend(f.user_id);strip.appendChild(m)}
+      card.appendChild(strip);
+    }
+    grid.appendChild(card);
   });
-  box.appendChild(l);
+  box.appendChild(grid);
+}
+function podiumEl(items){
+  const wrap=document.createElement('div');wrap.className='podium';
+  [1,0,2].forEach(i=>{
+    const r=items[i];
+    const pod=document.createElement('div');
+    if(!r){pod.className='pod';wrap.appendChild(pod);return}
+    pod.className='pod p'+(i+1)+(r.onClick?' click':'');
+    pod.appendChild(avEl(r.profile,i===0?'av-xl':'av-lg'));
+    pod.insertAdjacentHTML('beforeend',`<div class="pod-name">${esc(r.name)}${r.me?' <span style="color:var(--accent);font-size:11px">(você)</span>':''}</div><div class="pod-val">${esc(r.val)}</div>`);
+    if(r.add){const b=document.createElement('button');b.type='button';b.className='btn btn-ghost';b.style.cssText='font-size:11px;padding:4px 10px;margin-top:.4rem';b.textContent='Adicionar';b.onclick=ev=>{ev.stopPropagation();addFriendByHandle(r.add,b)};pod.appendChild(b)}
+    pod.insertAdjacentHTML('beforeend',`<div class="pod-base">${i+1}</div>`);
+    if(r.onClick)pod.onclick=r.onClick;
+    wrap.appendChild(pod);
+  });
+  return wrap;
 }
 function renderBoard(){
   const box=document.getElementById('friendRankList');box.innerHTML='';
@@ -3535,16 +3954,16 @@ function renderBoard(){
   }[m];
   rows.sort(cmp);
   if(!rows.length){box.innerHTML='<div class="empty-state"><h3>Ainda sem avaliações para comparar</h3></div>';return}
-  rows.forEach((r,i)=>{
-    SOC.profiles[r.user_id]=SOC.profiles[r.user_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar};
-    const val={
-      albums:`${r.albums_rated} ${r.albums_rated!==1?'álbuns':'álbum'}`,
-      tracks:`${r.tracks_rated} música${r.tracks_rated!==1?'s':''}`,
-      avgHigh:fmtNote(r.avg_score),avgLow:fmtNote(r.avg_score),
-      recent:r.last_activity?timeAgo(r.last_activity):'—'
-    }[m];
-    const isMe=r.user_id===me;
-    const right=document.createElement('div');right.className='rank-score';right.style.fontSize='1rem';right.style.color=(m==='avgHigh'||m==='avgLow')?scoreColor(r.avg_score):'var(--accent)';right.textContent=val;
+  const valOf=r=>({albums:plAlbum(r.albums_rated),tracks:plTrack(r.tracks_rated),avgHigh:fmtNote(r.avg_score),avgLow:fmtNote(r.avg_score),recent:r.last_activity?timeAgo(r.last_activity):'—'}[m]);
+  rows.forEach(r=>{SOC.profiles[r.user_id]=SOC.profiles[r.user_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar}});
+  let start=0;
+  if(rows.length>=3){
+    box.appendChild(podiumEl(rows.slice(0,3).map(r=>({profile:SOC.profiles[r.user_id],name:nameOf(SOC.profiles[r.user_id]),val:valOf(r),me:r.user_id===me,onClick:r.user_id===me?()=>openProfile():()=>openFriend(r.user_id)}))));
+    start=3;
+  }
+  rows.slice(start).forEach((r,k)=>{
+    const i=start+k,isMe=r.user_id===me;
+    const right=document.createElement('div');right.className='rank-score';right.style.fontSize='1rem';right.style.color=(m==='avgHigh'||m==='avgLow')?scoreColor(r.avg_score):'var(--accent)';right.textContent=valOf(r);
     const sub=`${plAlbum(r.albums_rated)} · ${plTrack(r.tracks_rated)}`;
     const row=personRow(r.user_id,sub,right,isMe?null:()=>openFriend(r.user_id),isMe?'me':'');
     const pos=document.createElement('div');pos.className='rank-pos'+(i<3?' top':'');pos.textContent=i+1;
@@ -3626,10 +4045,10 @@ async function openFriend(uid){
       sbAuthed(`/rest/v1/shared_tracks?select=key,name,artist,album_title,cover,score,saved_at&user_id=eq.${uid}&order=saved_at.desc&limit=1000`),
       sbAuthed(`/rest/v1/profiles?select=bio,fav_artist,fav_album&id=eq.${uid}`).catch(()=>[])
     ]);
-    renderFriendProfile(uid,computeFriendStats(al||[],tr||[]),(ex&&ex[0])||{});
+    renderFriendProfile(uid,computeFriendStats(al||[],tr||[]),(ex&&ex[0])||{},al||[],tr||[]);
   }catch(e){body.innerHTML='<div class="sp-err">'+esc(e.message||'Erro ao abrir o perfil.')+'</div>'}
 }
-function renderFriendProfile(uid,st,ex){
+function renderFriendProfile(uid,st,ex,albums,tracks){
   ex=ex||{};
   const p=SOC.profiles[uid]||{};
   const f=SOC.friends.find(x=>x.user_id===uid);
@@ -3651,6 +4070,25 @@ function renderFriendProfile(uid,st,ex){
     ${tile(st.topCount?st.topCount[0]:'—','Artista mais avaliado',st.topCount?plTrack(st.topCount[1]):'')}
     ${tile(st.top1?st.top1.name:'—','Nº 1 do ranking',st.top1?'média '+fmtNote(st.top1.avg)+' · '+plAlbum(st.top1.albums):'')}
   </div>`);
+  if(albums&&albums.length){
+    const sec=document.createElement('div');
+    sec.innerHTML=`<div class="soc-title">Álbuns ouvidos (${albums.length})</div>`;
+    const grid=document.createElement('div');grid.className='fc-grid';
+    albums.forEach((a,i)=>{
+      const cell=document.createElement('div');cell.className='fp-album'+(i>=12?' more-alb':'');
+      if(i>=12)cell.style.display='none';
+      cell.innerHTML=`<div class="fp-cover">${a.cover?`<img src="${esc(a.cover)}" alt="">`:'<div class="ph">♪</div>'}<i style="color:${scoreColor(parseFloat(a.avg))}">${fmtNote(a.avg)}</i></div><div class="fp-t">${esc(a.title)}</div>`;
+      cell.onclick=()=>openEval({kind:'album',user_id:uid,key:a.key,title:a.title,artist:a.artist,cover:a.cover,score:parseFloat(a.avg),saved_at:a.saved_at});
+      grid.appendChild(cell);
+    });
+    sec.appendChild(grid);
+    if(albums.length>12){
+      const more=document.createElement('button');more.type='button';more.className='link-btn';more.style.marginTop='.4rem';more.textContent='Ver todos os '+albums.length+' álbuns';
+      more.onclick=()=>{grid.querySelectorAll('.more-alb').forEach(x=>{x.style.display=''});more.remove()};
+      sec.appendChild(more);
+    }
+    b.appendChild(sec);
+  }
   const t=document.createElement('div');t.className='soc-title';t.textContent='Últimas avaliações';b.appendChild(t);
   const l=document.createElement('div');l.className='rank-list';
   if(!st.recent.length)l.innerHTML='<div style="color:var(--text3);font-size:13px;padding:.4rem">Ainda não salvou nenhuma avaliação.</div>';
@@ -3680,7 +4118,12 @@ function renderFriendProfile(uid,st,ex){
 
 // ── detalhe de uma avaliação de amigo ──
 let SHARE_OPEN=false;
-function shareTokenFromHash(){const m=(location.hash||'').match(/^#\/?r\/([0-9a-fA-F-]{36})$/);return m?m[1].toLowerCase():null}
+function shareTokenFromHash(){
+  const m=(location.hash||'').match(/^#\/?r\/([0-9a-fA-F-]{36})$/);
+  if(m)return m[1].toLowerCase();
+  const q=location.pathname.match(/^\/r\/([0-9a-fA-F-]{36})\/?$/);
+  return q?q[1].toLowerCase():null;
+}
 function clearShareHash(){
   if(!shareTokenFromHash())return;
   const act=document.querySelector('.section.active');
@@ -3739,6 +4182,13 @@ function renderEvalDetails(ev,list,actions){
   if(ev.listened_at)list.insertAdjacentHTML('beforeend',`<div class="ev-meta">Ouvido em <b>${fmtDateBR(ev.listened_at)}</b></div>`);
   if(ev.moods&&ev.moods.length)list.insertAdjacentHTML('beforeend',`<div class="soc-title">Mood</div>${chipsHtml(ev.moods)}`);
   if(ev.tags&&ev.tags.length)list.insertAdjacentHTML('beforeend',`<div class="soc-title">Tags</div>${chipsHtml(ev.tags)}`);
+  if(ev.kind==='album'&&String(ev.key).startsWith('sp_')&&AUTH.user){
+    list.appendChild(buildComAvg(ev.key,()=>{const m=DB.albums.find(a=>albumKey(a)===ev.key);return m?avgTracks(m):null},()=>true));
+  }
+  if(AUTH.user&&ev.author&&ev.author.id){
+    const host=document.createElement('div');list.appendChild(host);
+    buildInteractions(ev.author.id,ev.kind,ev.key,{username:ev.author.username}).then(el=>{if(host.isConnected)host.replaceChildren(el)});
+  }
   actions.innerHTML='';
   if(ev.kind==='album'){
     if(String(ev.key).startsWith('sp_')){
@@ -3748,6 +4198,11 @@ function renderEvalDetails(ev,list,actions){
       btn.textContent=mine?'Abrir na minha biblioteca':'Adicionar à minha biblioteca para avaliar também';
       btn.onclick=()=>{closeEval();closeFriend();if(mine)openDetail(mine.id);else importAlbum(spId)};
       actions.appendChild(btn);
+      if(AUTH.user){
+        const sg=document.createElement('button');sg.type='button';sg.className='btn btn-ghost';sg.style.cssText='width:100%;margin-top:.5rem';sg.textContent='Indicar a um amigo';
+        sg.onclick=()=>openSuggest({key:ev.key,title:ev.title,artist:ev.artist,cover:ev.cover});
+        actions.appendChild(sg);
+      }
     }
   }else{
     const btn=document.createElement('button');btn.className='btn btn-primary';btn.style.width='100%';btn.textContent='Avaliar também';
@@ -3861,9 +4316,10 @@ function applyRankMode(){
 }
 function isRankingsVisible(){const s=document.getElementById('sec-rankings');return !!s&&s.classList.contains('active')}
 
-const COM={tab:'people',metric:{people:'tracks',albums:'best',artists:'best'},cache:{}};
-try{const t=localStorage.getItem('myspotlist_comtab');if(['people','albums','artists'].includes(t))COM.tab=t}catch(e){}
+const COM={tab:'overview',metric:{people:'tracks',albums:'best',artists:'best'},cache:{}};
+try{const t=localStorage.getItem('myspotlist_comtab');if(['overview','people','albums','artists'].includes(t))COM.tab=t}catch(e){}
 const COM_METRICS={
+  overview:[],
   people:[['tracks','Músicas avaliadas'],['albums','Álbuns avaliados'],['avgHigh','Maior nota média'],['avgLow','Menor nota média (mais exigente)'],['recent','Atividade mais recente']],
   albums:[['best','Melhores avaliados'],['most','Mais avaliados']],
   artists:[['best','Melhores avaliados'],['most','Mais músicas avaliadas']]
@@ -3871,39 +4327,130 @@ const COM_METRICS={
 function setComTab(t){COM.tab=t;try{localStorage.setItem('myspotlist_comtab',t)}catch(e){}renderCommunity()}
 function setComMetric(v){COM.metric[COM.tab]=v;renderCommunity()}
 const skelRows=n=>Array.from({length:n},()=>'<div class="skel skel-row"></div>').join('');
+const skelCards=n=>Array.from({length:n},()=>'<div class="skel" style="aspect-ratio:1;border-radius:12px"></div>').join('');
 const posEl=i=>{const d=document.createElement('div');d.className='rank-pos'+(i<3?' top':'');d.textContent=i+1;return d};
+async function loadOverview(){
+  const [ov,best,most,art,ppl]=await Promise.allSettled([
+    socRpc('community_overview'),
+    socRpc('community_albums',{mode:'best',max_rows:12}),
+    socRpc('community_albums',{mode:'most',max_rows:12}),
+    socRpc('community_artists',{mode:'best',max_rows:12}),
+    socRpc('community_people',{metric:'tracks',max_rows:3})
+  ]);
+  const val=r=>r.status==='fulfilled'?r.value:null;
+  if(best.status==='rejected')throw best.reason;
+  return {ov:(val(ov)||[])[0]||null,best:val(best)||[],most:val(most)||[],art:val(art)||[],ppl:val(ppl)||[]};
+}
 async function renderCommunity(force){
-  ['people','albums','artists'].forEach(t=>document.getElementById('cseg-'+t).classList.toggle('active',COM.tab===t));
-  document.getElementById('comMetric').innerHTML=COM_METRICS[COM.tab].map(([v,l])=>`<option value="${v}"${COM.metric[COM.tab]===v?' selected':''}>${l}</option>`).join('');
+  ['overview','people','albums','artists'].forEach(t=>document.getElementById('cseg-'+t).classList.toggle('active',COM.tab===t));
+  document.getElementById('comTools').style.display=COM.tab==='overview'?'none':'';
+  document.getElementById('comMetric').innerHTML=(COM_METRICS[COM.tab]||[]).map(([v,l])=>`<option value="${v}"${COM.metric[COM.tab]===v?' selected':''}>${l}</option>`).join('');
   const box=document.getElementById('comList');
+  box.className={overview:'com-overview',people:'rank-list',albums:'cover-grid',artists:'artist-grid'}[COM.tab];
   document.getElementById('comNote').innerHTML='';
-  if(!AUTH.user){box.innerHTML=feedMsg('Entre para ver o ranking da comunidade.','Criar conta ou entrar',"openAuth('signup')");return}
-  const tab=COM.tab,metric=COM.metric[tab],key=tab+'|'+metric;
+  if(!AUTH.user){box.className='rank-list';box.innerHTML=feedMsg('Entre para ver o ranking da comunidade.','Criar conta ou entrar',"openAuth('signup')");return}
+  const tab=COM.tab,metric=COM.metric[tab]||'',key=tab+'|'+metric;
   const hit=COM.cache[key];
   if(hit&&!force&&Date.now()-hit.at<60000){drawCommunity(tab,hit.rows);return}
-  box.innerHTML=skelRows(6);
+  box.innerHTML=tab==='people'?skelRows(6):(tab==='overview'?skelRows(3)+'<div class="skel" style="height:190px;margin-top:1rem"></div>':skelCards(8));
   try{
     let rows;
-    if(tab==='people')rows=await socRpc('community_people',{metric,max_rows:50});
-    else if(tab==='albums')rows=await socRpc('community_albums',{mode:metric,max_rows:30});
-    else rows=await socRpc('community_artists',{mode:metric,max_rows:30});
+    if(tab==='overview')rows=await loadOverview();
+    else if(tab==='people')rows=await socRpc('community_people',{metric,max_rows:50});
+    else if(tab==='albums')rows=await socRpc('community_albums',{mode:metric,max_rows:40});
+    else rows=await socRpc('community_artists',{mode:metric,max_rows:40});
     COM.cache[key]={rows:rows||[],at:Date.now()};
-    if(COM.tab===tab&&COM.metric[tab]===metric)drawCommunity(tab,rows||[]);
+    if(COM.tab===tab&&COM.metric[tab]===metric||COM.tab==='overview'&&tab==='overview')drawCommunity(tab,rows||[]);
   }catch(e){
     if(e.authFailed){signOutLocal('Sua sessão expirou. Entre novamente.');return}
     if(COM.tab!==tab)return;
+    box.className='rank-list';
     box.innerHTML=isMissingTable(e)?feedMsg('A comunidade ainda não foi ativada neste projeto.'):'<div class="sp-err">'+esc(e.message||'Erro ao carregar o ranking.')+'</div>';
   }
 }
-function drawCommunity(tab,rows){
+function comAlbumCard(r,i,cls){
+  const avg=parseFloat(r.avg_score);
+  const card=document.createElement('div');card.className='cg-card'+(cls?' '+cls:'');card.onclick=()=>openCommAlbum(r);
+  card.innerHTML=`<div class="cg-cover">${r.cover?`<img src="${esc(r.cover)}" alt="" loading="lazy">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:2rem">♪</div>'}<span class="rk">${i+1}</span><span class="score-pill" data-tone="${scoreTone(avg)}">${fmtNote(avg)}</span></div><div class="cg-t">${esc(r.title)}</div><div class="cg-s">${esc(r.artist)}</div><div class="cg-m">${r.raters} avaliaç${r.raters===1?'ão':'ões'}</div>`;
+  return card;
+}
+function artistPhotoEl(name){
+  const cached=(DB.artistPhotoCache||{})[name];
+  const mk=url=>{
+    if(url){const i=document.createElement('img');i.src=url;i.alt='';return i}
+    const d=document.createElement('div');d.className='ph';d.textContent=initialOf(name);return d;
+  };
+  const el=mk(cached||null);
+  if(cached===undefined)fetchArtistPhoto(name).then(u=>{if(u&&el.isConnected)el.replaceWith(mk(u))});
+  return el;
+}
+function comArtistCard(r,i,cls){
+  const avg=parseFloat(r.avg_score);
+  const card=document.createElement('div');card.className='ag-card'+(cls?' '+cls:'');
+  const ph=document.createElement('div');ph.className='ag-photo';
+  ph.appendChild(artistPhotoEl(r.artist));
+  ph.insertAdjacentHTML('beforeend',`<span class="rk">${i+1}</span>`);
+  card.appendChild(ph);
+  card.insertAdjacentHTML('beforeend',`<div class="ag-n">${esc(r.artist)}</div><div class="ag-s"><span style="color:${scoreColor(avg)};font-weight:700">${fmtNote(avg)}</span> · ${plTrack(r.tracks)}</div>`);
+  return card;
+}
+function peoplePodiumItems(rows,me){
+  return rows.slice(0,3).map(r=>{
+    SOC.profiles[r.user_id]=SOC.profiles[r.user_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar};
+    const isMe=r.user_id===me,friend=!!r.is_friend;
+    return {profile:SOC.profiles[r.user_id],name:nameOf(SOC.profiles[r.user_id]),val:plTrack(r.tracks_rated),me:isMe,
+      add:(!isMe&&!friend)?r.username:null,onClick:isMe?()=>openProfile():(friend?()=>openFriend(r.user_id):null)};
+  });
+}
+function drawOverview(d){
   const box=document.getElementById('comList');box.innerHTML='';
+  if(!d.best.length&&!d.most.length&&!d.art.length&&!d.ppl.length){
+    box.innerHTML='<div class="empty-state"><div class="icon">♪</div><h3>A comunidade ainda está começando</h3><p>Salve suas avaliações para aparecer aqui e fazer parte dos rankings.</p></div>';return;
+  }
+  if(d.ov){
+    const o=d.ov;
+    box.insertAdjacentHTML('beforeend',`<div class="ov-stats">
+      <div class="ov-stat"><b>${o.people}</b><span>Pessoas</span></div>
+      <div class="ov-stat"><b>${o.albums}</b><span>Álbuns</span></div>
+      <div class="ov-stat"><b>${o.evaluations}</b><span>Avaliações</span></div>
+      <div class="ov-stat"><b>${o.tracks}</b><span>Músicas avaliadas</span></div>
+      <div class="ov-stat"><b>${fmtNote(o.avg_score)}</b><span>Nota média geral</span></div></div>`);
+  }
+  const section=(title,tab,build)=>{
+    const sec=document.createElement('div');sec.className='ov-sec';
+    sec.innerHTML=`<div class="ov-head"><h3>${title}</h3><button type="button" class="link-btn" onclick="setComTab('${tab}')">Ver todos</button></div>`;
+    sec.appendChild(build());box.appendChild(sec);
+  };
+  const hs=(items,mk)=>{const h=document.createElement('div');h.className='hscroll';if(!items.length)h.innerHTML='<div class="ov-empty">Ainda sem dados.</div>';items.forEach((r,i)=>h.appendChild(mk(r,i)));return h};
+  if(d.best.length)section('Álbuns mais bem avaliados','albums',()=>hs(d.best,(r,i)=>comAlbumCard(r,i,'hcard')));
+  if(d.most.length)section('Álbuns mais avaliados','albums',()=>{COM.metric.albums=COM.metric.albums;return hs(d.most,(r,i)=>comAlbumCard(r,i,'hcard'))});
+  if(d.art.length)section('Artistas em destaque','artists',()=>hs(d.art,(r,i)=>comArtistCard(r,i,'hartist')));
+  if(d.ppl.length>=1){
+    const me=AUTH.user&&AUTH.user.id;
+    section('Quem mais avalia','people',()=>{
+      const w=document.createElement('div');
+      if(d.ppl.length>=3)w.appendChild(podiumEl(peoplePodiumItems(d.ppl,me)));
+      else d.ppl.forEach((r,i)=>w.appendChild(comPersonRow(r,i,'tracks',me)));
+      return w;
+    });
+  }
+}
+function drawCommunity(tab,rows){
+  const box=document.getElementById('comList');
+  if(tab==='overview'){drawOverview(rows);return}
+  box.innerHTML='';
   const metric=COM.metric[tab],notes=[];
   if(tab==='people'&&(metric==='avgHigh'||metric==='avgLow'))notes.push('A nota média só conta para quem já avaliou pelo menos 5 músicas.');
   if(AUTH.user&&DB.profile&&DB.profile.community===false)notes.push('Você está oculto no ranking da comunidade. <button class="link-btn" onclick="toggleCommunity(true)">Aparecer</button>');
   document.getElementById('comNote').innerHTML=notes.join('<br>');
-  if(!rows.length){box.innerHTML='<div class="empty-state"><div class="icon">♪</div><h3>Ainda não há dados para este ranking</h3><p>Salve algumas avaliações para aparecer aqui.</p></div>';return}
+  if(!rows.length){box.className='rank-list';box.innerHTML='<div class="empty-state"><div class="icon">♪</div><h3>Ainda não há dados para este ranking</h3><p>Salve algumas avaliações para aparecer aqui.</p></div>';return}
   const me=AUTH.user&&AUTH.user.id;
-  rows.forEach((r,i)=>box.appendChild(tab==='people'?comPersonRow(r,i,metric,me):tab==='albums'?comAlbumRow(r,i):comArtistRow(r,i)));
+  if(tab==='people'){
+    let start=0;
+    if(rows.length>=3){box.appendChild(podiumEl(peoplePodiumItems(rows,me)));start=3}
+    rows.slice(start).forEach((r,k)=>box.appendChild(comPersonRow(r,start+k,metric,me)));
+  }else if(tab==='albums')rows.forEach((r,i)=>box.appendChild(comAlbumCard(r,i)));
+  else rows.forEach((r,i)=>box.appendChild(comArtistCard(r,i)));
 }
 function comPersonRow(r,i,metric,me){
   SOC.profiles[r.user_id]=SOC.profiles[r.user_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar};
@@ -3923,36 +4470,6 @@ function comPersonRow(r,i,metric,me){
   if(isMe)row.querySelector('h4').insertAdjacentHTML('beforeend',' <span style="color:var(--accent);font-size:11px">(você)</span>');
   return row;
 }
-function comAlbumRow(r,i){
-  const avg=parseFloat(r.avg_score);
-  const row=document.createElement('div');row.className='rank-item';row.style.cursor='pointer';row.onclick=()=>openCommAlbum(r);
-  row.appendChild(posEl(i));row.appendChild(rankImg(r.cover));
-  const info=document.createElement('div');info.className='rank-info';
-  info.innerHTML=`<h4>${esc(r.title)}</h4><p>${esc(r.artist)} · ${r.raters} avaliaç${r.raters===1?'ão':'ões'}</p>`;
-  row.appendChild(info);
-  const sc=document.createElement('div');sc.className='rank-score';sc.style.color=scoreColor(avg);sc.textContent=fmtNote(avg);
-  row.appendChild(sc);return row;
-}
-function artistImgEl(name){
-  const cached=(DB.artistPhotoCache||{})[name];
-  const mk=url=>{
-    if(url){const i=document.createElement('img');i.src=url;i.alt='';i.className='rank-img';i.style.borderRadius='50%';i.style.objectFit='cover';return i}
-    const d=document.createElement('div');d.className='rank-img-ph';d.style.borderRadius='50%';d.textContent=initialOf(name);return d;
-  };
-  const el=mk(cached||null);
-  if(cached===undefined)fetchArtistPhoto(name).then(u=>{if(u&&el.isConnected)el.replaceWith(mk(u))});
-  return el;
-}
-function comArtistRow(r,i){
-  const avg=parseFloat(r.avg_score);
-  const row=document.createElement('div');row.className='rank-item';
-  row.appendChild(posEl(i));row.appendChild(artistImgEl(r.artist));
-  const info=document.createElement('div');info.className='rank-info';
-  info.innerHTML=`<h4>${esc(r.artist)}</h4><p>${plAlbum(r.albums)} · ${plTrack(r.tracks)} · ${r.raters} ${r.raters===1?'pessoa':'pessoas'}</p>`;
-  row.appendChild(info);
-  const sc=document.createElement('div');sc.className='rank-score';sc.style.color=scoreColor(avg);sc.textContent=fmtNote(avg);
-  row.appendChild(sc);return row;
-}
 function openCommAlbum(r){
   const avg=parseFloat(r.avg_score);
   const body=document.getElementById('evalBody');body.innerHTML='';
@@ -3971,6 +4488,10 @@ function openCommAlbum(r){
     btn.textContent=mine?'Abrir na minha biblioteca':'Adicionar à minha biblioteca para avaliar também';
     btn.onclick=()=>{closeEval();if(mine)openDetail(mine.id);else importAlbum(spId)};
     b.appendChild(btn);
+    if(AUTH.user){
+      const sg=document.createElement('button');sg.type='button';sg.className='btn btn-ghost';sg.style.cssText='width:100%;margin-top:.5rem';sg.textContent='Indicar a um amigo';
+      sg.onclick=()=>openSuggest({key:r.key,title:r.title,artist:r.artist,cover:r.cover});b.appendChild(sg);
+    }
   }else b.innerHTML='<div style="color:var(--text3);font-size:13px">Este álbum foi cadastrado manualmente.</div>';
   body.appendChild(b);
   document.getElementById('evalOverlay').classList.add('open');
@@ -4059,7 +4580,8 @@ function renderMyProfile(){
       <div class="rank-list" id="pfRecent"></div>
       <div class="pf-foot">
         <button type="button" class="btn btn-ghost" onclick="closeProfile();openLogin(true)">Editar perfil</button>
-        <button type="button" class="btn btn-ghost" onclick="closeProfile();openSettings()">Configurações</button>
+        <button type="button" class="btn btn-ghost" onclick="closeProfile();openSummary()">Compartilhar resumo</button>
+      <button type="button" class="btn btn-ghost" onclick="closeProfile();openSettings()">Configurações</button>
         ${acct?'':'<button type="button" class="btn btn-primary" onclick="closeProfile();openAuth(\'signup\')">Criar conta</button>'}
       </div>
     </div>`;
@@ -4157,6 +4679,534 @@ async function pickSearch(q,offset){
   }catch(e){if(seq===pickSeq)box.innerHTML='<div class="sp-err">'+esc(e.message||'Erro na busca.')+'</div>'}
 }
 
+// ─── NOTA: BOTÕES − E + ───────────────────────────────────────
+function scoreStepper(inp,large){
+  const wrap=document.createElement('div');wrap.className='score-step'+(large?' lg':'');
+  const step=delta=>{
+    const cur=parseFloat(String(inp.value).replace(',','.'));
+    let n=isNaN(cur)?5:cur+delta;
+    n=Math.max(0,Math.min(10,Math.round(n*100)/100));
+    inp.value=scoreToField(n);
+    if(inp.oninput)inp.oninput();
+  };
+  const mk=(txt,delta,label)=>{const b=document.createElement('button');b.type='button';b.className='step-btn';b.textContent=txt;b.setAttribute('aria-label',label);b.onclick=()=>step(delta);return b};
+  wrap.appendChild(mk('−',-0.5,'Diminuir nota'));wrap.appendChild(inp);wrap.appendChild(mk('+',0.5,'Aumentar nota'));
+  return wrap;
+}
+const SEND_ICON='<svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>';
+
+// ─── MÉDIA DA COMUNIDADE (com o olho para esconder) ────────────
+const COMAVG_CACHE={};
+function comAvgPref(){let v=null;try{v=localStorage.getItem('myspotlist_comavg')}catch(e){}return v==='show'||v==='hide'?v:null}
+async function fetchComAvg(key){
+  const h=COMAVG_CACHE[key];if(h&&Date.now()-h.at<60000)return h.v;
+  const r=await socRpc('album_community_avg',{p_key:key});
+  const v=(r&&r[0])||{avg_score:null,raters:0};
+  COMAVG_CACHE[key]={v,at:Date.now()};return v;
+}
+function buildComAvg(key,getMy,isSaved){
+  const el=document.createElement('div');el.className='comavg';
+  const EYE='<svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const EYE_OFF='<svg viewBox="0 0 24 24"><path d="M17.9 17.9A10.9 10.9 0 0112 19C5 19 1 12 1 12a18.5 18.5 0 015.1-5.9M9.9 4.2A9.1 9.1 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.2 3.2M1 1l22 22"/></svg>';
+  let data=null,failed=false,loading=false;
+  const setPref=v=>{try{localStorage.setItem('myspotlist_comavg',v)}catch(e){}draw()};
+  const draw=()=>{
+    if(failed){el.innerHTML='';return}
+    const pref=comAvgPref(),visible=pref==='show'||(pref===null&&isSaved());
+    el.innerHTML='';
+    if(!visible){
+      const b=document.createElement('button');b.type='button';b.className='comavg-btn';b.innerHTML=EYE+'<span>Ver média da comunidade</span>';
+      b.title=pref===null?'Fica escondida até você salvar a sua avaliação, para não influenciar a sua nota':'Mostrar a média da comunidade';
+      b.onclick=()=>setPref('show');el.appendChild(b);return;
+    }
+    if(!data){
+      if(!loading){loading=true;fetchComAvg(key).then(v=>{data=v}).catch(()=>{failed=true}).finally(()=>{loading=false;draw()})}
+      el.innerHTML='<div class="comavg-line">Carregando a média da comunidade…</div>';return;
+    }
+    const line=document.createElement('div');line.className='comavg-line';
+    const eye=document.createElement('button');eye.type='button';eye.className='comavg-eye';eye.title='Esconder a média da comunidade';eye.setAttribute('aria-label','Esconder a média da comunidade');eye.innerHTML=EYE_OFF;eye.onclick=()=>setPref('hide');
+    if(data.raters>0&&data.avg_score!=null){
+      const avg=parseFloat(data.avg_score),my=getMy();
+      let delta='';
+      if(my!==null&&my!==undefined&&!isNaN(my)){const d=Math.round((my-avg)*100)/100;delta=d===0?' · igual à sua nota':` · sua nota está <span class="${d>0?'delta-up':'delta-down'}">${d>0?'+':'−'}${fmtNote(Math.abs(d))}</span> da média`}
+      line.innerHTML=`<span>Comunidade <b style="color:${scoreColor(avg)}">${fmtNote(avg)}</b> · ${data.raters} ${data.raters===1?'avaliação':'avaliações'}${delta}</span>`;
+    }else line.innerHTML='<span>Ninguém da comunidade avaliou este álbum ainda</span>';
+    line.appendChild(eye);el.appendChild(line);
+  };
+  draw();return el;
+}
+
+// ─── CURTIR E COMENTAR ────────────────────────────────────────
+async function setLike(ownerId,kind,key,on){
+  const me=AUTH.user.id;
+  if(on)await sbAuthed('/rest/v1/review_likes?on_conflict=liker_id,owner_id,kind,key',{method:'POST',body:{liker_id:me,owner_id:ownerId,kind,key},headers:{Prefer:'resolution=ignore-duplicates,return=minimal'}});
+  else await sbAuthed(`/rest/v1/review_likes?liker_id=eq.${me}&owner_id=eq.${ownerId}&kind=eq.${kind}&key=eq.${encodeURIComponent(key)}`,{method:'DELETE'});
+}
+const CMT_ICON='<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>';
+async function buildInteractions(ownerId,kind,key,opts){
+  opts=opts||{};
+  let data;
+  try{data=await socRpc('evaluation_social',{p_owner:ownerId,p_kind:kind,p_key:key})}catch(e){return document.createElement('div')}
+  if(!data)return document.createElement('div');
+  const wrap=document.createElement('div');wrap.className='ix';
+  const me=AUTH.user.id,isSelf=ownerId===me;
+  if(!data.can){
+    wrap.innerHTML=`<div class="ix-lock">Adicione ${opts.username?'<b>@'+esc(opts.username)+'</b>':'o autor'} como amigo para curtir e comentar esta avaliação.</div>`;
+    return wrap;
+  }
+  const toggle=async()=>{
+    const was=data.liked;data.liked=!was;data.likes+=was?-1:1;draw();
+    const b=wrap.querySelector('.like-btn');if(b&&data.liked)b.classList.add('pop');
+    try{await setLike(ownerId,kind,key,!was)}
+    catch(e){data.liked=was;data.likes+=was?1:-1;draw();toast(e.message||'Não foi possível curtir agora.')}
+  };
+  const draw=()=>{
+    wrap.innerHTML='';
+    const bar=document.createElement('div');bar.className='ix-bar';
+    const like=document.createElement('button');like.type='button';like.className='like-btn'+(data.liked?' on':'');like.innerHTML=HEART+'<span>'+data.likes+'</span>';
+    if(isSelf){like.disabled=true;like.title='Curtidas na sua avaliação'}else{like.title=data.liked?'Descurtir':'Curtir';like.onclick=toggle}
+    bar.appendChild(like);
+    const cc=document.createElement('span');cc.className='cmt-ct';cc.innerHTML=CMT_ICON+'<span>'+data.comments.length+'</span>';bar.appendChild(cc);
+    wrap.appendChild(bar);
+    const list=document.createElement('div');list.className='ix-comments';
+    data.comments.forEach(cm=>{
+      const row=document.createElement('div');row.className='ix-c';
+      row.appendChild(avEl({display_name:cm.display_name,username:cm.username,avatar:cm.avatar}));
+      const bd=document.createElement('div');bd.className='ix-cb';
+      bd.innerHTML=`<div class="ix-cw"><b>${esc(nameOf({display_name:cm.display_name,username:cm.username}))}</b> · ${timeAgo(cm.created_at)}</div><div class="ix-ct">${esc(cm.body)}</div>`;
+      if(cm.mine||isSelf){
+        const del=document.createElement('button');del.type='button';del.className='ix-del';del.textContent='Excluir';
+        del.onclick=async()=>{
+          try{await sbAuthed(`/rest/v1/review_comments?id=eq.${cm.id}`,{method:'DELETE'});data.comments=data.comments.filter(x=>x.id!==cm.id);draw()}
+          catch(e){toast(e.message||'Não foi possível excluir.')}
+        };
+        bd.appendChild(del);
+      }
+      row.appendChild(bd);list.appendChild(row);
+    });
+    wrap.appendChild(list);
+    const form=document.createElement('div');form.className='ix-form';
+    const ta=document.createElement('textarea');ta.maxLength=500;ta.rows=1;ta.placeholder=isSelf?'Responder aos comentários…':'Escreva um comentário…';
+    const btn=document.createElement('button');btn.type='button';btn.className='btn btn-primary';btn.textContent='Comentar';
+    const send=async()=>{
+      const body=ta.value.trim();if(!body)return;
+      btn.disabled=true;
+      try{
+        const r=await sbAuthed('/rest/v1/review_comments?select=id,created_at',{method:'POST',body:{author_id:me,owner_id:ownerId,kind,key,body},headers:{Prefer:'return=representation'}});
+        const row=Array.isArray(r)?r[0]:r;
+        data.comments.push({id:row&&row.id,author_id:me,username:DB.profile&&DB.profile.username,display_name:DB.profile&&DB.profile.name,avatar:DB.profile&&DB.profile.avatar,body,created_at:(row&&row.created_at)||new Date().toISOString(),mine:true});
+        draw();
+      }catch(e){toast(e.message||'Não foi possível comentar.');btn.disabled=false}
+    };
+    btn.onclick=send;
+    ta.onkeydown=e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();send()}};
+    form.appendChild(ta);form.appendChild(btn);wrap.appendChild(form);
+  };
+  draw();return wrap;
+}
+
+// ─── NOTIFICAÇÕES ─────────────────────────────────────────────
+const NOTIF={items:[],primed:false,seen:new Set(),open:false,unavailable:false};
+function notifParts(n){
+  const who=nameOf({display_name:n.display_name,username:n.username});
+  const r=n.ref||{},t=r.title||'';
+  const msg=r.message?`: “${r.message}”`:'';
+  switch(n.type){
+    case 'like':return [who,'curtiu sua avaliação de',t,''];
+    case 'comment':return [who,'comentou na sua avaliação de',t,r.snippet?`: “${r.snippet}”`:''];
+    case 'recommend':return [who,'indicou',t,' para você'+msg];
+    case 'invite':return [who,'convidou você para avaliar',t,msg];
+    case 'friend_request':return [who,'quer ser seu amigo','',''];
+    case 'friend_accept':return [who,'aceitou seu pedido de amizade','',''];
+    default:return [who,'interagiu com você','',''];
+  }
+}
+const notifPlain=n=>{const [w,a,t,x]=notifParts(n);return `${w} ${a}${t?' "'+t+'"':''}${x}`};
+const notifHtml=n=>{const [w,a,t,x]=notifParts(n);return `<b>${esc(w)}</b> ${esc(a)}${t?' <b>'+esc(t)+'</b>':''}${esc(x)}`};
+async function loadNotifs(){
+  if(NOTIF.unavailable)return;
+  let rows;
+  try{rows=await socRpc('list_notifications',{max_rows:40})}
+  catch(e){if(isMissingTable(e)){NOTIF.unavailable=true;NOTIF.items=[];return}throw e}
+  rows=rows||[];
+  rows.forEach(r=>{if(r.actor_id)SOC.profiles[r.actor_id]=SOC.profiles[r.actor_id]||{username:r.username,display_name:r.display_name,avatar:r.avatar}});
+  const fresh=rows.filter(r=>!r.read_at&&!NOTIF.seen.has(r.id));
+  if(NOTIF.primed&&fresh.length)toast(fresh.length===1?notifPlain(fresh[0]):fresh.length+' novas notificações');
+  rows.forEach(r=>NOTIF.seen.add(r.id));
+  NOTIF.items=rows;NOTIF.primed=true;
+}
+function updateBell(){
+  const w=document.getElementById('bellWrap');if(!w)return;
+  w.style.display=(AUTH.user&&!NOTIF.unavailable)?'':'none';
+  const n=NOTIF.items.filter(x=>!x.read_at).length;
+  const b=document.getElementById('bellBadge');
+  b.textContent=n>9?'9+':String(n);b.style.display=n?'flex':'none';
+}
+function notifRow(n){
+  const row=document.createElement('div');row.className='notif-item'+(n.read_at?'':' unread');
+  row.appendChild(avEl({display_name:n.display_name,username:n.username,avatar:n.avatar}));
+  const body=document.createElement('div');body.className='ni-body';
+  body.innerHTML=`<div class="ni-text">${notifHtml(n)}</div><div class="ni-time">${timeAgo(n.created_at)}</div>`;
+  if(n.type==='friend_request'&&n.friendship_id){
+    const act=document.createElement('div');act.className='ni-actions';
+    const mk=(label,cls,acc)=>{const b=document.createElement('button');b.type='button';b.className='btn '+cls;b.textContent=label;b.onclick=async ev=>{ev.stopPropagation();b.disabled=true;await respondRequest(n.friendship_id,acc);await loadNotifs();updateBell();renderNotifPanel();if(isSocialVisible())renderSocial()};return b};
+    act.appendChild(mk('Aceitar','btn-primary',true));act.appendChild(mk('Recusar','btn-ghost',false));
+    body.appendChild(act);
+  }
+  row.appendChild(body);
+  if(n.ref&&n.ref.cover){const im=document.createElement('img');im.className='ni-cover';im.src=n.ref.cover;im.alt='';row.appendChild(im)}
+  row.onclick=()=>openNotif(n);
+  return row;
+}
+function renderNotifPanel(){
+  const box=document.getElementById('notifList');if(!box)return;
+  box.innerHTML='';
+  if(!NOTIF.items.length){box.innerHTML='<div class="np-empty">Nada por aqui ainda.<br>Curtidas, comentários, indicações e pedidos de amizade aparecem aqui.</div>';return}
+  NOTIF.items.forEach(n=>box.appendChild(notifRow(n)));
+}
+function closeNotifPanel(){NOTIF.open=false;const p=document.getElementById('notifPanel');if(p)p.classList.remove('open')}
+function toggleNotifPanel(){
+  const p=document.getElementById('notifPanel');
+  if(NOTIF.open){closeNotifPanel();return}
+  closeSearchPanel();
+  NOTIF.open=true;renderNotifPanel();p.classList.add('open');
+  loadNotifs().then(()=>{updateBell();if(NOTIF.open)renderNotifPanel()}).catch(()=>{});
+  setTimeout(()=>{if(NOTIF.open&&NOTIF.items.some(x=>!x.read_at))markAllRead(true)},1800);
+}
+async function markAllRead(silent){
+  try{await socRpc('mark_notifications_read',{});NOTIF.items.forEach(x=>{if(!x.read_at)x.read_at=new Date().toISOString()});updateBell();if(!silent){renderNotifPanel();if(isSocialVisible())renderSocial()}}
+  catch(e){if(!silent)toast(e.message||'Não foi possível marcar agora.')}
+}
+function openNotif(n){
+  closeNotifPanel();
+  const r=n.ref||{};
+  if(n.type==='like'||n.type==='comment')openMyEvaluation(r.kind,r.key);
+  else if(n.type==='recommend'||n.type==='invite')openSuggestionView(n);
+  else if(n.type==='friend_request')goSocial();
+  else if(n.type==='friend_accept'&&n.actor_id)openFriend(n.actor_id);
+}
+function openMyEvaluation(kind,key){
+  if(kind==='album'){
+    const a=DB.albums.find(x=>albumKey(x)===key);
+    if(a){showSection('library');openDetail(a.id);setTimeout(()=>{const ix=document.getElementById('ixOwn');if(ix)ix.scrollIntoView({behavior:'smooth',block:'center'})},700);return}
+  }else{
+    const t=DB.standaloneTracks.find(x=>trackKey(x)===key);
+    if(t){openStModal(t);return}
+  }
+  toast('Esta avaliação não está mais na sua biblioteca.');
+}
+function openSuggestionView(n){
+  const r=n.ref||{};
+  const who=nameOf({display_name:n.display_name,username:n.username});
+  const body=document.getElementById('evalBody');body.innerHTML='';
+  const head=document.createElement('div');head.className='st-header';
+  head.innerHTML=`${r.cover?`<img src="${esc(r.cover)}" class="st-cover" alt="">`:'<div class="st-cover-ph">♪</div>'}
+    <div style="flex:1;min-width:0"><div style="font-size:1.1rem;font-weight:600;line-height:1.25">${esc(r.title||'Álbum')}</div>
+    <div style="color:var(--accent);font-size:.88rem;margin:.15rem 0 .4rem">${esc(r.artist||'')}</div>
+    <div class="ev-when">${esc(who)} ${n.type==='invite'?'convidou você para avaliar este álbum':'indicou este álbum para você'} · ${timeAgo(n.created_at)}</div></div>`;
+  body.appendChild(head);
+  const b=document.createElement('div');b.className='st-body';
+  if(r.message)b.insertAdjacentHTML('beforeend',`<div class="ev-review">${esc(r.message)}</div>`);
+  const spId=String(r.key||'').replace(/^sp_/,'');
+  const mine=DB.albums.find(a=>a.spotifyId===spId);
+  const btn=document.createElement('button');btn.type='button';btn.className='btn '+(mine?'btn-ghost':'btn-primary');btn.style.cssText='width:100%;margin-top:1rem';
+  btn.textContent=mine?'Abrir na minha biblioteca':(n.type==='invite'?'Adicionar e avaliar agora':'Adicionar à minha biblioteca');
+  btn.onclick=()=>{closeEval();if(mine)openDetail(mine.id);else importAlbum(spId)};
+  b.appendChild(btn);
+  body.appendChild(b);
+  document.getElementById('evalOverlay').classList.add('open');
+}
+
+// ─── INDICAR / CONVIDAR UM AMIGO ──────────────────────────────
+const SG={album:null,kind:'recommend',sel:new Set()};
+function openSuggest(album){
+  if(!AUTH.user){openAuth('signup');return}
+  SG.album=album;SG.sel=new Set();
+  document.getElementById('sgAlbum').innerHTML=`${album.cover?`<img src="${esc(album.cover)}" alt="">`:'<div class="ph">♪</div>'}<div style="min-width:0"><div style="font-weight:600;font-size:14px">${esc(album.title)}</div><div style="font-size:12px;color:var(--text3)">${esc(album.artist)}</div></div>`;
+  document.getElementById('sgMsg').value='';
+  setSuggestKind('recommend');renderSuggestFriends();
+  document.getElementById('suggestOverlay').classList.add('open');
+}
+function closeSuggest(){document.getElementById('suggestOverlay').classList.remove('open')}
+function setSuggestKind(k){
+  SG.kind=k;
+  ['recommend','invite'].forEach(x=>document.getElementById('sgk-'+x).classList.toggle('active',x===k));
+  document.getElementById('sgTitle').textContent=k==='recommend'?'Indicar a um amigo':'Convidar para avaliar';
+  document.getElementById('sgMsg').placeholder=k==='recommend'?'Ex.: você precisa ouvir este álbum!':'Ex.: vamos ouvir e avaliar juntos?';
+  document.getElementById('sgSend').textContent=k==='recommend'?'Enviar indicação':'Enviar convite';
+}
+function renderSuggestFriends(){
+  const box=document.getElementById('sgFriends');box.innerHTML='';
+  if(!SOC.friends.length){box.innerHTML='<div class="ev-empty">Você ainda não tem amigos. Adicione pelo @ na aba Social.</div>';return}
+  SOC.friends.forEach(f=>{
+    const p=SOC.profiles[f.user_id]||{};
+    const row=document.createElement('div');row.className='sg-f'+(SG.sel.has(f.user_id)?' sel':'');
+    row.appendChild(avEl(p));
+    const nm=document.createElement('span');nm.className='n';
+    nm.innerHTML=`${esc(nameOf(p))} <span style="color:var(--text3)">${p.username?'@'+esc(p.username):''}</span>`;
+    row.appendChild(nm);
+    const ck=document.createElement('i');ck.textContent='✓';row.appendChild(ck);
+    row.onclick=()=>{if(SG.sel.has(f.user_id))SG.sel.delete(f.user_id);else SG.sel.add(f.user_id);row.classList.toggle('sel')};
+    box.appendChild(row);
+  });
+}
+async function sendSuggest(){
+  if(!SG.sel.size){toast('Escolha pelo menos um amigo.');return}
+  const a=SG.album,btn=document.getElementById('sgSend');btn.disabled=true;
+  try{
+    const n=await socRpc('suggest_album',{to_ids:[...SG.sel],p_kind:SG.kind,album_key:a.key,p_title:a.title,p_artist:a.artist,p_cover:a.cover||'',p_message:document.getElementById('sgMsg').value.trim()});
+    const w=n===1?'amigo':'amigos';
+    toast(SG.kind==='recommend'?`Indicação enviada para ${n} ${w}!`:`Convite enviado para ${n} ${w}!`);
+    closeSuggest();
+  }catch(e){toast(isMissingTable(e)?'Para usar, rode o supabase-interacao.sql no Supabase.':(e.message||'Não foi possível enviar.'))}
+  btn.disabled=false;
+}
+function openSuggestForAlbum(id){
+  const a=DB.albums.find(x=>x.id===id);if(!a||!a.spotifyId)return;
+  openSuggest({key:'sp_'+a.spotifyId,title:a.title,artist:a.artist,cover:a.cover});
+}
+
+// ─── IMAGEM PARA COMPARTILHAR (canvas) ────────────────────────
+const IMG_FONT='Sora, system-ui, -apple-system, "Segoe UI", sans-serif';
+const IMG_ICON='<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>';
+const slugify=s=>String(s||'avaliacao').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'avaliacao';
+const _imgCache=new Map();
+function loadImg(url){
+  if(!url)return Promise.resolve(null);
+  if(_imgCache.has(url))return _imgCache.get(url);
+  const tryLoad=src=>new Promise(res=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src});
+  const p=(async()=>{
+    let i=await tryLoad(url);
+    if(!i&&/^https?:/i.test(url)&&!url.startsWith(location.origin))i=await tryLoad('/api/img?u='+encodeURIComponent(url));
+    return i;
+  })();
+  _imgCache.set(url,p);return p;
+}
+async function ensureFonts(){try{await Promise.all(['400','500','600','700','800'].map(w=>document.fonts.load(`${w} 32px Sora`)))}catch(e){}}
+function rr(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+}
+function drawCover(ctx,img,x,y,w,h,r){
+  ctx.save();rr(ctx,x,y,w,h,r);ctx.clip();
+  if(img){const s=Math.max(w/img.width,h/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh)}
+  else{
+    const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,'#1f3a2c');g.addColorStop(1,'#0e1114');ctx.fillStyle=g;ctx.fillRect(x,y,w,h);
+    ctx.fillStyle='rgba(255,255,255,.22)';ctx.font=`700 ${Math.round(w*.4)}px ${IMG_FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('♪',x+w/2,y+h/2);
+  }
+  ctx.restore();ctx.textBaseline='alphabetic';
+}
+function coverShadow(ctx,x,y,w,h,r,blur,off){ctx.save();ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=blur;ctx.shadowOffsetY=off;rr(ctx,x,y,w,h,r);ctx.fillStyle='#000';ctx.fill();ctx.restore()}
+function bgBlur(ctx,img,W,H){
+  ctx.fillStyle='#080a0c';ctx.fillRect(0,0,W,H);
+  if(img){
+    ctx.save();
+    try{ctx.filter='blur(70px) saturate(1.4)'}catch(e){}
+    const s=Math.max(W/img.width,H/img.height)*1.35,dw=img.width*s,dh=img.height*s;
+    ctx.drawImage(img,(W-dw)/2,(H-dh)/2,dw,dh);
+    ctx.restore();
+    ctx.fillStyle='rgba(8,10,12,.58)';ctx.fillRect(0,0,W,H);
+  }else{const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#10281c');g.addColorStop(1,'#080a0c');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
+  const v=ctx.createLinearGradient(0,H*.55,0,H);v.addColorStop(0,'rgba(8,10,12,0)');v.addColorStop(1,'rgba(8,10,12,.65)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
+}
+function fitFont(ctx,text,maxW,size,weight,min){let s=size;for(;;){ctx.font=`${weight} ${s}px ${IMG_FONT}`;if(ctx.measureText(text).width<=maxW||s<=min)break;s-=2}return s}
+function wrapText(ctx,text,maxW,maxLines){
+  const words=String(text||'').replace(/\s+/g,' ').trim().split(' ');const lines=[];let cur='';
+  for(const w of words){const t=cur?cur+' '+w:w;if(ctx.measureText(t).width<=maxW)cur=t;else{if(cur)lines.push(cur);cur=w}}
+  if(cur)lines.push(cur);
+  if(lines.length>maxLines){lines.length=maxLines;let l=lines[maxLines-1];while(ctx.measureText(l+'…').width>maxW&&l.length>1)l=l.slice(0,-1);lines[maxLines-1]=l.replace(/[ ,.;]+$/,'')+'…'}
+  return lines;
+}
+const toneColor=n=>n>=8?'#1db954':(n>=5.8?'#f59e0b':'#ef4444');
+function starsText(score){const v=Math.round((score/2)*2)/2,full=Math.floor(v);return (v>=0.5?'★'.repeat(full)+(v-full>=0.5?'½':''):'—')}
+function scoreBadge(ctx,cx,cy,r,txt,col,size){
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle='rgba(8,10,12,.88)';ctx.fill();ctx.lineWidth=8;ctx.strokeStyle=col;ctx.stroke();
+  ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';fitFont(ctx,txt,r*1.5,size,800,30);ctx.fillText(txt,cx,cy+4);ctx.textBaseline='alphabetic';
+}
+function pillText(ctx,txt,x,y,col,size){
+  ctx.font=`700 ${size}px ${IMG_FONT}`;const w=ctx.measureText(txt).width+size*1.1,h=size*1.75;
+  rr(ctx,x-w,y-h,w,h,h/2);ctx.fillStyle='rgba(8,10,12,.86)';ctx.fill();
+  ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,x-w/2,y-h/2+2);ctx.textBaseline='alphabetic';
+}
+function brand(ctx,x,y,size,align){ctx.fillStyle='#1db954';ctx.font=`800 ${size}px ${IMG_FONT}`;ctx.textAlign=align||'left';ctx.fillText('MySpotList',x,y)}
+function muted(ctx,size,w,a){ctx.fillStyle=`rgba(255,255,255,${a||.6})`;ctx.font=`${w||500} ${size}px ${IMG_FONT}`}
+
+function drawPoster(ctx,W,H,img,d,sc,col){
+  bgBlur(ctx,img,W,H);
+  brand(ctx,72,100,36);
+  muted(ctx,28,500,.55);ctx.textAlign='right';ctx.fillText(fmtDateBR(d.date||todayStr()),W-72,100);
+  coverShadow(ctx,150,150,780,780,38,70,30);drawCover(ctx,img,150,150,780,780,38);
+  ctx.textAlign='left';ctx.fillStyle='#fff';fitFont(ctx,d.title,936,66,700,34);ctx.fillText(d.title,72,1034);
+  muted(ctx,40,500,.68);fitFont(ctx,d.artist,936,40,500,26);ctx.fillText(d.artist,72,1092);
+  ctx.fillStyle='#f59e0b';ctx.font=`700 54px ${IMG_FONT}`;ctx.fillText(starsText(d.score),72,1195);
+  muted(ctx,28,500,.6);ctx.fillText(d.user||'',72,1248);
+  scoreBadge(ctx,W-72-98,1170,98,sc,col,80);
+  muted(ctx,22,500,.35);ctx.textAlign='center';ctx.fillText('myspotlist',W/2,1316);
+}
+function drawStory(ctx,W,H,img,d,sc,col){
+  bgBlur(ctx,img,W,H);
+  brand(ctx,W/2,128,44,'center');muted(ctx,26,600,.5);ctx.textAlign='center';ctx.fillText(d.kind==='track'?'MINHA AVALIAÇÃO · MÚSICA':'MINHA AVALIAÇÃO',W/2,182);
+  coverShadow(ctx,110,240,860,860,44,80,34);drawCover(ctx,img,110,240,860,860,44);
+  ctx.textAlign='center';ctx.fillStyle='#fff';fitFont(ctx,d.title,920,72,700,36);ctx.fillText(d.title,W/2,1196);
+  muted(ctx,40,500,.68);fitFont(ctx,d.artist,920,40,500,26);ctx.fillText(d.artist,W/2,1262);
+  muted(ctx,28,600,.45);ctx.fillText('NOTA',W/2,1362);
+  ctx.fillStyle=col;ctx.font=`800 250px ${IMG_FONT}`;ctx.fillText(sc,W/2,1560);
+  ctx.fillStyle='#f59e0b';ctx.font=`700 58px ${IMG_FONT}`;ctx.fillText(starsText(d.score),W/2,1650);
+  muted(ctx,36,500,.78);
+  if(d.review){const lines=wrapText(ctx,'“'+d.review+'”',880,2);lines.forEach((l,i)=>ctx.fillText(l,W/2,1740+i*50))}
+  else if(d.total){ctx.fillText(`${d.rated} de ${d.total} faixas avaliadas`,W/2,1745)}
+  muted(ctx,30,500,.5);ctx.fillText(d.user||'',W/2,1862);
+}
+function drawTracksCard(ctx,W,H,img,d,sc,col){
+  bgBlur(ctx,img,W,H);
+  drawCover(ctx,img,72,72,230,230,28);
+  ctx.textAlign='left';ctx.fillStyle='#fff';fitFont(ctx,d.title,520,56,700,30);ctx.fillText(d.title,334,140);
+  muted(ctx,34,500,.68);fitFont(ctx,d.artist,520,34,500,24);ctx.fillText(d.artist,334,196);
+  muted(ctx,26,500,.5);ctx.fillText(`${d.rated} de ${d.total} faixas avaliadas`,334,250);
+  muted(ctx,22,600,.45);ctx.textAlign='right';ctx.fillText('MÉDIA',W-72,100);
+  ctx.fillStyle=col;ctx.font=`800 120px ${IMG_FONT}`;ctx.fillText(sc,W-72,208);
+  ctx.fillStyle='rgba(255,255,255,.12)';ctx.fillRect(72,338,W-144,2);
+  const tr=(d.tracks||[]).slice(0,11),step=76;
+  tr.forEach((t,i)=>{
+    const y=420+i*step,tc=toneColor(t.s);
+    muted(ctx,28,500,.4);ctx.textAlign='left';ctx.fillText(String(i+1),72,y);
+    ctx.fillStyle='#fff';fitFont(ctx,t.n,520,32,500,22);ctx.fillText(t.n,134,y);
+    rr(ctx,700,y-20,220,14,7);ctx.fillStyle='rgba(255,255,255,.12)';ctx.fill();
+    rr(ctx,700,y-20,Math.max(14,220*(t.s/10)),14,7);ctx.fillStyle=tc;ctx.fill();
+    ctx.fillStyle=tc;ctx.font=`700 36px ${IMG_FONT}`;ctx.textAlign='right';ctx.fillText(fmtNote(t.s),W-72,y+2);
+  });
+  if((d.tracks||[]).length>11){muted(ctx,26,500,.5);ctx.textAlign='left';ctx.fillText(`+ ${d.tracks.length-11} faixas`,134,420+11*step)}
+  muted(ctx,26,500,.55);ctx.textAlign='left';ctx.fillText(d.user||'',72,1290);
+  brand(ctx,W-72,1290,30,'right');
+}
+function drawMinimal(ctx,W,H,img,d,sc,col){
+  ctx.fillStyle='#0b0e11';ctx.fillRect(0,0,W,H);
+  const g=ctx.createRadialGradient(200,120,40,200,120,760);g.addColorStop(0,'rgba(29,185,84,.16)');g.addColorStop(1,'rgba(29,185,84,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  coverShadow(ctx,72,170,500,500,26,60,24);drawCover(ctx,img,72,170,500,500,26);
+  const x=632,mw=W-72-x;
+  muted(ctx,24,600,.45);ctx.textAlign='left';ctx.fillText('NOTA',x,236);
+  ctx.fillStyle=col;ctx.font=`800 170px ${IMG_FONT}`;ctx.fillText(sc,x,396);
+  ctx.fillStyle='#f59e0b';ctx.font=`700 52px ${IMG_FONT}`;ctx.fillText(starsText(d.score),x,474);
+  ctx.fillStyle='#fff';ctx.font=`700 44px ${IMG_FONT}`;const tl=wrapText(ctx,d.title,mw,3);tl.forEach((l,i)=>ctx.fillText(l,x,560+i*54));
+  muted(ctx,30,500,.62);ctx.fillText(wrapText(ctx,d.artist,mw,1)[0]||'',x,560+tl.length*54+14);
+  brand(ctx,72,990,34);muted(ctx,26,500,.5);ctx.textAlign='right';ctx.fillText(d.user||'',W-72,990);
+}
+async function drawEvalCard(canvas,tpl,d){
+  const sizes={poster:[1080,1350],story:[1080,1920],tracks:[1080,1350],minimal:[1080,1080]};
+  const [W,H]=sizes[tpl]||sizes.poster;canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
+  const img=await loadImg(d.cover);
+  const score=(d.score==null||isNaN(d.score))?0:d.score;
+  ({poster:drawPoster,story:drawStory,tracks:drawTracksCard,minimal:drawMinimal}[tpl]||drawPoster)(ctx,W,H,img,{...d,score},fmtNote(score),toneColor(score));
+}
+
+// ─── resumo (semana / mês / sempre) ───
+function computeSummary(period){
+  const now=Date.now(),span=period==='week'?7:period==='month'?30:null;
+  const since=span?now-span*86400000:0;
+  const albums=DB.albums.filter(a=>a.savedAt&&a.savedAt>=since&&avgTracks(a)!==null);
+  const tracks=DB.standaloneTracks.filter(t=>isRatedTrack(t)&&!trackInSavedAlbum(t)&&trackStamp(t)>=since);
+  let n=0,sum=0;const cnt={};
+  albums.forEach(a=>a.tracks.filter(isRatedTrack).forEach(t=>{n++;sum+=parseFloat(t.score);cnt[a.artist]=(cnt[a.artist]||0)+1}));
+  tracks.forEach(t=>{n++;sum+=parseFloat(t.score);cnt[t.artist]=(cnt[t.artist]||0)+1});
+  const top=Object.entries(cnt).sort((x,y)=>y[1]-x[1])[0];
+  const items=albums.map(a=>({title:a.title,artist:a.artist,cover:a.cover,score:avgTracks(a)})).sort((x,y)=>y.score-x.score);
+  const fmt=t=>new Date(t).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}).replace('.','');
+  const label=period==='week'?`${fmt(now-6*86400000)} a ${fmt(now)}`:(period==='month'?'Últimos 30 dias':'Desde o começo');
+  const heading=period==='week'?'Minha semana':(period==='month'?'Meu mês':'Minha jornada');
+  return {label,heading,period,albums:albums.length,tracks:n,avg:n?sum/n:null,topArtist:top?top[0]:'',items,user:shareUserLabel()};
+}
+async function drawSummaryCard(canvas,tpl,s){
+  const [W,H]=tpl==='top5'?[1080,1350]:[1080,1920];canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#080a0c';ctx.fillRect(0,0,W,H);
+  const g=ctx.createRadialGradient(W/2,0,60,W/2,0,H*.75);g.addColorStop(0,'rgba(29,185,84,.30)');g.addColorStop(1,'rgba(29,185,84,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  const imgs=await Promise.all(s.items.slice(0,tpl==='top5'?5:9).map(i=>loadImg(i.cover)));
+  if(tpl==='top5'){
+    ctx.textAlign='left';brand(ctx,72,110,34);
+    ctx.fillStyle='#fff';ctx.font=`800 84px ${IMG_FONT}`;ctx.fillText('Top álbuns',72,215);
+    muted(ctx,32,500,.55);ctx.fillText(s.heading+' · '+s.label,72,266);
+    if(!s.items.length){muted(ctx,40,500,.5);ctx.textAlign='center';ctx.fillText('Sem avaliações neste período',W/2,700)}
+    s.items.slice(0,5).forEach((it,i)=>{
+      const y=330+i*180;
+      muted(ctx,64,800,.28);ctx.textAlign='left';ctx.fillText(String(i+1),72,y+98);
+      coverShadow(ctx,170,y,150,150,16,24,10);drawCover(ctx,imgs[i],170,y,150,150,16);
+      ctx.fillStyle='#fff';fitFont(ctx,it.title,450,40,700,26);ctx.textAlign='left';ctx.fillText(it.title,350,y+66);
+      muted(ctx,30,500,.6);fitFont(ctx,it.artist,450,30,500,22);ctx.fillText(it.artist,350,y+112);
+      ctx.fillStyle=toneColor(it.score);ctx.font=`800 74px ${IMG_FONT}`;ctx.textAlign='right';ctx.fillText(fmtNote(it.score),W-72,y+96);
+    });
+    muted(ctx,28,500,.6);ctx.textAlign='left';
+    ctx.fillText(`${s.albums} ${s.albums===1?'álbum':'álbuns'} · ${s.tracks} ${s.tracks===1?'música':'músicas'}${s.avg!=null?' · média '+fmtNote(s.avg):''}`,72,1262);
+    muted(ctx,26,500,.45);ctx.textAlign='right';ctx.fillText(s.user||'',W-72,1262);
+    return;
+  }
+  brand(ctx,W/2,120,44,'center');
+  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font=`800 100px ${IMG_FONT}`;ctx.fillText(s.heading,W/2,268);
+  muted(ctx,34,500,.55);ctx.fillText(s.label,W/2,326);
+  const stats=[[String(s.albums),'ÁLBUNS','#fff'],[String(s.tracks),'MÚSICAS','#fff'],[s.avg!=null?fmtNote(s.avg):'—','NOTA MÉDIA',s.avg!=null?toneColor(s.avg):'#fff']];
+  stats.forEach(([v,l,col],i)=>{const cx=216+i*324;ctx.fillStyle=col;ctx.font=`800 118px ${IMG_FONT}`;ctx.textAlign='center';ctx.fillText(v,cx,526);muted(ctx,24,600,.45);ctx.fillText(l,cx,574)});
+  const x0=50,y0=650,cell=320,gap=20;
+  for(let i=0;i<9;i++){
+    const x=x0+(i%3)*(cell+gap),y=y0+Math.floor(i/3)*(cell+gap),it=s.items[i];
+    if(it){drawCover(ctx,imgs[i],x,y,cell,cell,22);pillText(ctx,fmtNote(it.score),x+cell-14,y+cell-14,toneColor(it.score),30)}
+    else{rr(ctx,x,y,cell,cell,22);ctx.fillStyle='rgba(255,255,255,.05)';ctx.fill()}
+  }
+  if(s.topArtist){muted(ctx,28,600,.45);ctx.textAlign='center';ctx.fillText('ARTISTA MAIS AVALIADO',W/2,1742);ctx.fillStyle='#fff';fitFont(ctx,s.topArtist,900,60,700,30);ctx.fillText(s.topArtist,W/2,1812)}
+  muted(ctx,26,500,.45);ctx.textAlign='center';ctx.fillText(s.user||'',W/2,1880);
+}
+let SUMP='week',sumPanel=null;
+function openSummary(){document.getElementById('summaryOverlay').classList.add('open');setSummaryPeriod(SUMP)}
+function closeSummary(){document.getElementById('summaryOverlay').classList.remove('open')}
+function setSummaryPeriod(p){
+  SUMP=p;['week','month','all'].forEach(x=>document.getElementById('sump-'+x).classList.toggle('active',x===p));
+  const host=document.getElementById('sumHost');
+  if(!sumPanel||!sumPanel.isConnected){
+    host.innerHTML='';
+    sumPanel=buildImagePanel({templates:[['grid','Colagem'],['top5','Top 5']],filename:'myspotlist-resumo',draw:(cv,tpl)=>drawSummaryCard(cv,tpl,computeSummary(SUMP))});
+    host.appendChild(sumPanel);
+  }
+  sumPanel.render();
+}
+
+// painel com modelos + visualização + baixar/compartilhar
+function buildImagePanel(o){
+  const panel=document.createElement('div');panel.className='img-panel';
+  const chips=document.createElement('div');chips.className='tags-wrap img-chips';
+  const stage=document.createElement('div');stage.className='img-stage';
+  const canvas=document.createElement('canvas');canvas.className='img-canvas';stage.appendChild(canvas);
+  const actions=document.createElement('div');actions.className='img-actions';
+  const dl=document.createElement('button');dl.type='button';dl.className='btn btn-primary';dl.textContent='Baixar imagem';
+  const sh=document.createElement('button');sh.type='button';sh.className='btn btn-ghost';sh.textContent='Compartilhar imagem';
+  actions.appendChild(dl);actions.appendChild(sh);
+  const note=document.createElement('div');note.className='img-note';
+  panel.appendChild(chips);panel.appendChild(stage);panel.appendChild(actions);panel.appendChild(note);
+  let cur=o.templates[0][0],seq=0;
+  const render=async()=>{
+    const my=++seq;panel.classList.add('loading');note.textContent='';
+    try{await ensureFonts();await o.draw(canvas,cur)}catch(e){console.error('imagem',e);note.textContent='Não foi possível gerar a imagem agora.'}
+    if(my===seq)panel.classList.remove('loading');
+  };
+  o.templates.forEach(([id,label])=>{
+    const t=document.createElement('span');t.className='tag'+(id===cur?' active':'');t.textContent=label;t.dataset.tpl=id;
+    t.onclick=()=>{cur=id;chips.querySelectorAll('.tag').forEach(x=>x.classList.toggle('active',x===t));render()};
+    chips.appendChild(t);
+  });
+  const getBlob=()=>new Promise((res,rej)=>{try{canvas.toBlob(b=>b?res(b):rej(new Error('vazio')),'image/png')}catch(e){rej(e)}});
+  dl.onclick=async()=>{
+    try{const b=await getBlob();const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(o.filename||'myspotlist')+'-'+cur+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('Imagem baixada!')}
+    catch(e){note.textContent='Não foi possível salvar a imagem (a capa pode estar bloqueada pelo navegador).'}
+  };
+  sh.onclick=async()=>{
+    try{
+      const b=await getBlob();const f=new File([b],(o.filename||'myspotlist')+'-'+cur+'.png',{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],text:o.text?o.text():undefined});
+      else{note.textContent='Seu navegador não compartilha imagens direto. Use "Baixar imagem" e envie o arquivo.'}
+    }catch(e){if(e&&e.name!=='AbortError')note.textContent='Não foi possível compartilhar agora. Use "Baixar imagem".'}
+  };
+  panel.render=render;panel.canvas=canvas;
+  return panel;
+}
+
 // ─── PERFIL / LOGIN ──────────────────────────────────────────
 const AV_COLORS=['#1db954','#8b5cf6','#f59e0b','#ec4899','#06b6d4','#ef4444','#84cc16'];
 const AV_SUGGEST={
@@ -4184,6 +5234,7 @@ function avatarLabel(a){
   return (a.type==='album'?'Capa de álbum: ':'Foto de artista: ')+(a.label||'');
 }
 function applyProfile(){
+  updateBell();
   const p=DB.profile;if(!p)return;
   setAvatarEl(document.getElementById('navAvatar'),p);
   document.getElementById('navName').textContent=p.name;

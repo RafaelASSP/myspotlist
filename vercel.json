@@ -1,5 +1,11 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/r/:token", "destination": "/api/r?token=:token" }
+  ],
+  "functions": {
+    "api/r.js": { "includeFiles": "index.html" }
+  },
   "headers": [
     {
       "source": "/(.*)",
